@@ -11,16 +11,22 @@ Image logoWidget(String imageName) {
   );
 }
 
-TextField reusableTextField(String text, IconData icon, String fieldInputType,
+TextFormField reusableTextField(String text, IconData icon, String fieldInputType,
     TextEditingController controller) {
   bool isPasswordType = fieldInputType == 'password'? true : false;
-  return TextField(
+  return TextFormField(
     controller: controller,
     obscureText: isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
     cursorColor: Colors.black,
     style: TextStyle(color: Colors.black.withOpacity(0.9)),
+      validator: (value){
+        if (value!.isEmpty){
+          return 'Please enter a username';
+        }
+        return null;
+      },
     decoration: InputDecoration(
       contentPadding: EdgeInsets.symmetric(vertical: 16.0),
       prefixIcon: Icon(
@@ -28,7 +34,7 @@ TextField reusableTextField(String text, IconData icon, String fieldInputType,
         color: Colors.red,
       ),
       labelText: text,
-      labelStyle: TextStyle(color: Colors.black.withOpacity(0.9)),
+      labelStyle: TextStyle(color: Colors.black54),
       filled: false,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       //fillColor: Colors.white.withOpacity(0.3),
@@ -64,7 +70,7 @@ Container loginButton(BuildContext context, String title, Function onTap) {
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
-              return Colors.white;
+              return Colors.white12;
             }
             return Colors.red;
           }),
@@ -74,7 +80,7 @@ Container loginButton(BuildContext context, String title, Function onTap) {
   );
 }
 
-Container customLoginButton(BuildContext context, String title, Function onTap) {
+Container customLoginButton(BuildContext context, String title, String logo, Color borderColor, Function onTap) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: 50,
@@ -82,8 +88,8 @@ Container customLoginButton(BuildContext context, String title, Function onTap) 
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(90),
       border: Border.all(
-        color: Colors.red,
-        width: 2.0,
+        color: Colors.grey,
+        width: 1.0,
       )
     ),
     child: ElevatedButton(
@@ -91,13 +97,18 @@ Container customLoginButton(BuildContext context, String title, Function onTap) 
         onTap();
       },
       child:Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Image.asset(
+            logo, // Replace with your Google logo asset
+            height: 30.0,
+          ),
+          SizedBox(width: 20,),
           //Icon(Icons.supervised_user_circle),
           Text(
             title,
-            style: const TextStyle(
-                color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+                color: Colors.black54,  fontSize: 16),
           ),
         ],
       ),

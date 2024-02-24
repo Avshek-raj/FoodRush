@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>983034390152-s0cf4gadi2v6m1e96nvijoumoj45adtp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.983034390152-s0cf4gadi2v6m1e96nvijoumoj45adtp</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>983034390152-gle8dia1df1025s91le102ma1qqm8vgd.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC4ZObdfO6O62N5OrhHWYmgQElc80E44LQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>983034390152</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.foodrush.foodrush</string>
+	<key>PROJECT_ID</key>
+	<string>foodrush-28b7a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>foodrush-28b7a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:983034390152:ios:caf1c92c240460a69ee13d</string>
+</dict>
+</plist>

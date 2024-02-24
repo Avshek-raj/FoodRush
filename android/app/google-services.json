@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "983034390152",
+    "project_id": "foodrush-28b7a",
+    "storage_bucket": "foodrush-28b7a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983034390152:android:f1678d16b2ae5c8a9ee13d",
+        "android_client_info": {
+          "package_name": "com.foodrush.foodrush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983034390152-gle8dia1df1025s91le102ma1qqm8vgd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.foodrush.foodrush",
+            "certificate_hash": "f55f526c075508ae3132a148a01376678ecc6195"
+          }
+        },
+        {
+          "client_id": "983034390152-2q49j52vpdccgqs8imk9bkfjsn9gbmfs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiriE6GSaAiU_162lPp5p5sotPH7kaU2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983034390152-2q49j52vpdccgqs8imk9bkfjsn9gbmfs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "983034390152-s0cf4gadi2v6m1e96nvijoumoj45adtp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.foodrush.foodrush"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

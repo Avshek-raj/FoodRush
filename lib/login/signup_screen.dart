@@ -1,15 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
-import 'package:foodrush/screens/signin_screen.dart';
+import 'package:foodrush/login/signin_screen.dart';
+
+import 'home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
-
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _formKey = new GlobalKey<FormState>();
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _confirmPasswordTextController = TextEditingController();
   TextEditingController _usernameTextController = TextEditingController();
@@ -36,31 +40,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(
                 height: 40,
               ),
-              //logoWidget("assets/images/logo_pureRed.png"),
-              reusableTextField("username", Icons.person_outline, "text", _usernameTextController),
+              Form(child: Column(
+                key: _formKey,
+                  children: [reusableTextField("Username", Icons.person_outline, "text", _usernameTextController),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    reusableTextField("Email", Icons.mail_outline, "email", _emailTextController),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    reusableTextField("Contact number", Icons.phone_outlined, "phone", _mobileNumTextController),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    reusableTextField("Address", Icons.home, "address", _addressTextController),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    reusableTextField("Password", Icons.lock_outline, "password", _passwordTextController),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    reusableTextField("Confirm Password", Icons.lock_outline, "password", _confirmPasswordTextController),],
+              )),
               const SizedBox(
-                height: 20,
-              ),
-              reusableTextField("Email", Icons.mail_outline, "email", _emailTextController),
-              const SizedBox(
-                height: 20,
-              ),
-              reusableTextField("Mobile No.", Icons.phone_outlined, "phone", _mobileNumTextController),
-              const SizedBox(
-                height: 20,
-              ),
-              reusableTextField("Address", Icons.home, "address", _addressTextController),
-              const SizedBox(
-                height: 20,
-              ),
-              reusableTextField("Password", Icons.lock_outline, "password", _passwordTextController),
-              const SizedBox(
-                height: 20,
-              ),
-              reusableTextField("Confirm Password", Icons.lock_outline, "password", _confirmPasswordTextController),const SizedBox(
                 height: 20,
               ),
               loginButton(context, "Sign Up", () {
+                if (_formKey.currentState!.validate()) {
+                  FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: _emailTextController.text,
+                      password: _passwordTextController.text).then ((value) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  }).onError((error, stackTrace) {
+                    print("Error ${error.toString()}");
+                  });
+                }
+
+                //    )
+                // })
                 // FirebaseAuth.instance
                 //     .signInWithEmailAndPassword(
                 //     email: _emailTextController.text,
