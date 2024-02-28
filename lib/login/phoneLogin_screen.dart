@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../home screen/home_screen.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import 'OTPScreen.dart';
-import 'home_screen.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
@@ -19,7 +19,10 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   TextEditingController _phoneTextController = TextEditingController();
   String _errorMessage = '';
   Widget build(BuildContext context) {
-    return Scaffold(body: Container(
+    return Scaffold(body: isLoading ?
+    Center(
+      child: CircularProgressIndicator(),
+    ) :Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
@@ -70,6 +73,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                       height: 20,
                     ),
                     loginButton(context, "Verify phone number", () {
+                      isLoading = true;
                       String number = "+977" + _phoneTextController.text;
                       if(_formKey.currentState!.validate()){
                         FirebaseAuth.instance.verifyPhoneNumber(
@@ -80,6 +84,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                               });
                             },
                             codeSent: (String verificationId, int? resendToken){
+                              isLoading = false;
                               Navigator.push(context, MaterialPageRoute(builder: (context) => OTPScreen(verificationId: verificationId,)));
                             },
                             codeAutoRetrievalTimeout: (String verificationId){},

@@ -4,8 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../home screen/home_screen.dart';
+import '../home screen/mainScreen.dart';
 import '../reusable_widgets/reusable_widget.dart';
-import 'home_screen.dart';
 
 class OTPScreen extends StatefulWidget {
   String verificationId;
@@ -20,7 +21,10 @@ class _OTPScreenState extends State<OTPScreen> {
   TextEditingController _otpController = TextEditingController();
   String _errorMessage = '';
   Widget build(BuildContext context) {
-    return Scaffold(body: Container(
+    return Scaffold(body: isLoading ?
+    Center(
+      child: CircularProgressIndicator(),
+    ) :Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
@@ -71,12 +75,15 @@ class _OTPScreenState extends State<OTPScreen> {
                         height: 20,
                       ),
                       loginButton(context, "Verify OTP", () async {
+                        isLoading = true;
                         if(_formKey.currentState!.validate()){
                           try {
                             PhoneAuthCredential credential = await PhoneAuthProvider.credential(verificationId: widget.verificationId, smsCode: _otpController.text.toString());
                             FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                              isLoading = false;
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                             }).onError((error, stackTrace) {
+                              isLoading = false;
                               setState(() {
                                 _errorMessage = 'Incorrect OTP code. Please try again.';
                               });

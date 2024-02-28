@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 import 'package:foodrush/login/signin_screen.dart';
 
-import 'home_screen.dart';
+import '../home screen/home_screen.dart';
+import '../home screen/mainScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -22,7 +23,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Container(
+    return Scaffold(body: isLoading ?
+    Center(
+      child: CircularProgressIndicator(),
+    ) :Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
@@ -42,38 +46,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Form(child: Column(
                 key: _formKey,
-                  children: [reusableTextField("Username", Icons.person_outline, "text", _usernameTextController),
+                  children: [reusableTextFormField("Username", Icons.person_outline, "text", _usernameTextController),
                     const SizedBox(
                       height: 20,
                     ),
-                    reusableTextField("Email", Icons.mail_outline, "email", _emailTextController),
+                    reusableTextFormField("Email", Icons.mail_outline, "email", _emailTextController),
                     const SizedBox(
                       height: 20,
                     ),
-                    reusableTextField("Contact number", Icons.phone_outlined, "phone", _mobileNumTextController),
+                    reusableTextFormField("Contact number", Icons.phone_outlined, "phone", _mobileNumTextController),
                     const SizedBox(
                       height: 20,
                     ),
-                    reusableTextField("Address", Icons.home, "address", _addressTextController),
+                    reusableTextFormField("Address", Icons.home, "address", _addressTextController),
                     const SizedBox(
                       height: 20,
                     ),
-                    reusableTextField("Password", Icons.lock_outline, "password", _passwordTextController),
+                    reusableTextFormField("Password", Icons.lock_outline, "password", _passwordTextController),
                     const SizedBox(
                       height: 20,
                     ),
-                    reusableTextField("Confirm Password", Icons.lock_outline, "password", _confirmPasswordTextController),],
+                    reusableTextFormField("Confirm Password", Icons.lock_outline, "password", _confirmPasswordTextController),],
               )),
               const SizedBox(
                 height: 20,
               ),
               loginButton(context, "Sign Up", () {
+                isLoading = true;
                 if (_formKey.currentState!.validate()) {
                   FirebaseAuth.instance.createUserWithEmailAndPassword(
                       email: _emailTextController.text,
                       password: _passwordTextController.text).then ((value) {
+                        isLoading = false;
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                        MaterialPageRoute(builder: (context) => MainScreen()));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });

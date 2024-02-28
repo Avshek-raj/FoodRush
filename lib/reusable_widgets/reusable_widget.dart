@@ -11,7 +11,7 @@ Image logoWidget(String imageName) {
   );
 }
 
-TextFormField reusableTextField(String text, IconData icon, String fieldInputType,
+TextFormField reusableTextFormField(String text, IconData icon, String fieldInputType,
     TextEditingController controller) {
   bool isPasswordType = fieldInputType == 'password'? true : false;
   return TextFormField(
@@ -146,4 +146,63 @@ Row dividerOrLine() {
       ),
     ],
   );
+}
+
+TextField reusableTextField(String text, IconData icon, String fieldInputType,
+    TextEditingController controller) {
+  bool isPasswordType = fieldInputType == 'password'? true : false;
+  return TextField(
+      controller: controller,
+      obscureText: isPasswordType,
+      enableSuggestions: !isPasswordType,
+      autocorrect: !isPasswordType,
+      cursorColor: Colors.black,
+      style: TextStyle(color: Colors.grey.shade500, fontSize: 15),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 14.0),
+        prefixIcon: Icon(
+          icon,
+          color: Colors.red,
+        ),
+        labelText: text,
+        labelStyle: TextStyle(color: Colors.black54),
+        filled: false,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        //fillColor: Colors.white.withOpacity(0.3),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide(color: Colors.red,)),
+      ),
+      keyboardType: fieldInputType == 'password'
+          ? TextInputType.visiblePassword
+          : fieldInputType == 'email' ? TextInputType.emailAddress
+          : fieldInputType == 'phone' ? TextInputType.phone
+          : TextInputType.text
+  );
+}
+
+GestureDetector menuItem(String itemName, String icon){
+  return GestureDetector(
+    onTap: () {
+
+    },
+    child: Container(
+      height: 76,
+      width: 76,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Image.asset(
+            icon,
+            height: 40,
+            width: 40,
+          ),
+          Text(itemName),
+        ],
+      ),
+    ),
+  ) ;
 }

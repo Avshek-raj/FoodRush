@@ -7,8 +7,9 @@ import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../home screen/home_screen.dart';
+import '../home screen/mainScreen.dart';
 import '../utils/color_utils.dart';
-import 'home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -25,7 +26,10 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Container(
+    return Scaffold(body: isLoading ?
+    Center(
+      child: CircularProgressIndicator(),
+    ) :Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       // decoration: BoxDecoration(
@@ -116,18 +120,21 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 20,
                     ),
                     loginButton(context, "Login", () {
+                      isLoading = true;
                       String username = _emailTextController.text;
                       String password = _passwordTextController.text;
                       if(_formKey.currentState!.validate()){
                         if (username == 'admin' && password == 'admin'){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                         }
                         FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _emailTextController.text,
                             password: _passwordTextController.text).then ((value) {
+                          isLoading = false;
                           print(value.toString());
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                         }).onError((error, stackTrace) {
+                          isLoading =false;
                           showDialog(context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
@@ -176,7 +183,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   idToken: gAuth.idToken
                 );
                 FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                 }).onError((error, stackTrace) {
                   showDialog(context: context,
                       builder: (BuildContext context) {
