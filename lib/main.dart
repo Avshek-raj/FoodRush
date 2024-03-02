@@ -2,9 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/providers/product_provider.dart';
 import 'package:provider/provider.dart';
-import 'home screen/home_screen.dart';
-import 'home screen/mainScreen.dart';
-import 'login/signin_screen.dart';
+import 'Screens/mainScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

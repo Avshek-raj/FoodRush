@@ -1,11 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/color_utils.dart';
 import 'orderSummay_screen.dart';
 
-class Cart extends StatelessWidget {
-  const Cart({super.key});
+class TopLiked {
+  String? image, price, name;
+  TopLiked({this.image, this.name, this.price});
+}
 
+ List<TopLiked> data = [];
+
+class Cart extends StatefulWidget {
+  Cart({super.key,String?  productName, String? productImage, int? productPrice, String? productDesc});
+  @override
+  State<Cart> createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
+  int itemCount = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,48 +93,46 @@ class Cart extends StatelessWidget {
                         "Jollof Rice",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
-                        height: 5,
-                        width: 14,
-                      ),
                       Spacer(),
                       //for counter
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              // Decrease counter logic
-                              int a = 0;
-                              bool cartIncrease = false;
+                      Container(
+                        height: 30,
+                        width: 107,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
 
-                              decreaseValue() {
-                                if (a > 0) {
-                                  a--;
+                                if (itemCount > 1) {
+                                  //setState(() {
+                                  itemCount--;
+                                  //});
                                 }
-                              }
-                            },
-                            icon: Icon(Icons.remove),
-                          ),
-                          Text(
-                            "1", // Counter value
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: myColor,
+                              },
+                              icon: Icon(Icons.remove), iconSize: 15,
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              // Increase counter logic
-                              int a = 0;
-                              bool cartIncrease = false;
-                              increaseValue() {
-                                a++;
-                              }
-                            },
-                            icon: Icon(Icons.add),
-                          ),
-                        ],
+                            Text(
+                              itemCount.toString(), // Counter value
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                //setState(() {
+                                itemCount++;
+                                //});
+                              },
+                              icon: Icon(Icons.add), iconSize: 15,
+                            ),
+                          ],
+                        ),
                       ),
                       Spacer(),
                       Padding(

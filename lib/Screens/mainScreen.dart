@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodrush/home%20screen/profile_screen.dart';
-
+import 'package:foodrush/Screens/profile_screen.dart';
+import 'package:foodrush/Screens/search_screen.dart';
 import 'cart_screen.dart';
 import 'home_screen.dart';
 
@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     HomeScreen(),
-    PageTwo(),
+    Search(),
     PageThree(),
     Cart(),
     ProfileScreen(),

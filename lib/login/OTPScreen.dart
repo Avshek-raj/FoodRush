@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../home screen/home_screen.dart';
-import '../home screen/mainScreen.dart';
+import '../Screens/home_screen.dart';
+import '../Screens/mainScreen.dart';
 import '../reusable_widgets/reusable_widget.dart';
 
 class OTPScreen extends StatefulWidget {

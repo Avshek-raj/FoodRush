@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 import 'package:foodrush/login/signin_screen.dart';
 
-import '../home screen/home_screen.dart';
-import '../home screen/mainScreen.dart';
+import '../Screens/home_screen.dart';
+import '../Screens/mainScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

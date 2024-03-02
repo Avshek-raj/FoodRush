@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../home screen/home_screen.dart';
+import '../Screens/home_screen.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import 'OTPScreen.dart';
 

@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../Screens/cart_screen.dart';
+import '../utils/color_utils.dart';
+
 Image logoWidget(String imageName) {
   return Image.asset(
     imageName,
@@ -206,3 +209,90 @@ GestureDetector menuItem(String itemName, String icon){
     ),
   ) ;
 }
+
+Container setItemCount(int count) {
+  return Container(
+    height: 30,
+    width: 107,
+    decoration: BoxDecoration(
+      color: Colors.red,
+      borderRadius: BorderRadius.circular(40),
+    ),
+    child: Row(
+      children: [
+        IconButton(
+          onPressed: () {
+
+              if (count > 0) {
+                count--;
+              }
+          },
+          icon: Icon(Icons.remove), iconSize: 15,
+        ),
+        Text(
+          count.toString(), // Counter value
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+              count++;
+          },
+          icon: Icon(Icons.add), iconSize: 15,
+        ),
+      ],
+    ),
+  );
+}
+
+class CartBadge extends StatelessWidget {
+  final int itemCount;
+
+  const CartBadge({
+    Key? key,
+    required this.itemCount,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Cart()));
+      },
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(16),
+      icon: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.centerLeft,
+        children: [
+          Icon(Icons.shopping_cart),
+          if (itemCount > 0)
+            Positioned(
+              top: -5,
+              right: -5,
+              child: Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red,
+                ),
+                child: Text(
+                  itemCount.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
