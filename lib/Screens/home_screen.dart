@@ -4,7 +4,6 @@ import 'package:foodrush/providers/product_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../reusable_widgets/reusable_widget.dart';
-import 'cart_screen.dart';
 import 'orderDescription_screen.dart';
 
 class TopLiked {
@@ -73,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: SingleChildScrollView(
-                  child: Padding(
+                child: Padding(
                 padding: EdgeInsets.fromLTRB(
                     20, MediaQuery.of(context).size.height * 0.02, 20, 0),
                 child: Column(
@@ -236,6 +235,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     OrderDescription(
+                                                      productId:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productId,
                                                       productName:
                                                           productProvider
                                                               .foodProductList[
