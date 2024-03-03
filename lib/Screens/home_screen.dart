@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem("More", "assets/images/more.png"),
+                                menuItem("All", "assets/images/more.png"),
                               ],
                             ),
                           ],
