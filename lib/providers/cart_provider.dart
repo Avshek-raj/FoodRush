@@ -2,16 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 
 import '../Screens/home_screen.dart';
 import '../models/cart_model.dart';
 class CartProvider with ChangeNotifier {
-  void addReviewCartDate({
+  void addReviewCartData({
     required BuildContext context, // Add required BuildContext parameter
     String? cartId,
     String? cartImage,
     String? cartPrice,
     String? cartName,
+    int? cartQuantity,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -19,13 +21,14 @@ class CartProvider with ChangeNotifier {
       await FirebaseFirestore.instance
           .collection("Cart")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection("YourCart")
+          .collection("CartItems")
           .doc(cartId)
           .set({
-        "cartId": cartId,
-        "cartName": cartName,
-        "cartImage": cartImage,
+        "CartId": cartId,
+        "CartName": cartName,
+        "CartImage": cartImage,
         "CartPrice": cartPrice,
+        "CartQuantity": cartQuantity
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Product added successfully'),
@@ -46,29 +49,48 @@ class CartProvider with ChangeNotifier {
 
   List<CartModel> cartList = [];
   late CartModel cartModel;
-
-  fetchCartData() async{
+  fetchCartData(callback) async{
     isLoading = true;
     List<CartModel> newList = [];
-    QuerySnapshot value = await FirebaseFirestore.instance.collection("FoodProducts").get();
+    QuerySnapshot value = await FirebaseFirestore.instance.collection("Cart")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection("CartItems").get();
     value.docs.forEach((element) {
-      cartModel = CartModel(cartId: element.get("productId"),cartName: element.get("productName"), cartImage: element.get("productImage"), cartPrice: element.get("productPrice"));
+      cartModel = CartModel(cartId: element.get("CartId"),cartName: element.get("CartName"), cartImage: element.get("CartImage"), cartPrice: element.get("CartPrice"), cartQuantity: element.get("CartQuantity"));
       newList.add(cartModel);
     });
     cartList = newList;
+    cartItemNumber = cartList.length;
     isLoading = false;
+    callback();
     notifyListeners();
   }
 
-  double calculateTotalPrice() {
-    double totalPrice = 0;
+  deleteCartItem(cartId) async{
+    isLoading = true;
+    List<CartModel> newList = [];
+    await  FirebaseFirestore.instance.collection("Cart")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection("CartItems").doc(cartId).delete();
+    cartItemNumber = cartItemNumber! - 1;
+    notifyListeners();
+  }
+
+  int calculateTotalPrice() {
+    int totalPrice = 0;
     for (var item in cartList) {
-      totalPrice += double.parse(item.cartPrice ?? '0');
+      int price = int.parse(item.cartPrice ?? '0');
+      int quantity = int.parse(item.cartQuantity?.toString() ?? '0');
+      totalPrice += price * quantity;
     }
     return totalPrice;
   }
 
   get getFoodProductsDataList{
     return cartList;
+  }
+
+  getNumOfCartItem(){
+    return cartList.length;
   }
 }

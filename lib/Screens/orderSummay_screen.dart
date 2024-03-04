@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-
+import '../Screens/parment.dart';
+import '../models/cart_model.dart';
 import '../utils/color_utils.dart';
 
 class OrderSummary extends StatefulWidget {
-  const OrderSummary({super.key});
+  List<CartModel> cartList ;
+  List<int> itemCount ;
+  List<int> total ;
+  int grandTotal ;
+  OrderSummary({super.key,required this.cartList, required this.itemCount, required this.total, required this.grandTotal});
 
   @override
   State<OrderSummary> createState() => _OrderSummaryState();
@@ -13,8 +18,10 @@ class _OrderSummaryState extends State<OrderSummary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
+      body:
+        // SingleChildScrollView(
+        // child:
+        SafeArea(
           child: Column(
             children: [
               Row(
@@ -49,7 +56,7 @@ class _OrderSummaryState extends State<OrderSummary> {
               ),
               //Container1
               Container(
-                height: 380,
+                height: MediaQuery.of(context).size.height*0.52,
                 width: 350,
                 decoration: BoxDecoration(
                   // shape: BoxShape.rectangle,
@@ -69,154 +76,64 @@ class _OrderSummaryState extends State<OrderSummary> {
                       SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              // shape: BoxShape.rectangle,
-                                color: Colors.white,
-                                border: Border.all(color: Colors.grey.shade200),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Image.asset(
-                              "aset/images/cheeseburger.png",
-                              height: 40,
-                              width: 40,
-                              fit: BoxFit.contain,
+                      ListView.builder(
+                          shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: widget.cartList.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                          0, 0, 0, 5),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                // shape: BoxShape.rectangle,
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey.shade200),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Image.network(
+                                widget.cartList[index].cartImage!,
+                                height: 40,
+                                width: 40,
+                                fit: BoxFit.contain,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Cheese Burger",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
-                                ),
-                                Text(
-                                  "400*1",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18),
-                                )
-                              ],
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
-                          Spacer(),
-                          Text(
-                            "RS: 400",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 18),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.cartList[index].cartName.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15),
+                                  ),
+                                  Text(
+                                    widget.cartList[index].cartPrice.toString() + "*" + widget.cartList[index].cartQuantity.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              "Rs. " + (int.parse(widget.cartList[index].cartPrice!)*widget.cartList[index].cartQuantity!).toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 18),
+                            ),
+                          ],
+                        ),
+                        )
                       ),
-                      Divider(),
-                      //arko order ko lagi
-                      Row(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              // shape: BoxShape.rectangle,
-                                color: Colors.white,
-                                border: Border.all(color: Colors.grey.shade200),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Image.asset(
-                              "aset/images/jhol-momo.png",
-                              height: 40,
-                              width: 40,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Jhol Mo:Mo",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
-                                ),
-                                Text(
-                                  "300*1",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18),
-                                )
-                              ],
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            "RS: 300",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 18),
-                          ),
-                        ],
-                      ),
-                      Divider(),
-                      //third order
-                      Row(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              // shape: BoxShape.rectangle,
-                                color: Colors.white,
-                                border: Border.all(color: Colors.grey.shade200),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Image.asset(
-                              "aset/images/keemanoodles.png",
-                              height: 40,
-                              width: 40,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Keema Noodles",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
-                                ),
-                                Text(
-                                  "250*1",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18),
-                                )
-                              ],
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            "RS: 250",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 18),
-                          ),
-                        ],
-                      ),
+
                       Divider(),
                       //sub total
                       Row(
@@ -229,11 +146,13 @@ class _OrderSummaryState extends State<OrderSummary> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 18),
                               ),
+                              SizedBox(height: 15,),
                               Text(
                                 "Delivery fee:",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 18),
                               ),
+                              SizedBox(height: 15,),
                               Text(
                                 "Total Amount:",
                                 style: TextStyle(
@@ -247,17 +166,19 @@ class _OrderSummaryState extends State<OrderSummary> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "RS: 950",
+                                  "Rs. " + widget.grandTotal.toString(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600, fontSize: 18),
                                 ),
+                                SizedBox(height: 15,),
                                 Text(
                                   "RS: 50",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600, fontSize: 18),
                                 ),
+                                SizedBox(height: 15,),
                                 Text(
-                                  "RS: 1000",
+                                  "Rs. " + (widget.grandTotal + 50).toString(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700, fontSize: 18),
                                 ),
@@ -273,10 +194,8 @@ class _OrderSummaryState extends State<OrderSummary> {
               SizedBox(
                 height: 10,
               ),
-
               //delivery address ko container
               Container(
-                height: 200,
                 width: 350,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -399,7 +318,9 @@ class _OrderSummaryState extends State<OrderSummary> {
                               onPrimary: Colors.white,
                               primary: myColor,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Payment()));
+                            },
                             child: Text(
                               "Proceed to payment",
                               style: TextStyle(
@@ -411,7 +332,7 @@ class _OrderSummaryState extends State<OrderSummary> {
             ],
           ),
         ),
-      ),
+      //),
     );
   }
 }

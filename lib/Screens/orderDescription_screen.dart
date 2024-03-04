@@ -50,7 +50,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                     ),
                     Spacer(),
                     CartBadge(
-                      itemCount: 3, // Replace this with
+                      itemCount: cartItemNumber ?? 0, // Replace this with
                     ),
                   ],
                 ),
@@ -283,11 +283,12 @@ class _OrderDescriptionState extends State<OrderDescription> {
             Spacer(),
             GestureDetector(
               onTap: () {
-                cartProvider.addReviewCartDate(context: context,
+                cartProvider.addReviewCartData(context: context,
                   cartId: widget.productId,
                   cartImage: widget.productImage,
                   cartPrice: widget.productPrice,
                   cartName: widget.productName,
+                  cartQuantity: itemCount,
                   onSuccess: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
                     // Execute any additional code on success

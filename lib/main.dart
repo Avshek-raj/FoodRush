@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/home_screen.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:foodrush/providers/cart_provider.dart';
+import 'package:foodrush/Screens/jpt.dart';
+import 'package:foodrush/Screens/burger.dart';
+import 'package:foodrush/Screens/ourMenu.dart';
+import 'package:foodrush/Screens/tabbar.dart';
+import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/providers/product_provider.dart';
 import 'package:provider/provider.dart';
 import 'Screens/mainScreen.dart';
@@ -34,8 +39,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-        home: MainScreen(),
-      ),
+        home: SignInScreen(),
+      )
     );
   }
 }

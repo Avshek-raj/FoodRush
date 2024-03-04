@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/providers/product_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import 'orderDescription_screen.dart';
 
@@ -45,6 +46,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late ProductProvider productProvider;
+  late CartProvider cartProvider;
   TextEditingController searchTextController = TextEditingController();
 
   void handleOtherButtonPress() {
@@ -54,6 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     ProductProvider productProvider = Provider.of(context, listen: false);
+    CartProvider cartProvider = Provider.of(context, listen: false);
+    cartProvider.fetchCartData((){});
     productProvider.fetchFoodProductData();
     super.initState();
   }
@@ -61,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     productProvider = Provider.of(context);
+    cartProvider = Provider.of(context);
     // ProductProvider productProvider = Provider.of(context);
     // productProvider.fetchFoodProductData();
     return Scaffold(
@@ -78,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: 20),
-                    const Row(
+                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
@@ -118,8 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Spacer(), // Add some spacing between buttons
                         CartBadge(
-                          itemCount: 3, // Replace this with
-                        ),
+                          itemCount: cartProvider.cartList.length,)
                       ],
                     ),
                     SizedBox(height: 15),
@@ -173,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem("More", "assets/images/more.png"),
+                                menuItem("All", "assets/images/more.png"),
                               ],
                             ),
                           ],

@@ -3,6 +3,6 @@ class CartModel{
   String? cartImage;
   String? cartPrice;
   String? cartName;
-  String? cartQuantity;
+  int? cartQuantity;
   CartModel({this.cartId,this.cartImage,this.cartPrice,this.cartName,this.cartQuantity});
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/Screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import '../utils/color_utils.dart';
+import 'mainScreen.dart';
 import 'orderSummay_screen.dart';
 
 class TopLiked {
@@ -21,14 +23,22 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   late CartProvider cartProvider;
-  late int total = cartProvider.calculateTotalPrice().toInt();
+  late int grandTotal = cartProvider.calculateTotalPrice().toInt();
+  late List<int> itemCount = [];
+  List<int> total = [];
   @override
   void initState() {
     CartProvider cartProvider = Provider.of(context, listen: false);
-    cartProvider.fetchCartData();
+    cartProvider.fetchCartData((){
+      if (cartProvider.cartList != null && cartProvider.cartList.isNotEmpty) {
+        for (var item in cartProvider.cartList) {
+          itemCount.add(item.cartQuantity ?? 1);
+          total = cartProvider.cartList.map((item) => int.parse(item.cartPrice ?? '0')).toList();
+        }
+      }
+    });
     super.initState();
   }
-  int itemCount = 1;
   @override
   Widget build(BuildContext context) {
     cartProvider = Provider.of(context);
@@ -71,14 +81,21 @@ class _CartState extends State<Cart> {
       SizedBox(
         height: 25,
       ),
-      //arko container for jollofRice
       SizedBox(
           height: MediaQuery.of(context).size.height *0.55,
           width: MediaQuery.of(context).size.width * 0.89,
-          child: ListView.builder(
+          child: cartProvider.cartList.length == 0 ?
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Your cart is Empty",
+                    style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 14)
+                ),
+              )
+          :ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount:
-              cartProvider.cartList.length,
+              itemCount: cartProvider.cartList.length,
               itemBuilder: (context, index) => Padding(
                 padding: const EdgeInsets.fromLTRB(
                     0, 0, 0, 5),
@@ -124,7 +141,7 @@ class _CartState extends State<Cart> {
                       //for counter
                       Container(
                         height: 25,
-                        width: 88, // Adjust the width as needed
+                        width: 94, // Adjust the width as needed
                         decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(40),
@@ -136,9 +153,11 @@ class _CartState extends State<Cart> {
                               visualDensity: VisualDensity.compact,
                               padding: EdgeInsets.zero,
                               onPressed: () {
-                                if (itemCount > 1) {
+                                if (itemCount[index] > 1) {
                                   setState(() {
-                                  itemCount--;
+                                    itemCount[index]--;
+                                    grandTotal = grandTotal - int.parse(cartProvider.cartList[index].cartPrice!);
+                                  total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
                                   });
                                 }
                               },
@@ -146,7 +165,7 @@ class _CartState extends State<Cart> {
                               iconSize: 10,
                             ),
                             Text(
-                              itemCount.toString(), // Counter value
+                              itemCount[index].toString(), // Counter value
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
@@ -158,8 +177,11 @@ class _CartState extends State<Cart> {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 setState(() {
-                                itemCount++;
+                                itemCount[index]++;
+                                grandTotal = grandTotal + int.parse(cartProvider.cartList[index].cartPrice!);
+                                total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
                                 });
+
                               },
                               icon: Icon(Icons.add),
                               iconSize: 10,
@@ -176,31 +198,37 @@ class _CartState extends State<Cart> {
                           children: [
                             Align(
                               alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 40, top: 3),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end, // Align text to the right
-                                  children: [
-                                    Icon(
-                                      Icons.close_sharp,
-                                      color: Colors.grey,
-                                      size: 18,
-                                    ),
-                                  ],
+                              child: GestureDetector(
+                                onTap: (){
+                                  cartProvider.deleteCartItem(cartProvider.cartList[index].cartId);
+                                  setState(() {
+                                    cartProvider.cartList.removeAt(index);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 40, top: 3),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end, // Align text to the right
+                                    children: [
+                                      Icon(
+                                        Icons.close_sharp,
+                                        color: Colors.grey,
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               )
-
                             ),
                             Padding(
                                 padding: EdgeInsets.only(top: 11),
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "Rs. " + cartProvider.cartList[index].cartPrice.toString(),
+                                    "Rs. " + (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]).toString(),
                                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                   ),
                                 )
-
                             ),
                           ],
                         )
@@ -236,7 +264,7 @@ class _CartState extends State<Cart> {
                       child: Column(
                         children: [
                           Text(
-                            total.toString(),
+                            grandTotal.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
@@ -257,7 +285,9 @@ class _CartState extends State<Cart> {
                         onPrimary: myColor,
                         primary: Colors.white,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                      },
                       child: Text("Add Items")),
                 ),
                 SizedBox(
@@ -272,7 +302,9 @@ class _CartState extends State<Cart> {
                         primary:myColor,
                       ),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummary()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummary(
+                          cartList: cartProvider.cartList, itemCount: itemCount, total: total, grandTotal: grandTotal,)
+                        ));
                       },
                       child: Text("Checkout")),
                 ),
