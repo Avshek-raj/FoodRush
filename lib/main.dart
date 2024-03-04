@@ -7,8 +7,13 @@ import 'package:foodrush/Screens/ourMenu.dart';
 import 'package:foodrush/Screens/tabbar.dart';
 import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/providers/product_provider.dart';
+import 'package:foodrush/restaurantScreens/profile1.dart';
+import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
+import 'package:foodrush/restaurantScreens/profile2.dart';
+import 'package:foodrush/restaurantScreens/settings.dart';
+import 'package:foodrush/restaurantScreens/signupRestaurant.dart';
 import 'package:provider/provider.dart';
-import 'Screens/mainScreen.dart';
+import 'Screens/Navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +30,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<ProductProvider>(
       create: (context) => ProductProvider(),
       child: MaterialApp(
+        
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -32,7 +38,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.red,
 
         ),
-        home: SignUpScreen(),
+        home: ProfileRestaurant(),
       ),
     );
   }

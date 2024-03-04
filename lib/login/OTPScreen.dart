@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Screens/home_screen.dart';
-import '../Screens/mainScreen.dart';
+import '../Screens/Navigation.dart';
 import '../reusable_widgets/reusable_widget.dart';
 
 class OTPScreen extends StatefulWidget {
