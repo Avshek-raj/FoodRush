@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/home_screen.dart';
 import 'package:foodrush/Screens/profile_screen.dart';
-import 'package:foodrush/restaurantScreens/itemAdd.dart';
+import 'package:foodrush/restaurantScreens/foodAdd.dart';
 import 'package:foodrush/restaurantScreens/profile1.dart';
 
 class NavbarRestaurant extends StatefulWidget {
@@ -12,7 +12,7 @@ class NavbarRestaurant extends StatefulWidget {
 }
 
 class _NavbarRestaurantState extends State<NavbarRestaurant> {
-  List<Widget> widgetList = [ProfileRestaurant(), ProfileScreen(), ItemAdd()];
+  List<Widget> widgetList = [ProfileRestaurant(), ProfileScreen(), AddFood()];
   int selectedTab = 0;
   @override
   Widget build(BuildContext context) {

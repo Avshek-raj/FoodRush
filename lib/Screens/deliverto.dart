@@ -86,7 +86,7 @@ class DeliverToState extends State<DeliverTo> {
                               border: Border.all(color: Colors.white),
                               borderRadius: BorderRadius.circular(5),
                             ),
-                          )
+                          ),
                         ],
                       ),
                         SizedBox(

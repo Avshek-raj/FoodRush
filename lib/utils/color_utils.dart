@@ -27,3 +27,13 @@ String genderValidatorStr="Please enter your gender";
 
 String passwordStr="Password";
 String passwordValidatorStr="Please enter your password";
+
+
+String foodNameStr="Food Name";
+String foodNameValidatorStr="Please enter the name of food";
+
+String foodPricetr="Food Price";
+String foodpriceValidatorStr="Please enter the price of food";
+
+String foodDescriptionStr="Food Name";
+String foodDescriptionValidatorStr="Please write something about your food";
