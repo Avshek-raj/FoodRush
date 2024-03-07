@@ -74,9 +74,9 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       child: CircleAvatar(
                         // radius: 25,
                         child: Image.asset(
-                          "assets/images/p2.png",
-                          height: 40,
-                          width: 40,
+                          "assets/images/p22.png",
+                          // height: 40,
+                          // width: 40,
                           fit: BoxFit.cover,
                         ),
                         backgroundColor: Colors.transparent,
@@ -156,9 +156,9 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       child: CircleAvatar(
                         // radius: 25,
                         child: Image.asset(
-                          "assets/images/p1.png",
-                          height: 40,
-                          width: 40,
+                          "assets/images/p11.png",
+                          // height: 40,
+                          // width: 40,
                           fit: BoxFit.cover,
                         ),
                         backgroundColor: Colors.transparent,
