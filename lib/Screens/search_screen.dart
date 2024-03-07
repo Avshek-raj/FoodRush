@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodrush/providers/search_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../reusable_widgets/reusable_widget.dart';
 
@@ -58,8 +60,10 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+
   @override
   Widget build(BuildContext context) {
+    SearchProvider searchProvider = Provider.of<SearchProvider>(context);
     return Scaffold(
         body: FoodMenu()
     );
@@ -69,6 +73,7 @@ class _SearchState extends State<Search> {
 
 
 class FoodMenu extends StatelessWidget {
+  TextEditingController searchTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -94,7 +99,8 @@ class FoodMenu extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        ),reusableTextField("Search Food, Drink, etc",
+            Icons.search_outlined, "search", searchTextController),
         Expanded(
           child: ListView.builder(
             itemCount: dummyFoodItems.length,

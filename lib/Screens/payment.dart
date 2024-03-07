@@ -1,19 +1,32 @@
 // import 'package:firebase1/util/string_const.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/Screens/service/esewa.service.dart';
+import 'package:provider/provider.dart';
+
+import '../models/cart_model.dart';
+import '../providers/cart_provider.dart';
+import 'mainScreen.dart';
+
 // import 'package:text_divider/text_divider.dart';
 
 class Payment extends StatefulWidget {
-  const Payment({super.key});
+  String price;
+  String productId;
+  String productName;
+  List<CartModel> cartList;
+  Payment({super.key, required this.price, required this.productName, required this.productId, required this.cartList});
 
   @override
   State<Payment> createState() => _PaymentState();
 }
 
 class _PaymentState extends State<Payment> {
+  late CartProvider cartProvider;
   bool selectedValue = true; // or whatever initial value you want
 
   @override
   Widget build(BuildContext context) {
+    cartProvider = Provider.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -59,48 +72,27 @@ class _PaymentState extends State<Payment> {
               SizedBox(
                 height: 15,
               ),
-              Container(
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Image.asset(
-                  "aset/images/esewa.png",
-                  fit: BoxFit.contain,
+              GestureDetector(
+                onTap: (){
+                  Esewa esewa = Esewa(cartProvider);
+                  esewa.pay(context, widget.price, widget.productId, widget.productName, widget.cartList);
+                },
+                child: Container(
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Image.asset(
+                    "assets/images/esewa.png",
+                  ),
                 ),
-
-                // child: Row(
-                //   children: [
-                //     Padding(
-                //       padding: const EdgeInsets.all(8.0),
-                //       child: Column(
-                //         children: [
-                //           Container(
-                //              height: 90,
-                //                   width: 90,
-                //                   decoration: BoxDecoration(
-                //                       // shape: BoxShape.rectangle,
-                //                       color: Colors.white,
-                //                       border: Border.all(color: Colors.grey.shade200),
-                //                       borderRadius: BorderRadius.circular(10)),
-                //             child: Image.asset("aset/images/esewa.png",
-                //              height: 40,
-                //                     width: 40,
-                //                     fit: BoxFit.contain,
-
-                //             )
-                //             ),
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ),
               Text(
                 "eSewa",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
+
               SizedBox(
                 height: 15,
               ),
@@ -158,7 +150,7 @@ class _PaymentState extends State<Payment> {
                           ]),
                       Spacer(),
                       Radio(
-                        value: false, // value for the radio button
+                        value: true, // value for the radio button
                         groupValue:
                             selectedValue, // selected value of the group
                         onChanged: (value) {
@@ -183,15 +175,58 @@ class _PaymentState extends State<Payment> {
                 height: 50,
                 width: 250,
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      onPrimary: Colors.white,
-                      primary: Colors.red,
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "Complete Order",
-                      style: TextStyle(fontSize: 15),
-                    )),
+                  style: ElevatedButton.styleFrom(
+                    onPrimary: Colors.white,
+                    primary: Colors.red,
+                  ),
+                  onPressed: () {
+                    for (var item in widget.cartList){
+                     cartProvider.deleteCartItem(item.cartId);
+                    }
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Center(child: Text("Order Successful")),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min, // To minimize the dialog size
+                            children: [
+                              Image.asset(
+                                'assets/images/success.png',
+                                fit: BoxFit.fill,// Provide the correct asset path here
+                                width: 80, // Adjust the width as needed
+                                height: 80, // Adjust the height as needed
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                  "Your food has been ordered and will be delivered shortly by the restaurant.",
+                              ),
+                              SizedBox(height: 10,),
+                              Center(
+                                child: Text(
+                                  "Thank you for ordering with us.",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text("Close"),
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen())); // Close dialog
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Text(
+                    "Complete Order",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
               )
             ],
           ),

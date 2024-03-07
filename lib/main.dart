@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/home_screen.dart';
@@ -6,9 +7,9 @@ import 'package:foodrush/providers/cart_provider.dart';
 import 'package:foodrush/Screens/jpt.dart';
 import 'package:foodrush/Screens/burger.dart';
 import 'package:foodrush/Screens/ourMenu.dart';
-import 'package:foodrush/Screens/tabbar.dart';
 import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/providers/product_provider.dart';
+import 'package:foodrush/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'Screens/mainScreen.dart';
 
@@ -32,9 +33,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CartProvider>(
           create: (context) => CartProvider(),
         ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
+        ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Foodrush',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.red,

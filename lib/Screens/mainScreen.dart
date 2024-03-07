@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/profile_screen.dart';
 import 'package:foodrush/Screens/search_screen.dart';
+import 'MenuPage.dart';
 import 'cart_screen.dart';
 import 'home_screen.dart';
 
@@ -18,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     Search(),
-    PageThree(),
+    Menu(),
     Cart(),
     ProfileScreen(),
   ];
@@ -46,8 +47,8 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favourites',
+            icon: Icon(Icons.food_bank),
+            label: 'Menus',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),

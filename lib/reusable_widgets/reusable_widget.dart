@@ -1,11 +1,19 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../Screens/MenuPage.dart';
 import '../Screens/cart_screen.dart';
 import '../utils/color_utils.dart';
 
+import '../models/location_model.dart';
 int? cartItemNumber;
+
+String? deliveryAddress;
+String? deliveryLandmark;
+
+DeliveryInfoModel deliveryIngoModel = DeliveryInfoModel();
 
 Image logoWidget(String imageName) {
   return Image.asset(
@@ -27,8 +35,23 @@ TextFormField reusableTextFormField(String text, IconData icon, String fieldInpu
     cursorColor: Colors.black,
     style: TextStyle(color: Colors.black.withOpacity(0.9)),
       validator: (value){
-        if (value!.isEmpty){
-          return 'Please enter a username';
+        if (isPasswordType){
+          if (value!.isEmpty){
+            return "Please enter your password";
+          } else if(value.length <=7) {
+            return "The password should be at least 8 characters";
+          }
+        }else {
+          if (value!.isEmpty) {
+            return 'Please enter your ' + text.toLowerCase();
+          }
+        }
+        if (isPasswordType){
+          if (value!.isEmpty){
+            return "Please enter your password";
+          } else if(value.length <=7) {
+            return "The password should be at least 8 characters";
+          }
         }
         return null;
       },
@@ -186,10 +209,10 @@ TextField reusableTextField(String text, IconData icon, String fieldInputType,
   );
 }
 
-GestureDetector menuItem(String itemName, String icon){
+GestureDetector menuItem(context, String itemName, String icon){
   return GestureDetector(
     onTap: () {
-
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Menu()));
     },
     child: Container(
       height: 76,

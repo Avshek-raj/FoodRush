@@ -1,5 +1,13 @@
-// import 'package:firebase1/util/string_const.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/Screens/mainScreen.dart';
+import 'package:foodrush/providers/delivery_provider.dart';
+
+import 'package:foodrush/reusable_widgets/reusable_widget.dart';
+import 'package:provider/provider.dart';
+import '../models/location_model.dart';
+import '../providers/user_provider.dart';
+import '../reusable_widgets/reusable_widget.dart';
+
 
 class DeliverTo extends StatefulWidget {
   const DeliverTo({super.key});
@@ -9,8 +17,18 @@ class DeliverTo extends StatefulWidget {
 }
 
 class DeliverToState extends State<DeliverTo> {
+  DeliveryProvider deliveryProvider = DeliveryProvider();
+  TextEditingController name = new TextEditingController();
+  TextEditingController address = new TextEditingController();
+  TextEditingController landmark = new TextEditingController();
+  TextEditingController phone = new TextEditingController();
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    name.text = userProvider.deliveryInfoModel.name!;
+    address.text = userProvider.deliveryInfoModel.address!;
+    landmark.text = userProvider.deliveryInfoModel.landmark!;
+    phone.text = userProvider.deliveryInfoModel.phone!;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -64,7 +82,7 @@ class DeliverToState extends State<DeliverTo> {
                     children: [
                       SizedBox(height: 12,),
                       Text(
-                        "Enter Delivery Address",
+                        "Enter Delivery Info",
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 18),
                       ),
@@ -74,7 +92,7 @@ class DeliverToState extends State<DeliverTo> {
                       Row(
                         children: [
                           Text(
-                            "Name:",
+                             "Name:",
                             style: TextStyle(fontSize: 17),
                           ),
                           Spacer(),
@@ -86,6 +104,10 @@ class DeliverToState extends State<DeliverTo> {
                               border: Border.all(color: Colors.white),
                               borderRadius: BorderRadius.circular(5),
                             ),
+                            child: TextField(
+                              controller: name,
+
+                            )
                           )
                         ],
                       ),
@@ -107,6 +129,9 @@ class DeliverToState extends State<DeliverTo> {
                               border: Border.all(color: Colors.white),
                               borderRadius: BorderRadius.circular(5),
                             ),
+                              child: TextField(
+                                controller: address,
+                              )
                           )
                         ],
                       ),
@@ -116,7 +141,7 @@ class DeliverToState extends State<DeliverTo> {
                       Row(
                         children: [
                           Text(
-                            "City:",
+                             "Landmark:",
                             style: TextStyle(fontSize: 17),
                           ),
                           Spacer(),
@@ -128,6 +153,9 @@ class DeliverToState extends State<DeliverTo> {
                               border: Border.all(color: Colors.white),
                               borderRadius: BorderRadius.circular(5),
                             ),
+                              child: TextField(
+                                controller: landmark,
+                              )
                           )
                         ],
                       ),
@@ -149,6 +177,9 @@ class DeliverToState extends State<DeliverTo> {
                               border: Border.all(color: Colors.white),
                               borderRadius: BorderRadius.circular(5),
                             ),
+                              child: TextField(
+                                controller: phone,
+                              )
                           )
                         ],
                       ),
@@ -162,15 +193,23 @@ class DeliverToState extends State<DeliverTo> {
               //proceed button
               SizedBox(
                  height: 50,
-                    width: 250,
+                 width: 250,
                 child: ElevatedButton(
                    style: ElevatedButton.styleFrom(
                           onPrimary: Colors.white,
                           primary:Colors.red,
                         ),
                   onPressed: (){
-                
-                }, child: Text("Proceed",style: TextStyle(fontWeight: FontWeight.bold),)),
+                    deliveryProvider.addDeliveryData(context: context, name: name.text, address: address.text, landmark: landmark.text, phone: phone.text, onSuccess: () {
+                      Navigator.pop(context);
+                      // Execute any additional code on success
+                    },
+                    onError: (error) {
+                    print('Failed to add product: $error');
+                    // Execute any additional code on error
+                    },
+                    );
+                  }, child: Text("Proceed",style: TextStyle(fontWeight: FontWeight.bold),)),
               )
             ],
           ),

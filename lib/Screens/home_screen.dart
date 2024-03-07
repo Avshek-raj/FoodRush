@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/providers/product_provider.dart';
+import 'package:foodrush/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../models/location_model.dart';
 import '../providers/cart_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
+import 'deliverto.dart';
 import 'orderDescription_screen.dart';
 
 class TopLiked {
@@ -45,6 +48,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late UserProvider userProvider;
   late ProductProvider productProvider;
   late CartProvider cartProvider;
   TextEditingController searchTextController = TextEditingController();
@@ -55,8 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    UserProvider userProvider = Provider.of(context, listen:false);
     ProductProvider productProvider = Provider.of(context, listen: false);
     CartProvider cartProvider = Provider.of(context, listen: false);
+    userProvider.fetchUserData((){});
     cartProvider.fetchCartData((){});
     productProvider.fetchFoodProductData();
     super.initState();
@@ -64,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of(context);
     productProvider = Provider.of(context);
     cartProvider = Provider.of(context);
     // ProductProvider productProvider = Provider.of(context);
@@ -99,27 +106,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             radius: 35,
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Deliver to",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 15),
-                            ),
-                            Text(
-                              "Street,City",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            Text(
-                              "Nearest landmark",
-                              style: TextStyle(
-                                  color: Colors.black45, fontSize: 12),
-                            ),
-                          ],
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DeliverTo()));
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Deliver to",
+                                style:
+                                TextStyle(color: Colors.black, fontSize: 15),
+                              ),
+                              Text(
+                                userProvider.deliveryInfoModel.address?? "street,city",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
+                              ),
+                              Text(
+                                userProvider.deliveryInfoModel.landmark ?? "Nearest landmark",
+                                style: TextStyle(
+                                    color: Colors.black45, fontSize: 12),
+                              ),
+                            ],
+                          ),
                         ),
                         Spacer(), // Add some spacing between buttons
                         CartBadge(
@@ -143,20 +155,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Row(
                               children: [
-                                menuItem("Pizza", "assets/images/pizza.png"),
+                                menuItem(context, "Pizza", "assets/images/pizza.png"),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem("Burger", "assets/images/burger.png"),
+                                menuItem(context, "Burger", "assets/images/burger.png"),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(
+                                menuItem(context,
                                     "Chicken", "assets/images/chickenfry.png"),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem("Hotdog", "assets/images/hotdog.png"),
+                                menuItem(context, "Hotdog", "assets/images/hotdog.png"),
                               ],
                             ),
                             SizedBox(
@@ -164,20 +176,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Row(
                               children: [
-                                menuItem("Yomari", "assets/images/yomari.png"),
+                                menuItem(context, "Yomari", "assets/images/yomari.png"),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem("Sushi", "assets/images/sushi.png"),
+                                menuItem(context, "Sushi", "assets/images/sushi.png"),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(
+                                menuItem(context,
                                     "Noodles", "assets/images/noodles.png"),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem("All", "assets/images/more.png"),
+                                menuItem(context, "All", "assets/images/more.png"),
                               ],
                             ),
                           ],
