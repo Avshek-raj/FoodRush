@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/Screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
 import '../utils/color_utils.dart';
+import 'mainScreen.dart';
 import 'orderSummay_screen.dart';
 
 class TopLiked {
@@ -18,48 +22,84 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  int itemCount = 1;
+  late CartProvider cartProvider;
+  late int grandTotal = cartProvider.calculateTotalPrice().toInt();
+  late List<int> itemCount = [];
+  List<int> total = [];
+  @override
+  void initState() {
+    CartProvider cartProvider = Provider.of(context, listen: false);
+    cartProvider.fetchCartData((){
+      if (cartProvider.cartList != null && cartProvider.cartList.isNotEmpty) {
+        for (var item in cartProvider.cartList) {
+          itemCount.add(item.cartQuantity ?? 1);
+          total = cartProvider.cartList.map((item) => int.parse(item.cartPrice ?? '0')).toList();
+        }
+      }
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    cartProvider = Provider.of(context);
     return Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    BackButton(
-                      color: Colors.black,
-                    ), //back jane button
-                    Spacer(),
-                    Text(
-                      "Your Order",
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-                    ),
-                    Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        height: 25,
-                        width: 25,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: Icon(
-                          Icons.question_mark,
-                          color: Colors.black,
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
-                  ],
+      body: SafeArea(
+        child: Column(
+          children: [SingleChildScrollView(
+        child: Column(
+        children: [
+          Row(
+          children: [
+          BackButton(
+          color: Colors.black,
+        ), //back jane button
+        Spacer(),
+        Text(
+          "Your Order",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        ),
+        Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Container(
+            height: 25,
+            width: 25,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              border: Border.all(color: Colors.black),
+            ),
+            child: Icon(
+              Icons.question_mark,
+              color: Colors.black,
+            ),
+            alignment: Alignment.center,
+          ),
+        ),
+        ],
+      ),
+      SizedBox(
+        height: 25,
+      ),
+      SizedBox(
+          height: MediaQuery.of(context).size.height *0.55,
+          width: MediaQuery.of(context).size.width * 0.89,
+          child: cartProvider.cartList.length == 0 ?
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Your cart is Empty",
+                    style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 14)
                 ),
-                SizedBox(
-                  height: 25,
-                ),
-                //arko container for jollofRice
+              )
+          :ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: cartProvider.cartList.length,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    0, 0, 0, 5),
+                child:
                 Container(
                   height: 85,
                   width: 370,
@@ -83,234 +123,196 @@ class _CartState extends State<Cart> {
                           child: Padding(
                             padding: const EdgeInsets.all(6),
                             child: Image.network(
-                              "https://allaboutthecooks.co.uk/wp-content/uploads/2023/07/Oscar__R20.jpg",
+                              cartProvider.cartList[index].cartImage.toString(),
                               fit: BoxFit.contain,
                             ),
                           ),
                         ),
                       ),
-                      Text(
-                        "Jollof Rice",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width*0.22,
+                        child: Text(
+                          cartProvider.cartList[index].cartName.toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
                       ),
+
                       Spacer(),
                       //for counter
                       Container(
-                        height: 30,
-                        width: 107,
+                        height: 25,
+                        width: 94, // Adjust the width as needed
                         decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(40),
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
+                              visualDensity: VisualDensity.compact,
+                              padding: EdgeInsets.zero,
                               onPressed: () {
-
-                                if (itemCount > 1) {
-                                  //setState(() {
-                                  itemCount--;
-                                  //});
+                                if (itemCount[index] > 1) {
+                                  setState(() {
+                                    itemCount[index]--;
+                                    grandTotal = grandTotal - int.parse(cartProvider.cartList[index].cartPrice!);
+                                  total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
+                                  });
                                 }
                               },
-                              icon: Icon(Icons.remove), iconSize: 15,
+                              icon: Icon(Icons.remove),
+                              iconSize: 10,
                             ),
                             Text(
-                              itemCount.toString(), // Counter value
+                              itemCount[index].toString(), // Counter value
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 12,
                                 color: Colors.black,
                               ),
                             ),
                             IconButton(
+                              visualDensity: VisualDensity.compact,
+                              padding: EdgeInsets.zero,
                               onPressed: () {
-                                //setState(() {
-                                itemCount++;
-                                //});
+                                setState(() {
+                                itemCount[index]++;
+                                grandTotal = grandTotal + int.parse(cartProvider.cartList[index].cartPrice!);
+                                total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
+                                });
+
                               },
-                              icon: Icon(Icons.add), iconSize: 15,
+                              icon: Icon(Icons.add),
+                              iconSize: 10,
                             ),
                           ],
                         ),
                       ),
+
                       Spacer(),
+
                       Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.only(right: 5, ),
                         child: Column(
                           children: [
-                            Icon(
-                              Icons.close_sharp,
-                              color: Colors.grey,
-                              size: 18,
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: GestureDetector(
+                                onTap: (){
+                                  cartProvider.deleteCartItem(cartProvider.cartList[index].cartId);
+                                  setState(() {
+                                    cartProvider.cartList.removeAt(index);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 40, top: 3),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end, // Align text to the right
+                                    children: [
+                                      Icon(
+                                        Icons.close_sharp,
+                                        color: Colors.grey,
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
                             ),
-                            Text(
-                              "RS:200",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Padding(
+                                padding: EdgeInsets.only(top: 11),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Rs. " + (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]).toString(),
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                  ),
+                                )
                             ),
                           ],
-                        ),
+                        )
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                //container for spicy noodles
-                Container(
-                  height: 85,
-                  width: 370,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: 65,
-                        width: 65,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            // border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          height: 82,
-                          width: 82,
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Image.network(
-                              "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhFFCB6vec1NKDZ08tMd8AmcV0B97LZ5mhU4Q4out9v3D9dDgn-xD9-hprHTOElRr1PcqYoUFxQIt7znx2-tz40sLHTgCxNk62Vj0ieKuiD78U_1_PszT-2n1twQ4z0X7aEmFEWvGhV-bSkwQA1CdQhDIS9AYDEKl-gEFwxJMPmkTxWPKjOfRVS_SU1/s2006/Super_simple_noodle_recipe.jpg",
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        "Spicy Noodles",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 5,
-                        width: 14,
-                      ),
-                      //for counter
-                      Spacer(),
-                      Row(
+              ))),
+            ],
+          ),
+          ),
+          Spacer(),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade200),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            height: MediaQuery.of(context).size.width*0.50,
+            width: MediaQuery.of(context).size.width*0.96,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Total price",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14)),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              // Decrease counter logic
-                            },
-                            icon: Icon(Icons.remove),
+                          Text(
+                            grandTotal.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                           Text(
-                            "1", // Counter value
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color:myColor),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              // Increase counter logic
-                            },
-                            icon: Icon(Icons.add),
+                            "(Delivery fee not included)",
+                            style: TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.close_sharp,
-                              color: Colors.grey,
-                              size: 18,
-                            ),
-                            Text(
-                              "RS:400",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 300),
-                //total price haru halne coontainer
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  height: 258,
-                  width: 378,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Total price",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 14)),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "RS: 600",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 20),
-                                ),
-                                Text(
-                                  "(Delivery fee not included)",
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                SizedBox(
+                  height: 50,
+                  width: 250,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        onPrimary: myColor,
+                        primary: Colors.white,
                       ),
-                      SizedBox(
-                        height: 50,
-                        width: 250,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              onPrimary: myColor,
-                              primary: Colors.white,
-                            ),
-                            onPressed: () {},
-                            child: Text("Add Items")),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                      },
+                      child: Text("Add Items")),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 50,
+                  width: 250,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        onPrimary: Colors.white,
+                        primary:myColor,
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: 50,
-                        width: 250,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              onPrimary: Colors.white,
-                              primary:myColor,
-                            ),
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummary()));
-                            },
-                            child: Text("Checkout")),
-                      ),
-                    ],
-                  ),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummary(
+                          cartList: cartProvider.cartList, itemCount: itemCount, total: total, grandTotal: grandTotal,)
+                        ));
+                      },
+                      child: Text("Checkout")),
                 ),
               ],
             ),
-          ),
-        ));
+          ),],
+        ),
+
+      ));
   }
 }

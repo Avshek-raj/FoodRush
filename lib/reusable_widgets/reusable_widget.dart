@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import '../Screens/cart_screen.dart';
 import '../utils/color_utils.dart';
 
+int? cartItemNumber;
+
 Image logoWidget(String imageName) {
   return Image.asset(
     imageName,
@@ -261,7 +263,9 @@ class CartBadge extends StatelessWidget {
     return IconButton(
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Cart()));
+          context,
+          MaterialPageRoute(builder: (context) => Cart()),
+        );
       },
       alignment: Alignment.center,
       padding: EdgeInsets.all(16),
@@ -295,4 +299,5 @@ class CartBadge extends StatelessWidget {
     );
   }
 }
+
 

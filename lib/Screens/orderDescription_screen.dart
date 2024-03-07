@@ -1,26 +1,25 @@
 import 'dart:core';
-import 'dart:core';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../providers/cart_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import '../utils/color_utils.dart';
 import 'cart_screen.dart';
-import 'home_screen.dart';
 
 class OrderDescription extends StatefulWidget {
   String productName;
   String productImage;
   String productDesc;
   String productPrice;
-  OrderDescription({super.key, required this.productName, required this.productImage, required this.productPrice, required this.productDesc});
+  String productId;
+  OrderDescription({super.key,required this.productId, required this.productName, required this.productImage, required this.productPrice, required this.productDesc});
 
   @override
   State<OrderDescription> createState() => _OrderDescriptionState();
 }
 
 class _OrderDescriptionState extends State<OrderDescription> {
+  CartProvider cartProvider = CartProvider();
   int itemCount = 1;
   int index = 0; // Define the variable 'index'
   List<String> imageList = [
@@ -51,7 +50,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                     ),
                     Spacer(),
                     CartBadge(
-                      itemCount: 3, // Replace this with
+                      itemCount: cartItemNumber ?? 0, // Replace this with
                     ),
                   ],
                 ),
@@ -284,12 +283,21 @@ class _OrderDescriptionState extends State<OrderDescription> {
             Spacer(),
             GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(
-                  productName: widget.productName,
-                  productImage:widget.productImage,
-                  productPrice:int.parse(widget.productPrice),
-                  productDesc:widget.productDesc,
-                )));
+                cartProvider.addReviewCartData(context: context,
+                  cartId: widget.productId,
+                  cartImage: widget.productImage,
+                  cartPrice: widget.productPrice,
+                  cartName: widget.productName,
+                  cartQuantity: itemCount,
+                  onSuccess: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+                    // Execute any additional code on success
+                  },
+                  onError: (error) {
+                    print('Failed to add product: $error');
+                    // Execute any additional code on error
+                  },
+                  );
               },
               child: Container(
                 height: 40,

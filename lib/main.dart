@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/deliverto.dart';
 import 'package:foodrush/Screens/editProfileUser.dart';
 import 'package:foodrush/Screens/home_screen.dart';
+import 'package:foodrush/login/signin_screen.dart';
+import 'package:foodrush/providers/cart_provider.dart';
 import 'package:foodrush/Screens/jpt.dart';
 import 'package:foodrush/Screens/burger.dart';
 import 'package:foodrush/Screens/ourMenu.dart';
@@ -35,19 +37,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProductProvider>(
-      create: (context) => ProductProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ProductProvider>(
+          create: (context) => ProductProvider(),
+        ),
+        ChangeNotifierProvider<CartProvider>(
+          create: (context) => CartProvider(),
+        ),
+      ],
       child: MaterialApp(
         
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-    
           primarySwatch: Colors.red,
-
         ),
-        home: ForgotPw2(),
-      ),
+        home: SignInScreen(),
+      )
     );
   }
 }

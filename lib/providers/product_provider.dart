@@ -14,7 +14,7 @@ class ProductProvider with ChangeNotifier{
     List<ProductModel> newList = [];
     QuerySnapshot value = await FirebaseFirestore.instance.collection("FoodProducts").get();
     value.docs.forEach((element) {
-      productModel = ProductModel(productName: element.get("productName"), productImage: element.get("productImage"), productPrice: element.get("productPrice"), productDesc: element.get("productDescription"));
+      productModel = ProductModel(productId: element.get("productId"),productName: element.get("productName"), productImage: element.get("productImage"), productPrice: element.get("productPrice"), productDesc: element.get("productDescription"));
       newList.add(productModel);
     });
     foodProductList = newList;
