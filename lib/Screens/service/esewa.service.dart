@@ -5,7 +5,7 @@ import 'package:esewa_flutter_sdk/esewa_payment.dart';
 import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodrush/Screens/mainScreen.dart';
+import 'package:foodrush/Screens/Navigation.dart';
 import 'package:foodrush/models/cart_model.dart';
 
 import '../../providers/cart_provider.dart';

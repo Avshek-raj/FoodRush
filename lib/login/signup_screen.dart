@@ -7,7 +7,7 @@ import 'package:foodrush/login/signin_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../Screens/home_screen.dart';
-import '../Screens/mainScreen.dart';
+import '../Screens/Navigation.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

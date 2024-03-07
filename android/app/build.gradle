@@ -25,7 +25,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.foodrush.foodrush"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -39,7 +39,11 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
+<<<<<<< HEAD
         targetSdkVersion flutter.targetSdkVersion
+=======
+        targetSdkVersion 33
+>>>>>>> b94456988656547480e67a65f02066a695674e66
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled = true

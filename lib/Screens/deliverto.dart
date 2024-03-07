@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foodrush/Screens/mainScreen.dart';
+import 'package:foodrush/Screens/Navigation.dart';
 import 'package:foodrush/providers/delivery_provider.dart';
 
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
@@ -106,9 +106,9 @@ class DeliverToState extends State<DeliverTo> {
                             ),
                             child: TextField(
                               controller: name,
-
                             )
                           )
+
                         ],
                       ),
                         SizedBox(

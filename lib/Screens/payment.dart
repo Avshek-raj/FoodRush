@@ -2,10 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/service/esewa.service.dart';
 import 'package:provider/provider.dart';
-
+import 'package:foodrush/Screens/Navigation.dart';
 import '../models/cart_model.dart';
 import '../providers/cart_provider.dart';
-import 'mainScreen.dart';
 
 // import 'package:text_divider/text_divider.dart';
 

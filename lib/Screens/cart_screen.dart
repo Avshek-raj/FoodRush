@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import '../utils/color_utils.dart';
-import 'mainScreen.dart';
+import 'package:foodrush/Screens/Navigation.dart';
 import 'orderSummay_screen.dart';
 
 class TopLiked {

@@ -8,7 +8,7 @@ import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Screens/home_screen.dart';
-import '../Screens/mainScreen.dart';
+import '../Screens/Navigation.dart';
 import '../utils/color_utils.dart';
 
 class SignInScreen extends StatefulWidget {
