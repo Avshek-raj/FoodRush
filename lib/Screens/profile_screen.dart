@@ -44,9 +44,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Divider(),
           Container(
             decoration: BoxDecoration(
-              // border: Border.all(color: Colors.grey),
-              // borderRadius: BorderRadius.circular(10)
-            ),
+                // border: Border.all(color: Colors.grey),
+                // borderRadius: BorderRadius.circular(10)
+                ),
             child: Column(
               children: [
                 SizedBox(height: 30),
@@ -56,7 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     size: 40,
                     color: Colors.white,
                   ),
-                  backgroundColor: Colors.red, // Optional: you can set the background color of the avatar
+                  backgroundColor: Colors
+                      .red, // Optional: you can set the background color of the avatar
                   radius: 40,
                 ),
                 SizedBox(

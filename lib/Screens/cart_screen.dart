@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/Screens/Navigation.dart';
 import 'package:foodrush/Screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import '../utils/color_utils.dart';
+<<<<<<< HEAD
+// import 'mainScreen.dart';
+=======
 import 'package:foodrush/Screens/Navigation.dart';
+>>>>>>> 716a63020ca4e865602149b214e0d4c04cfc709b
 import 'orderSummay_screen.dart';
 
 class TopLiked {

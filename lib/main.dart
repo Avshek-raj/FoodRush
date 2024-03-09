@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/deliverto.dart';
 import 'package:foodrush/Screens/editProfileUser.dart';
 import 'package:foodrush/Screens/home_screen.dart';
+import 'package:foodrush/Screens/profile_screen.dart';
+import 'package:foodrush/Screens/service/changePwService.dart';
+import 'package:foodrush/login/changePwUI.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:foodrush/providers/RestaurantProduct_provider.dart';
 import 'package:foodrush/providers/cart_provider.dart';
-import 'package:foodrush/Screens/jpt.dart';
 import 'package:foodrush/Screens/burger.dart';
 import 'package:foodrush/Screens/ourMenu.dart';
 import 'package:foodrush/login/signup_screen.dart';
@@ -21,12 +23,11 @@ import 'package:foodrush/login/forgotPw1.dart';
 import 'package:foodrush/login/forgotPw2.dart';
 import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/providers/product_provider.dart';
-import 'package:foodrush/restaurantScreens/FormLogin.dart';
+import 'package:foodrush/restaurantScreens/formLoginRestaurant.dart';
 import 'package:foodrush/restaurantScreens/foodAdd.dart';
 import 'package:foodrush/restaurantScreens/profile1.dart';
 import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
 import 'package:foodrush/restaurantScreens/profile2.dart';
-import 'package:foodrush/restaurantScreens/pwChange.dart';
 import 'package:foodrush/restaurantScreens/settings.dart';
 import 'package:foodrush/restaurantScreens/signupRestaurant.dart';
 import 'package:provider/provider.dart';
@@ -73,9 +74,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
+<<<<<<< HEAD
         home: LoginAs(),
       )
+=======
+        home:PwChangeService(),
+      ),
+>>>>>>> 09db00e774670f1947329720244bdf6a2a31caab
     );
   }
 }
-
+//samjhana12 password
