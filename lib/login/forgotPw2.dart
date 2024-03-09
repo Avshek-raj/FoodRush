@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/login/forgotPw1.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:pinput/pinput.dart';
 
@@ -79,10 +80,16 @@ class _ForgotPw2State extends State<ForgotPw2> {
                     "Didn't Receive the Code?",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15,color: Colors.grey.shade400),
                   ),
-                  Text(
-                    "Resend Code",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                  ),
+                  
+                    GestureDetector(
+                      child: Text("Resend" ,style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),),
+                      onTap: () {
+                        sendVerificationCode(context);
+                      },
+                    ),
+                    
+                   
+                 
                 ],
               ),
 
@@ -128,4 +135,7 @@ class _ForgotPw2State extends State<ForgotPw2> {
       print("invalid OTP");
     }
   }
+  
+
+  
 }

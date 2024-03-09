@@ -67,7 +67,7 @@ class _FormLoginRestaurantState extends State<FormLoginRestaurant> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -88,7 +88,7 @@ class _FormLoginRestaurantState extends State<FormLoginRestaurant> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -109,7 +109,7 @@ class _FormLoginRestaurantState extends State<FormLoginRestaurant> {
                   ),
                 ),
                   SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -130,7 +130,7 @@ class _FormLoginRestaurantState extends State<FormLoginRestaurant> {
                   ),
                 ),
                   SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -151,7 +151,7 @@ class _FormLoginRestaurantState extends State<FormLoginRestaurant> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 //upload image of food
                 //FOR DOTTED BORDER

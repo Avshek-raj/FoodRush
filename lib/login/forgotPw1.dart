@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/login/forgotPw2.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
 import 'package:foodrush/utils/color_utils.dart';
-
+ String? phoneNumber= "";
+  String? phoneCode="+977";
 class ForgotPw1 extends StatefulWidget {
   const ForgotPw1({super.key});
 
@@ -12,9 +13,8 @@ class ForgotPw1 extends StatefulWidget {
 }
 
 class _ForgotPw1State extends State<ForgotPw1> {
-    String? phoneCode="+977";
-
-  String? phoneNumber= "";
+   
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +40,7 @@ Text("Enter your phone number to receive your 6 digit OTP code",style: TextStyle
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Ctextform(
-                   keyboardType: TextInputType.phone,
+                   keyboardType: TextInputType.phone, //number matra keyboard ma dekhauna
                   labelText: phoneStr,
                   prefixIcon: Icon(
                     Icons.phone_iphone_rounded,
@@ -53,7 +53,9 @@ Text("Enter your phone number to receive your 6 digit OTP code",style: TextStyle
                       return null;
                     }
                   },
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    phoneNumber=value;
+                  },
                 ),
               ),
               //button
@@ -68,7 +70,8 @@ Text("Enter your phone number to receive your 6 digit OTP code",style: TextStyle
                     onPrimary: Colors.white,
                 primary: Colors.red,
                   ),
-                  onPressed: (){
+                  onPressed: ()  {
+               sendVerificationCode(context);
                 
                 }, child: Text("next")),
               ),  
@@ -76,8 +79,10 @@ Text("Enter your phone number to receive your 6 digit OTP code",style: TextStyle
       ]) ,
     );
   }
-  //submit button thicke paxi yo function run hunxa
-sendVerificationCode()async{
+
+}
+  //submit button thiche paxi yo function run hunxa
+sendVerificationCode(BuildContext context)async{
   await FirebaseAuth.instance.verifyPhoneNumber(
   phoneNumber: phoneCode! + phoneNumber!, //user lai phone no pathauna ko lagi
   verificationCompleted: (PhoneAuthCredential credential) {},
@@ -88,4 +93,3 @@ sendVerificationCode()async{
   codeAutoRetrievalTimeout: (String verificationId) {},
 );
 } 
-}

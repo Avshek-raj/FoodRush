@@ -30,9 +30,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Divider(),
           Container(
             decoration: BoxDecoration(
-              // border: Border.all(color: Colors.grey),
-              // borderRadius: BorderRadius.circular(10)
-            ),
+                // border: Border.all(color: Colors.grey),
+                // borderRadius: BorderRadius.circular(10)
+                ),
             child: Column(
               children: [
                 SizedBox(height: 30),
@@ -42,7 +42,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     size: 40,
                     color: Colors.white,
                   ),
-                  backgroundColor: Colors.red, // Optional: you can set the background color of the avatar
+                  backgroundColor: Colors
+                      .red, // Optional: you can set the background color of the avatar
                   radius: 40,
                 ),
                 SizedBox(
@@ -94,12 +95,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Container(
               child: Column(
                 children: [
-                  profileMenuItem ("My Favourites",Icon(Icons.favorite)),
-
+                  profileMenuItem("My Favourites", Icon(Icons.favorite_outline)),
                   Divider(),
-                  profileMenuItem ("Order History",Icon(Icons.history)),
+                  profileMenuItem("Order History", Icon(Icons.history)),
                   Divider(),
-                  profileMenuItem ("Delivery Address",Icon(Icons.my_location)),
+                  profileMenuItem("Delivery Address", Icon(Icons.my_location)),
+                  Divider(),
+                  profileMenuItem("Change Password", Icon(Icons.key_outlined)),
                   Divider(),
                 ],
               ),
@@ -111,9 +113,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-GestureDetector profileMenuItem(String menuName, Icon icon, ){
+GestureDetector profileMenuItem(
+  String menuName,
+  Icon icon,
+) {
   return GestureDetector(
-    onTap: (){},
+    onTap: () {},
     child: Row(
       children: [
         Container(

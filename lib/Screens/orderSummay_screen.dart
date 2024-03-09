@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Screens/parment.dart';
+import 'package:foodrush/Screens/payment.dart';
+// import '../Screens/parment.dart';
 import '../models/cart_model.dart';
 import '../utils/color_utils.dart';
 

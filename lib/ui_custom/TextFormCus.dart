@@ -26,17 +26,19 @@ class Ctextform extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      // Remove FilteringTextInputFormatter.digitsOnly from inputFormatters
+      inputFormatters: [],
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       onChanged: onChanged,
       obscureText: obscureText,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 16), // Adjust vertical padding
         labelText: labelText,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(40),
         ),
       ),
     );
