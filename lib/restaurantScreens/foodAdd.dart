@@ -16,7 +16,7 @@ class AddFood extends StatefulWidget {
 class _AddFoodState extends State<AddFood> {
   File? file;
   XFile? image;
-  @override
+  @0verride
   Widget build(BuildContext context) {
     return Scaffold(
           body: SafeArea(

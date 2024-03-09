@@ -1,8 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/login/signin_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../models/user_model.dart';
+import '../providers/user_provider.dart';
+import 'deliverto.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+   ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -11,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: Column(children: [
@@ -23,7 +31,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 Spacer(),
-                Icon(Icons.exit_to_app)
+                IconButton(
+                  onPressed: () async{
+                    await FirebaseAuth.instance.signOut().then((value) =>
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen())));
+                  },
+                  icon: Icon(Icons.exit_to_app),)
               ],
             ),
           ),
@@ -50,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 Text(
-                  "Admin",
+                  userProvider.userModel.username?? 'Username',
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
                 ),
                 Row(
@@ -60,7 +73,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text("admin@gmail.com"),
+                    Text(
+                        userProvider.userModel.email??
+                        "Email"
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -95,6 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Container(
               child: Column(
                 children: [
+<<<<<<< HEAD
                   profileMenuItem("My Favourites", Icon(Icons.favorite_outline)),
                   Divider(),
                   profileMenuItem("Order History", Icon(Icons.history)),
@@ -102,6 +119,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   profileMenuItem("Delivery Address", Icon(Icons.my_location)),
                   Divider(),
                   profileMenuItem("Change Password", Icon(Icons.key_outlined)),
+=======
+                  profileMenuItem ("My Favourites",Icon(Icons.favorite), context, ""),
+
+                  Divider(),
+                  profileMenuItem ("Order History",Icon(Icons.history), context, ""),
+                  Divider(),
+                  profileMenuItem ( "Delivery Address",Icon(Icons.my_location), context, DeliverTo()),
+>>>>>>> 716a63020ca4e865602149b214e0d4c04cfc709b
                   Divider(),
                 ],
               ),
@@ -113,12 +138,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+<<<<<<< HEAD
 GestureDetector profileMenuItem(
   String menuName,
   Icon icon,
 ) {
   return GestureDetector(
     onTap: () {},
+=======
+GestureDetector profileMenuItem( String menuName, Icon icon, BuildContext context, function){
+  return GestureDetector(
+    onTap: (){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => function));
+    },
+>>>>>>> 716a63020ca4e865602149b214e0d4c04cfc709b
     child: Row(
       children: [
         Container(

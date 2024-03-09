@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:foodrush/Screens/payment.dart';
 // import '../Screens/parment.dart';
+=======
+import 'package:foodrush/Screens/deliverto.dart';
+import 'package:foodrush/Screens/payment.dart';
+import 'package:foodrush/providers/user_provider.dart';
+import 'package:provider/provider.dart';
+>>>>>>> 716a63020ca4e865602149b214e0d4c04cfc709b
 import '../models/cart_model.dart';
 import '../utils/color_utils.dart';
 
@@ -18,6 +25,7 @@ class OrderSummary extends StatefulWidget {
 class _OrderSummaryState extends State<OrderSummary> {
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       body:
         // SingleChildScrollView(
@@ -234,7 +242,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                   fontWeight: FontWeight.w500, fontSize: 15),
                             ),
                             Text(
-                              "City:",
+                              "Landmark:",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500, fontSize: 15),
                             ),
@@ -245,36 +253,41 @@ class _OrderSummaryState extends State<OrderSummary> {
                             ),
                           ],
                         ),
-                        Spacer(),
 //column for value
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 67),
+                          padding: const EdgeInsets.only(left: 50),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Samjhana Shrestha",
+                                userProvider.deliveryInfoModel.name??"xxxxx xxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Text(
-                                "Ram Mandir, Budol",
+                                userProvider.deliveryInfoModel.address??"xxxxx, xxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Text(
-                                "Banepa",
+                                userProvider.deliveryInfoModel.landmark??"xxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Text(
-                                "9843948325",
+                                userProvider.deliveryInfoModel.phone??"xxxxxxxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                             ],
                           ),
                         ),
+                        Spacer(),
+                        IconButton(
+                            onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> DeliverTo()));
+                        }, icon: Icon(Icons.edit,)
+                        )
                       ],
                     ),
                   ]),
@@ -301,7 +314,9 @@ class _OrderSummaryState extends State<OrderSummary> {
                               onPrimary: myColor,
                               primary: Colors.white,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                             child: Text(
                               "Edit Order",
                               style: TextStyle(
@@ -320,7 +335,13 @@ class _OrderSummaryState extends State<OrderSummary> {
                               primary: myColor,
                             ),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Payment()));
+                              String productName = "";
+                              String productId = "";
+                              for (var item in widget.cartList) {
+                                productName += item.cartName! + ",";
+                                productId += item.cartId! + ",";
+                              }
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Payment( price: widget.grandTotal.toString(), productId: productId, productName: productName,cartList: widget.cartList)));
                             },
                             child: Text(
                               "Proceed to payment",

@@ -26,7 +26,8 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: isLoading ?
+    return Scaffold(body: FirebaseAuth.instance.currentUser != null ? MainScreen()
+        :isLoading ?
     Center(
       child: CircularProgressIndicator(),
     ) :Container(
@@ -85,7 +86,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       controller: _passwordTextController,
                       validator: (value) {
                         if (value!.isEmpty){
-                          return "Please enter the password";
+                          return "Please enter your password";
                         } else if(value.length <=7) {
                           return "The password should be at least 8 characters";
                         }
@@ -120,21 +121,25 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 20,
                     ),
                     loginButton(context, "Login", () {
-                      isLoading = true;
                       String username = _emailTextController.text;
                       String password = _passwordTextController.text;
                       if(_formKey.currentState!.validate()){
+                        setState(() {
+                          isLoading = true;
+                        });
                         if (username == 'admin' && password == 'admin'){
                           Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                         }
                         FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _emailTextController.text,
                             password: _passwordTextController.text).then ((value) {
-                          isLoading = false;
                           print(value.toString());
                           Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                         }).onError((error, stackTrace) {
-                          isLoading =false;
+                          setState(() {
+                            isLoading =false;
+                          });
+
                           showDialog(context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
