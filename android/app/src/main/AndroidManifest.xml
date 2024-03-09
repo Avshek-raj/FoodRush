@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="foodrush"
+        android:label="Foodrush"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/foodrush">
         <activity
             android:name=".MainActivity"
             android:exported="true"

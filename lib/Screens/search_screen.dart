@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:foodrush/providers/search_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
 
 class FoodItem {
   final String name;
   final String description;
-  final double price;
+  final String price;
   final String imageUrl;
 
   FoodItem({
@@ -18,109 +19,137 @@ class FoodItem {
   });
 }
 
-List<FoodItem> dummyFoodItems = [
-  FoodItem(
-    name: "Cheeseburger",
-    description: "Juicy beef patty with melted cheese on a bun",
-    price: 8.99,
-    imageUrl: "https://example.com/cheeseburger.jpg",
-  ),
-  FoodItem(
-    name: "Caesar Salad",
-    description: "Fresh romaine lettuce with Caesar dressing and croutons",
-    price: 8.99,
-    imageUrl: "https://example.com/caesarsalad.jpg",
-  ),
-  FoodItem(
-    name: "Margherita Pizza",
-    description: "Classic pizza with tomato sauce, mozzarella, and basil",
-    price: 10.99,
-    imageUrl: "https://example.com/margheritapizza.jpg",
-  ),
-  FoodItem(
-    name: "Spaghetti Bolognese",
-    description: "Spaghetti with rich meat sauce and parmesan cheese",
-    price: 12.99,
-    imageUrl: "https://example.com/spaghettibolognese.jpg",
-  ),
-  FoodItem(
-    name: "Chocolate Cake",
-    description: "Decadent chocolate cake with frosting",
-    price: 5.99,
-    imageUrl: "https://example.com/chocolatecake.jpg",
-  ),
-  // Add more food items as needed
-];
-
 class Search extends StatefulWidget {
-  const Search({super.key});
+  String? searchValue;
+   Search({Key? key, this.searchValue}) : super(key: key);
 
   @override
-  State<Search> createState() => _SearchState();
+  _SearchState createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
-
+  final TextEditingController _searchController = TextEditingController();
   @override
-  Widget build(BuildContext context) {
-    SearchProvider searchProvider = Provider.of<SearchProvider>(context);
-    return Scaffold(
-        body: FoodMenu()
-    );
+  void initState() {
+    super.initState();
+    _searchController.text = widget.searchValue ?? ''; // Set initial value to searchValue
   }
-}
 
-
-
-class FoodMenu extends StatelessWidget {
-  TextEditingController searchTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Column(
+    CartProvider cartProvider = Provider.of(context);
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+        children: [
+      Row(
       children: [
-        SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      BackButton(
-                        color: Colors.black,
-                      ),
-                      Spacer(),
-                      CartBadge(
-                        itemCount: 3, // Replace this with
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+      BackButton(
+      color: Colors.black,
+      ), //back jane button
+        Spacer(),
+        Text(
+          "Search",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        ),
+        Spacer(),
+        CartBadge(
+          itemCount: cartProvider.cartList.length,)
+        ],
+      ),
+    Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 14.0),
+                labelText: 'Search',
+                hintText: 'Search for food items...',
+                prefixIcon: Icon(Icons.search, color: Colors.red),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide(color: Colors.red,)),
+              ),
+              onChanged: (value) {
+                setState(() {}); // Trigger rebuild with updated search query
+              },
             ),
           ),
-        ),reusableTextField("Search Food, Drink, etc",
-            Icons.search_outlined, "search", searchTextController),
-        Expanded(
-          child: ListView.builder(
-            itemCount: dummyFoodItems.length,
-            itemBuilder: (context, index) {
-              FoodItem foodItem = dummyFoodItems[index];
-              return ListTile(
-                leading: Image.network(
-                  foodItem.imageUrl,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                ),
-                title: Text(foodItem.name),
-                subtitle: Text(foodItem.description),
-                trailing: Text('\$${foodItem.price.toStringAsFixed(2)}'),
-              );
-            },
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('FoodProducts')
+                  .where('productCode', isGreaterThanOrEqualTo: _searchController.text.toLowerCase())
+                  .orderBy('productCode')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+
+                final List<FoodItem> searchResults = snapshot.data!.docs
+                    .map((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+                  return FoodItem(
+                    name: data['productName'],
+                    description: data['productDescription'],
+                    price: data['productPrice'],
+                    imageUrl: data['productImage'],
+                  );
+                })
+                    .where((foodItem) => foodItem.name.toLowerCase().contains(_searchController.text.toLowerCase()))
+                    .toList();
+
+                return ListView.builder(
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, index) {
+                    final FoodItem foodItem = searchResults[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey), // Add border decoration
+                          borderRadius: BorderRadius.circular(40),
+                          color: Colors.white54// Optional: Add border radius
+                        ),
+                        child: ListTile(
+                          leading: Image.network(
+                            foodItem.imageUrl,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
+                          title: Text(
+                            foodItem.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          trailing: Text(
+                            '\Rs. ${foodItem.price}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+      )
     );
   }
 }

@@ -5,11 +5,11 @@ import 'package:foodrush/providers/product_provider.dart';
 import 'package:foodrush/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../Screens/deliverto.dart';
+import '../Screens/orderDescription_screen.dart';
 import '../models/location_model.dart';
 import '../providers/cart_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
-import 'deliverto.dart';
-import 'orderDescription_screen.dart';
 
 class TopLiked {
   String? image, price, name;
@@ -41,14 +41,14 @@ List<TopLiked> data = [
 ];
 bool isLoading = false;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class RestaurantHomeScreen extends StatefulWidget {
+  const RestaurantHomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<RestaurantHomeScreen> createState() => _RestaurantHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
   late UserProvider userProvider;
   late ProductProvider productProvider;
   late CartProvider cartProvider;
@@ -79,19 +79,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: isLoading
           ? Center(
-              child: CircularProgressIndicator(),
-            )
+        child: CircularProgressIndicator(),
+      )
           : Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: SingleChildScrollView(
-                child: Padding(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+              child: Padding(
                 padding: EdgeInsets.fromLTRB(
                     20, MediaQuery.of(context).size.height * 0.02, 20, 0),
                 child: Column(
                   children: [
                     SizedBox(height: 20),
-                     Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(
                                     "View all",
                                     style: TextStyle(
-                                        // color: const Color.fromARGB(255, 55, 151, 59),
+                                      // color: const Color.fromARGB(255, 55, 151, 59),
                                         color: Colors.red,
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
@@ -243,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount:
-                                      productProvider.foodProductList.length,
+                                  productProvider.foodProductList.length,
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         0, 10, 10, 10), //2 ta box ko distance
@@ -260,25 +260,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       index]
                                                           .productId,
                                                       productName:
-                                                          productProvider
-                                                              .foodProductList[
-                                                                  index]
-                                                              .productName,
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productName,
                                                       productImage:
-                                                          productProvider
-                                                              .foodProductList[
-                                                                  index]
-                                                              .productImage,
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productImage,
                                                       productPrice:
-                                                          productProvider
-                                                              .foodProductList[
-                                                                  index]
-                                                              .productPrice,
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productPrice,
                                                       productDesc:
-                                                          productProvider
-                                                              .foodProductList[
-                                                                  index]
-                                                              .productDesc,
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productDesc,
                                                     )));
                                       },
                                       child: Container(
@@ -288,20 +288,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             border: Border.all(
                                                 color: Colors.grey.shade400),
                                             borderRadius:
-                                                BorderRadius.circular(15)),
+                                            BorderRadius.circular(15)),
                                         child: Column(
                                           children: [
                                             ClipRRect(
                                               borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(15),
-                                                topRight: Radius.circular(15),
-                                              ),
-                                              child: SizedBox(
-                                                height: 500,// Set your desired height
-                                                child: Image.network(
-                                                  productProvider.foodProductList[index].productImage!,
-                                                  fit: BoxFit.cover,
-                                                ),
+                                                  topLeft: Radius.circular(15),
+                                                  topRight:
+                                                  Radius.circular(15)),
+                                              child: Image.network(
+                                                productProvider
+                                                    .foodProductList[index]
+                                                    .productImage!,
+                                                fit: BoxFit.fill,
                                               ),
                                             ),
                                             Padding(
@@ -312,12 +311,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Text(
                                                       productProvider
                                                           .foodProductList[
-                                                              index]
+                                                      index]
                                                           .productName!,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                          FontWeight.bold,
                                                           fontSize: 16)),
                                                 ],
                                               ),
@@ -331,12 +330,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     "Rs. " +
                                                         productProvider
                                                             .foodProductList[
-                                                                index]
+                                                        index]
                                                             .productPrice!,
                                                     style: TextStyle(
                                                         color: Colors.red,
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                        FontWeight.bold,
                                                         fontSize: 16),
                                                   ),
                                                 ],
@@ -381,7 +380,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(
                                     "View all",
                                     style: TextStyle(
-                                        // color: const Color.fromARGB(255, 55, 151, 59),
+                                      // color: const Color.fromARGB(255, 55, 151, 59),
                                         color: Colors.red,
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
@@ -408,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           border: Border.all(
                                               color: Colors.grey.shade400),
                                           borderRadius:
-                                              BorderRadius.circular(15)),
+                                          BorderRadius.circular(15)),
                                       child: Column(
                                         children: [
                                           ClipRRect(
@@ -429,14 +428,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                        FontWeight.bold,
                                                         fontSize: 16)),
                                               ],
                                             ),
                                           ),
                                           Padding(
                                             padding:
-                                                const EdgeInsets.only(left: 10),
+                                            const EdgeInsets.only(left: 10),
                                             child: Row(
                                               children: [
                                                 Text(
@@ -444,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   style: TextStyle(
                                                       color: Colors.red,
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                      FontWeight.bold,
                                                       fontSize: 16),
                                                 ),
                                               ],

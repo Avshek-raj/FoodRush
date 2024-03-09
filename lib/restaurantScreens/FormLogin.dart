@@ -39,11 +39,11 @@ class _FormLoginRestaurantState extends State<FormLoginRestaurant> {
                         style:
                             TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                       ),
-            
+
                     ],
                   ),
                 ),
-            
+
                 //yo edit garne field haru
                 SizedBox(
                   height: 5,

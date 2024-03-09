@@ -23,7 +23,7 @@ class _ForgotPw1State extends State<ForgotPw1> {
 // fontSize: 20,
 
 //       ),),),
-      
+
       body:Column(children: [
         SizedBox(height: 50,),
         Text( "Forgot Password?",style: TextStyle(
@@ -59,7 +59,7 @@ Text("Enter your phone number to receive your 6 digit OTP code",style: TextStyle
               //button
                SizedBox(
                 height: 20,
-              ), 
+              ),
               SizedBox(
                 height: 50,
                         width: 250,
@@ -69,9 +69,9 @@ Text("Enter your phone number to receive your 6 digit OTP code",style: TextStyle
                 primary: Colors.red,
                   ),
                   onPressed: (){
-                
+
                 }, child: Text("next")),
-              ),  
+              ),
 
       ]) ,
     );
@@ -87,5 +87,5 @@ sendVerificationCode()async{
   },
   codeAutoRetrievalTimeout: (String verificationId) {},
 );
-} 
+}
 }

@@ -3,13 +3,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/login/phoneLogin_screen.dart';
+import 'package:foodrush/login/restaurantSignup_screen.dart';
 import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Screens/home_screen.dart';
 import '../Screens/Navigation.dart';
+import '../restaurantScreens/navbarRestaurant.dart';
+import '../restaurantScreens/signupRestaurant.dart';
 import '../utils/color_utils.dart';
+import 'loginAs.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -134,7 +138,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             email: _emailTextController.text,
                             password: _passwordTextController.text).then ((value) {
                           print(value.toString());
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => loginAs == "user" ?MainScreen()  : NavbarRestaurant() ));
                         }).onError((error, stackTrace) {
                           setState(() {
                             isLoading =false;
@@ -169,7 +173,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 )
               ),
 
-              signUpOption(),
+              loginAs == "user" ? signUpOption() : SizedBox(),
               const SizedBox(
                 height:20
               ),
@@ -177,8 +181,15 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(
                   height:20
               ),
-             // loginWith(),
-              customLoginButton(context, "Login with Google", "assets/images/google.png", Colors.green,() async{
+              loginAs == "restaurant" ? Text("Don't have an account?") : SizedBox(),
+              loginAs == "restaurant" ? const SizedBox(
+                  height: 20
+              ) : SizedBox(),
+              loginAs == "restaurant" ? loginButton(context, "Register your Restaurant", () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterRestaurantScreen()));
+
+              }) : SizedBox(),
+              loginAs == "user" ? customLoginButton(context, "Login with Google", "assets/images/google.png", Colors.green,() async{
                  GoogleSignIn _googleSignIn = GoogleSignIn();
                 await _googleSignIn.signOut();
                 final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -188,7 +199,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   idToken: gAuth.idToken
                 );
                 FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  MainScreen()));
                 }).onError((error, stackTrace) {
                   showDialog(context: context,
                       builder: (BuildContext context) {
@@ -213,10 +224,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 // }).onError((error, stackTrace) {
                 //   print("Error ${error.toString()}");
                 // });
-              }),
-              customLoginButton(context, "Login with mobile number", "assets/images/phone.png", Colors.green,() async{
+              }) : SizedBox(),
+              loginAs == "user" ? customLoginButton(context, "Login with mobile number", "assets/images/phone.png", Colors.green,() async{
                 Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneLoginScreen()));
-              }),
+              }): SizedBox(),
 
               //customLoginButton(context, "Login with Facebook", "assets/images/facebook.png", Colors.blue, () {
                 // FirebaseAuth.instance

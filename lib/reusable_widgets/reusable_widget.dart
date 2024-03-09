@@ -63,9 +63,7 @@ TextFormField reusableTextFormField(String text, IconData icon, String fieldInpu
       ),
       labelText: text,
       labelStyle: TextStyle(color: Colors.black54),
-      filled: false,
-      floatingLabelBehavior: FloatingLabelBehavior.never,
-      //fillColor: Colors.white.withOpacity(0.3),
+      fillColor: Colors.white.withOpacity(0.3),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(color: Colors.red,)),
@@ -177,7 +175,7 @@ Row dividerOrLine() {
 }
 
 TextField reusableTextField(String text, IconData icon, String fieldInputType,
-    TextEditingController controller) {
+    TextEditingController controller, Function(String)? onSubmittedCallback) {
   bool isPasswordType = fieldInputType == 'password'? true : false;
   return TextField(
       controller: controller,
@@ -205,7 +203,12 @@ TextField reusableTextField(String text, IconData icon, String fieldInputType,
           ? TextInputType.visiblePassword
           : fieldInputType == 'email' ? TextInputType.emailAddress
           : fieldInputType == 'phone' ? TextInputType.phone
-          : TextInputType.text
+          : TextInputType.text,
+      onSubmitted: (value) {
+        if (onSubmittedCallback != null) {
+          onSubmittedCallback(value);
+        }
+      },
   );
 }
 
