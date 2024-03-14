@@ -306,8 +306,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         width: 250,
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              onPrimary: myColor,
-                              primary: Colors.white,
+                              foregroundColor: myColor, backgroundColor: Colors.white,
                             ),
                             onPressed: () {
                               Navigator.pop(context);
@@ -326,8 +325,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         width: 250,
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              onPrimary: Colors.white,
-                              primary: myColor,
+                              foregroundColor: Colors.white, backgroundColor: myColor,
                             ),
                             onPressed: () {
                               String productName = "";
@@ -336,7 +334,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                 productName += item.cartName! + ",";
                                 productId += item.cartId! + ",";
                               }
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Payment( price: widget.grandTotal.toString(), productId: productId, productName: productName,cartList: widget.cartList)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentUi( price: widget.grandTotal.toString(), productId: productId, productName: productName,cartList: widget.cartList)));
                             },
                             child: Text(
                               "Proceed to payment",

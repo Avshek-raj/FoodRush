@@ -100,8 +100,7 @@ class _ForgotPw2State extends State<ForgotPw2> {
                 width: 250,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      onPrimary: Colors.white,
-                      primary: Colors.red,
+                      foregroundColor: Colors.white, backgroundColor: Colors.red,
                     ),
                     onPressed: () {
                       otpVerification();

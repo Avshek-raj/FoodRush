@@ -8,18 +8,18 @@ import '../providers/cart_provider.dart';
 
 // import 'package:text_divider/text_divider.dart';
 
-class Payment extends StatefulWidget {
+class PaymentUi extends StatefulWidget {
   String price;
   String productId;
   String productName;
   List<CartModel> cartList;
-  Payment({super.key, required this.price, required this.productName, required this.productId, required this.cartList});
+  PaymentUi({super.key, required this.price, required this.productName, required this.productId, required this.cartList});
 
   @override
-  State<Payment> createState() => _PaymentState();
+  State<PaymentUi> createState() => _PaymentUiState();
 }
 
-class _PaymentState extends State<Payment> {
+class _PaymentUiState extends State<PaymentUi> {
   late CartProvider cartProvider;
   bool selectedValue = true; // or whatever initial value you want
 
@@ -175,8 +175,7 @@ class _PaymentState extends State<Payment> {
                 width: 250,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    onPrimary: Colors.white,
-                    primary: Colors.red,
+                    foregroundColor: Colors.white, backgroundColor: Colors.red,
                   ),
                   onPressed: () {
                     for (var item in widget.cartList){

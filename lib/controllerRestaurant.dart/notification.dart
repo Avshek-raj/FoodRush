@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 
 class NotifRestaurant extends StatefulWidget {
   const NotifRestaurant({super.key});
@@ -19,9 +20,24 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                 padding: const EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    BackButton(
-                      color: Colors.black,
-                    ),
+
+                   GestureDetector(
+  onTap: () {
+    // Navigate to the desired screen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomeRestaurant()),
+    );
+  },
+  child: BackButton(
+    color: Colors.black,
+    onPressed: () {
+      // Navigate back to the previous page
+      Navigator.pop(context);
+    },
+  ),
+),
+
                     SizedBox(
                       width: 10,
                     ),
@@ -114,8 +130,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.white,
-                            primary: Colors.red,
+                            foregroundColor: Colors.white, backgroundColor: Colors.red,
                           ),
                           onPressed: () {},
                           child: Text("Details")),
@@ -128,8 +143,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.red,
-                            primary: Colors.white,
+                            foregroundColor: Colors.red, backgroundColor: Colors.white,
                           ),
                           onPressed: () {},
                           child: Text("Delete")),
@@ -196,8 +210,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.white,
-                            primary: Colors.red,
+                            foregroundColor: Colors.white, backgroundColor: Colors.red,
                           ),
                           onPressed: () {},
                           child: Text("Details")),
@@ -210,8 +223,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.red,
-                            primary: Colors.white,
+                            foregroundColor: Colors.red, backgroundColor: Colors.white,
                           ),
                           onPressed: () {},
                           child: Text("Delete")),

@@ -141,8 +141,7 @@ class _EditProfileState extends State<EditProfileUser> {
                         width: 250,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    onPrimary: Colors.white,
-                primary: Colors.red,
+                    foregroundColor: Colors.white, backgroundColor: Colors.red,
                   ),
                   onPressed: (){
                 

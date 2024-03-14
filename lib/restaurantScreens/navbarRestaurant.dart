@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/home_screen.dart';
 import 'package:foodrush/Screens/profile_screen.dart';
+import 'package:foodrush/controllerRestaurant.dart/notification.dart';
 import 'package:foodrush/restaurantScreens/foodAdd.dart';
 import 'package:foodrush/restaurantScreens/profile1.dart';
+import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome_screen.dart';
 
 class NavbarRestaurant extends StatefulWidget {
@@ -14,9 +16,9 @@ class NavbarRestaurant extends StatefulWidget {
 
 class _NavbarRestaurantState extends State<NavbarRestaurant> {
   List<Widget> widgetList = [
-    RestaurantHomeScreen(),
+    HomeRestaurant(),
     AddFood(),
-    AddFood(),
+    NotifRestaurant(),
     ProfileRestaurant()
   ];
   int selectedTab = 0;

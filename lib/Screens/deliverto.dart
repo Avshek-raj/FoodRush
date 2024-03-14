@@ -196,8 +196,7 @@ class DeliverToState extends State<DeliverTo> {
                  width: 250,
                 child: ElevatedButton(
                    style: ElevatedButton.styleFrom(
-                          onPrimary: Colors.white,
-                          primary:Colors.red,
+                          foregroundColor: Colors.white, backgroundColor: Colors.red,
                         ),
                   onPressed: (){
                     deliveryProvider.addDeliveryData(context: context, name: name.text, address: address.text, landmark: landmark.text, phone: phone.text, onSuccess: () {
