@@ -12,7 +12,9 @@ class OrderDescription extends StatefulWidget {
   String productDesc;
   String productPrice;
   String productId;
-  OrderDescription({super.key,required this.productId, required this.productName, required this.productImage, required this.productPrice, required this.productDesc});
+  String restaurantName;
+  String restaurantId;
+  OrderDescription({super.key,required this.productId, required this.productName, required this.productImage, required this.productPrice, required this.productDesc, required this.restaurantName, required this.restaurantId});
 
   @override
   State<OrderDescription> createState() => _OrderDescriptionState();
@@ -289,6 +291,8 @@ class _OrderDescriptionState extends State<OrderDescription> {
                   cartPrice: widget.productPrice,
                   cartName: widget.productName,
                   cartQuantity: itemCount,
+                  restaurantName: widget.restaurantName,
+                  restaurantId: widget.restaurantId,
                   onSuccess: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
                     // Execute any additional code on success

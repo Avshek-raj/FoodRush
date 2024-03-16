@@ -109,20 +109,21 @@ Padding(
         SizedBox(width: 15,),
         Text("LogOut",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),),
 Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(right:19,top: 10),
+          child: Row(
+            children: [
+              Spacer(),
+              Icon(Icons.arrow_forward_ios_rounded,color: Colors.red,)
+            ],
+          ),
+        )
        // Replace 'suffix_icon' with your desired suffix icon
       ],
     ),
   ),
 ),
-Padding(
-  padding: const EdgeInsets.only(right:19,top: 10),
-  child: Row(
-    children: [
-      Spacer(),
-      Icon(Icons.arrow_forward_ios_rounded,color: Colors.red,)
-    ],
-  ),
-)
+
       ],
     ),
   ),

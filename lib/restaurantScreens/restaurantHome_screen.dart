@@ -198,6 +198,7 @@
 //                           ],
 //                         )),
 
+<<<<<<< HEAD
 //                     //Top liked container
 //                     Container(
 //                       height: 210,
@@ -466,5 +467,283 @@
 //     );
 //   }
 // }
+=======
+                    //Top liked container
+                    Container(
+                      height: 210,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        // border: Border.all(color: Colors.grey.shade400)
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Top Liked",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "View all",
+                                    style: TextStyle(
+                                      // color: const Color.fromARGB(255, 55, 151, 59),
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                height: 180,
+                                width: MediaQuery.of(context).size.width * 0.89,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                  productProvider.foodProductList.length,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 10, 10, 10), //2 ta box ko distance
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OrderDescription(
+                                                      productId:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productId,
+                                                      productName:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productName,
+                                                      productImage:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productImage,
+                                                      productPrice:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productPrice,
+                                                      productDesc:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productDesc,
+                                                      restaurantName: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantName,
+                                                      restaurantId: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantId,
+                                                    )));
+                                      },
+                                      child: Container(
+                                        height: 150,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.grey.shade400),
+                                            borderRadius:
+                                            BorderRadius.circular(15)),
+                                        child: Column(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(15),
+                                                  topRight:
+                                                  Radius.circular(15)),
+                                              child: Image.network(
+                                                productProvider
+                                                    .foodProductList[index]
+                                                    .productImage!,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10, left: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productName!,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: 16)),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Rs. " +
+                                                        productProvider
+                                                            .foodProductList[
+                                                        index]
+                                                            .productPrice!,
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 210,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        // border: Border.all(color: Colors.grey.shade400)
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Near you",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "View all",
+                                    style: TextStyle(
+                                      // color: const Color.fromARGB(255, 55, 151, 59),
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                height: 180,
+                                width: MediaQuery.of(context).size.width * 0.89,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 10, 10, 10), //2 ta box ko distance
+                                    child: Container(
+                                      height: 150,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade400),
+                                          borderRadius:
+                                          BorderRadius.circular(15)),
+                                      child: Column(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(15),
+                                                topRight: Radius.circular(15)),
+                                            child: Image.asset(
+                                              data[index].image!,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10, left: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(data[index].name!,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        fontSize: 16)),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(left: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  data[index].price!,
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ))),
+    );
+  }
+}
+>>>>>>> 968e0b56760f4f3e8d17c6566e69caf34cf46989
 
 

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 
-class NotifRestaurant extends StatefulWidget {
-  const NotifRestaurant({super.key});
+class NotifyRestaurant extends StatefulWidget {
+  const NotifyRestaurant({super.key});
 
   @override
-  State<NotifRestaurant> createState() => _NotifRestaurantState();
+  State<NotifyRestaurant> createState() => _NotifyRestaurantState();
 }
 
-class _NotifRestaurantState extends State<NotifRestaurant> {
+class _NotifyRestaurantState extends State<NotifyRestaurant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

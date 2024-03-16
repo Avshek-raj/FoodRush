@@ -4,5 +4,7 @@ class CartModel{
   String? cartPrice;
   String? cartName;
   int? cartQuantity;
-  CartModel({this.cartId,this.cartImage,this.cartPrice,this.cartName,this.cartQuantity});
+  String? restaurantName;
+  String? restaurantId;
+  CartModel({this.cartId,this.cartImage,this.cartPrice,this.cartName,this.cartQuantity, this.restaurantName, this.restaurantId});
 }

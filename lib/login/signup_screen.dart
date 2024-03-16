@@ -1,13 +1,18 @@
+import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/models/user_model.dart';
 import 'package:foodrush/providers/user_provider.dart';
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_admin/firebase_admin.dart';
+
 
 import '../Screens/home_screen.dart';
 import '../Screens/Navigation.dart';
+import 'emailVerification_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -84,9 +89,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   setState(() {
                     isLoading = true;
                   });
+                  UserModel userModel = UserModel(
+                    username: _usernameTextController.text,
+                    email: _emailTextController.text,
+                    phone: _mobileNumTextController.text,
+                    address: _addressTextController.text,
+                    password: _passwordTextController.text,
+                    role: "User"
+                  );
                   FirebaseAuth.instance.createUserWithEmailAndPassword(
                       email: _emailTextController.text,
                       password: _passwordTextController.text).then ((value) {
+                    value.user?.sendEmailVerification();
                     userProvider.addUserDetails(
                         context: context,
                         username: _usernameTextController.text,
@@ -94,14 +108,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         phone: _mobileNumTextController.text,
                         address: _addressTextController.text,
                         password: _passwordTextController.text,
+                        role: "User",
                         onSuccess: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => MainScreen()));
-                        },
-                        onError: (e){
                           setState(() {
                             isLoading = false;
                           });
+                          showDialog(context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Message"),
+                                  content: Text("Verification link is sent to your email. Please verify before login"),
+                                  actions: [
+                                    TextButton(onPressed: (){
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => SignInScreen()));
+                                    }, child: Text('OK'))
+                                  ],
+                                );
+                              });
+                        },
+                        onError: (e){
                           showDialog(context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
@@ -115,22 +141,113 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 );
                               });
                         });
-                  }).onError((error, stackTrace) {
-                    setState(() {
-                      isLoading = false;
-                    });showDialog(context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Error"),
-                            content: Text(error.toString()),
-                            actions: [
-                              TextButton(onPressed: (){
-                                Navigator.of(context).pop();
-                              }, child: Text('OK'))
-                            ],
-                          );
+                  }).onError((error, stackTrace) async {
+                    try{
+                      if (error.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account.") {
+
+                        await FirebaseAdmin.instance.initializeApp(
+                          AppOptions(
+                            credential: FirebaseAdmin.instance.certFromPath("firebase-adminsdk-obpyz@foodrush-28b7a.iam.gserviceaccount.com"),
+                          ),
+                        );
+                        var userRecord = await FirebaseAdmin.instance.app()?.auth().getUserByEmail(_emailTextController.text);
+                        await FirebaseAdmin.instance.app()?.auth().deleteUser(userRecord!.uid);
+                        await FirebaseAuth.instance.currentUser!.delete();
+                        FirebaseAuth.instance.createUserWithEmailAndPassword(
+                            email: _emailTextController.text,
+                            password: _passwordTextController.text).then ((value) {
+                          value.user?.sendEmailVerification();
+                          userProvider.addUserDetails(
+                              context: context,
+                              username: _usernameTextController.text,
+                              email: _emailTextController.text,
+                              phone: _mobileNumTextController.text,
+                              address: _addressTextController.text,
+                              password: _passwordTextController.text,
+                              role: "User",
+                              onSuccess: (){
+                                showDialog(context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Message"),
+                                        content: Text("Verification link is sent to your email. Please verify before login"),
+                                        actions: [
+                                          TextButton(onPressed: (){
+                                            Navigator.push(context,
+                                                MaterialPageRoute(builder: (context) => SignInScreen()));
+                                          }, child: Text('OK'))
+                                        ],
+                                      );
+                                    });
+                              },
+                              onError: (e){
+                                showDialog(context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Error"),
+                                        content: Text(e.toString()),
+                                        actions: [
+                                          TextButton(onPressed: (){
+                                            Navigator.of(context).pop();
+                                          }, child: Text('OK'))
+                                        ],
+                                      );
+                                    });
+                              });
+                        }).onError((error, stackTrace) async {
+                          setState(() {
+                            isLoading = false;
+                          });showDialog(context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(error.toString()),
+                                  actions: [
+                                    TextButton(onPressed: (){
+                                      Navigator.of(context).pop();
+                                    }, child: Text('OK'))
+                                  ],
+                                );
+                              });
+                          print("Error ${error.toString()}");
                         });
-                    print("Error ${error.toString()}");
+                      } else {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        showDialog(context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error"),
+                                content: Text(error.toString()),
+                                actions: [
+                                  TextButton(onPressed: (){
+                                    Navigator.of(context).pop();
+                                  }, child: Text('OK'))
+                                ],
+                              );
+                            });
+                      }
+
+                      print("Error ${error.toString()}");
+                    }catch(e) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      showDialog(context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(onPressed: (){
+                                  Navigator.of(context).pop();
+                                }, child: Text('OK'))
+                              ],
+                            );
+                          });
+                    }
+
                   });
                 }
                 //)

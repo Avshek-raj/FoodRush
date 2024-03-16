@@ -6,8 +6,9 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import '../utils/color_utils.dart';
+
 import 'package:foodrush/Screens/Navigation.dart';
-import 'orderSummay_screen.dart';
+import 'orderSummary_screen.dart';
 
 class TopLiked {
   String? image, price, name;
@@ -24,7 +25,7 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   late CartProvider cartProvider;
-  late int grandTotal = cartProvider.calculateTotalPrice().toInt();
+  late int grandTotal = 0;
   late List<int> itemCount = [];
   List<int> total = [];
   @override
@@ -32,6 +33,7 @@ class _CartState extends State<Cart> {
     CartProvider cartProvider = Provider.of(context, listen: false);
     cartProvider.fetchCartData((){
       if (cartProvider.cartList != null && cartProvider.cartList.isNotEmpty) {
+        grandTotal = cartProvider.calculateTotalPrice().toInt();
         for (var item in cartProvider.cartList) {
           itemCount.add(item.cartQuantity ?? 1);
           total = cartProvider.cartList.map((item) => int.parse(item.cartPrice ?? '0')).toList();
@@ -102,104 +104,26 @@ class _CartState extends State<Cart> {
                     0, 0, 0, 5),
                 child:
                 Container(
-                  height: 85,
                   width: 370,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Row(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min, // Set the main axis size to min
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 65,
-                        width: 65,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            // border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6, bottom: 0),
+                            child: Text(cartProvider.cartList[index].restaurantName?? "", style: TextStyle(fontWeight: FontWeight.bold),),
                           ),
-                          height: 82,
-                          width: 82,
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Image.network(
-                              cartProvider.cartList[index].cartImage.toString(),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width*0.22,
-                        child: Text(
-                          cartProvider.cartList[index].cartName.toString(),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                      ),
-
-                      Spacer(),
-                      //for counter
-                      Container(
-                        height: 25,
-                        width: 94, // Adjust the width as needed
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              visualDensity: VisualDensity.compact,
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                if (itemCount[index] > 1) {
-                                  setState(() {
-                                    itemCount[index]--;
-                                    grandTotal = grandTotal - int.parse(cartProvider.cartList[index].cartPrice!);
-                                  total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
-                                  });
-                                }
-                              },
-                              icon: Icon(Icons.remove),
-                              iconSize: 10,
-                            ),
-                            Text(
-                              itemCount[index].toString(), // Counter value
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
-                            ),
-                            IconButton(
-                              visualDensity: VisualDensity.compact,
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                setState(() {
-                                itemCount[index]++;
-                                grandTotal = grandTotal + int.parse(cartProvider.cartList[index].cartPrice!);
-                                total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
-                                });
-
-                              },
-                              icon: Icon(Icons.add),
-                              iconSize: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Spacer(),
-
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5, ),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: GestureDetector(
+                              Spacer(),
+                              GestureDetector(
                                 onTap: (){
                                   cartProvider.deleteCartItem(cartProvider.cartList[index].cartId);
                                   setState(() {
@@ -207,7 +131,7 @@ class _CartState extends State<Cart> {
                                   });
                                 },
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 40, top: 3),
+                                  padding: EdgeInsets.only( top: 3, right: 3),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end, // Align text to the right
                                     children: [
@@ -220,19 +144,113 @@ class _CartState extends State<Cart> {
                                   ),
                                 ),
                               )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: 65,
+                            width: 65,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                // border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              height: 82,
+                              width: 82,
+                              child: Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: Image.network(
+                                  cartProvider.cartList[index].cartImage.toString(),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             ),
-                            Padding(
-                                padding: EdgeInsets.only(top: 11),
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Rs. " + (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]).toString(),
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.22,
+                            child: Text(
+                              cartProvider.cartList[index].cartName.toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                          ),
+
+                          Spacer(),
+                          //for counter
+                          Container(
+                            height: 25,
+                            width: 94, // Adjust the width as needed
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  visualDensity: VisualDensity.compact,
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    if (itemCount[index] > 1) {
+                                      setState(() {
+                                        itemCount[index]--;
+                                        grandTotal = grandTotal - int.parse(cartProvider.cartList[index].cartPrice!);
+                                      total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.remove),
+                                  iconSize: 10,
+                                ),
+                                Text(
+                                  itemCount[index].toString(), // Counter value
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: Colors.black,
                                   ),
-                                )
+                                ),
+                                IconButton(
+                                  visualDensity: VisualDensity.compact,
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    setState(() {
+                                    itemCount[index]++;
+                                    grandTotal = grandTotal + int.parse(cartProvider.cartList[index].cartPrice!);
+                                    total[index] = (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]);
+                                    });
+
+                                  },
+                                  icon: Icon(Icons.add),
+                                  iconSize: 10,
+                                ),
+                              ],
                             ),
-                          ],
-                        )
+                          ),
+
+                          Spacer(),
+
+                          // Padding(
+                          //   padding: const EdgeInsets.only(right: 5, ),
+                          //   child: Column(
+                          //     children: [
+
+                                Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Rs. " + (int.parse(cartProvider.cartList[index].cartPrice!)*itemCount[index]).toString(),
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                      ),
+                                    )
+                                ),
+                          //     ],
+                          //   )
+                          // ),
+                        ],
                       ),
                     ],
                   ),

@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 
 import '../models/location_model.dart';
 import '../providers/cart_provider.dart';
+import '../providers/message_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import 'deliverto.dart';
+import 'map.dart';
 import 'orderDescription_screen.dart';
 
 class TopLiked {
@@ -49,6 +51,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late MessageProvider messageProvider;
   late UserProvider userProvider;
   late ProductProvider productProvider;
   late CartProvider cartProvider;
@@ -66,6 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
     userProvider.fetchUserData((){});
     cartProvider.fetchCartData((){});
     productProvider.fetchFoodProductData();
+    MessageProvider messageProvider = Provider.of(context, listen:false);
+    messageProvider.setupFirebaseMessaging(context);
     super.initState();
   }
 
@@ -81,328 +86,214 @@ class _HomeScreenState extends State<HomeScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : SafeArea(
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: SingleChildScrollView(
-                  child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      20, MediaQuery.of(context).size.height * 0.02, 20, 0),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20),
-                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 18, 18, 18),
-                            child: CircleAvatar(
-                              child: Icon(
-                                Icons.person_outline,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              backgroundColor: Colors
-                                  .red, // Optional: you can set the background color of the avatar
-                              radius: 35,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DeliverTo()));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Deliver to",
-                                  style:
-                                  TextStyle(color: Colors.black, fontSize: 15),
-                                ),
-                                Text(
-                                  userProvider.deliveryInfoModel.address?? "street,city",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                Text(
-                                  userProvider.deliveryInfoModel.landmark ?? "Nearest landmark",
-                                  style: TextStyle(
-                                      color: Colors.black45, fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Spacer(), // Add some spacing between buttons
-                          CartBadge(
-                            itemCount: cartProvider.cartList.length,)
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      reusableTextField("Search Food, Drink, etc",
-                          Icons.search_outlined, "search", searchTextController, (value){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Search(searchValue: value,)));
-                          }),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                          height: 200,
-                          width: 350,
-                          decoration: BoxDecoration(
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                    20, MediaQuery.of(context).size.height * 0.02, 20, 0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 18, 18, 18),
+                          child: CircleAvatar(
+                            child: Icon(
+                              Icons.person_outline,
+                              size: 30,
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(20)),
+                            ),
+                            backgroundColor: Colors
+                                .red, // Optional: you can set the background color of the avatar
+                            radius: 35,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DeliverTo()));
+                          },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  menuItem(context, "Pizza", "assets/images/pizza.png"),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  menuItem(context, "Burger", "assets/images/burger.png"),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  menuItem(context,
-                                      "Chicken", "assets/images/chickenfry.png"),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  menuItem(context, "Hotdog", "assets/images/hotdog.png"),
-                                ],
+                              Text(
+                                "Deliver to",
+                                style:
+                                TextStyle(color: Colors.black, fontSize: 15),
                               ),
-                              SizedBox(
-                                height: 15,
+                              Text(
+                                userProvider.deliveryInfoModel.address?? "street,city",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
                               ),
-                              Row(
-                                children: [
-                                  menuItem(context, "Yomari", "assets/images/yomari.png"),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  menuItem(context, "Sushi", "assets/images/sushi.png"),
-                                  SizedBox(
-
-                                    width: 15,
-                                  ),
-                                  menuItem(context,
-                                      "Noodles", "assets/images/noodles.png"),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  menuItem(context, "All", "assets/images/more.png"),
-                                ],
+                              Text(
+                                userProvider.deliveryInfoModel.landmark ?? "Nearest landmark",
+                                style: TextStyle(
+                                    color: Colors.black45, fontSize: 12),
                               ),
                             ],
-                          )),
-                  
-                      //Top liked container
-                      Container(
-                        height: 210,
+                          ),
+                        ),
+                        Spacer(), // Add some spacing between buttons
+                        CartBadge(
+                          itemCount: cartProvider.cartList.length,)
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    reusableTextField("Search Food, Drink, etc",
+                        Icons.search_outlined, "search", searchTextController, (value){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen()));
+                        }),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                        height: 200,
                         width: 350,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          // border: Border.all(color: Colors.grey.shade400)
-                        ),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Top Liked",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Text(
-                                      "View all",
-                                      style: TextStyle(
-                                          // color: const Color.fromARGB(255, 55, 151, 59),
-                                          color: Colors.red,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            Row(
+                              children: [
+                                menuItem(context, "Pizza", "assets/images/pizza.png"),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                menuItem(context, "Burger", "assets/images/burger.png"),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                menuItem(context,
+                                    "Chicken", "assets/images/chickenfry.png"),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                menuItem(context, "Hotdog", "assets/images/hotdog.png"),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 15,
                             ),
                             Row(
                               children: [
+                                menuItem(context, "Yomari", "assets/images/yomari.png"),
                                 SizedBox(
-                                  height: 180,
-                                  width: MediaQuery.of(context).size.width * 0.89,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount:
-                                        productProvider.foodProductList.length,
-                                    itemBuilder: (context, index) => Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 10, 10), //2 ta box ko distance
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrderDescription(
-                                                        productId:
-                                                        productProvider
-                                                            .foodProductList[
-                                                        index]
-                                                            .productId,
-                                                        productName:
-                                                            productProvider
-                                                                .foodProductList[
-                                                                    index]
-                                                                .productName,
-                                                        productImage:
-                                                            productProvider
-                                                                .foodProductList[
-                                                                    index]
-                                                                .productImage,
-                                                        productPrice:
-                                                            productProvider
-                                                                .foodProductList[
-                                                                    index]
-                                                                .productPrice,
-                                                        productDesc:
-                                                            productProvider
-                                                                .foodProductList[
-                                                                    index]
-                                                                .productDesc,
-                                                      )));
-                                        },
-                                        child: Container(
-                                          height: 150,
-                                          width: 150,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey.shade400),
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          child: Column(
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  topRight: Radius.circular(15),
-                                                ),
-                                                child: SizedBox(
-                                                  height: 500,// Set your desired height
-                                                  child: Image.network(
-                                                    productProvider.foodProductList[index].productImage!,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10, left: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                        productProvider
-                                                            .foodProductList[
-                                                                index]
-                                                            .productName!,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 16)),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      "Rs. " +
-                                                          productProvider
-                                                              .foodProductList[
-                                                                  index]
-                                                              .productPrice!,
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
+                                  width: 15,
+                                ),
+                                menuItem(context, "Sushi", "assets/images/sushi.png"),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                menuItem(context,
+                                    "Noodles", "assets/images/noodles.png"),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                menuItem(context, "All", "assets/images/more.png"),
                               ],
                             ),
                           ],
-                        ),
+                        )),
+
+                    //Top liked container
+                    Container(
+                      height: 210,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        // border: Border.all(color: Colors.grey.shade400)
                       ),
-                      Container(
-                        height: 210,
-                        width: 350,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          // border: Border.all(color: Colors.grey.shade400)
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Near you",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Text(
-                                      "View all",
-                                      style: TextStyle(
-                                          // color: const Color.fromARGB(255, 55, 151, 59),
-                                          color: Colors.red,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Row(
                               children: [
-                                SizedBox(
-                                  height: 180,
-                                  width: MediaQuery.of(context).size.width * 0.89,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: data.length,
-                                    itemBuilder: (context, index) => Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 10, 10), //2 ta box ko distance
+                                Text(
+                                  "Top Liked",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "View all",
+                                    style: TextStyle(
+                                        // color: const Color.fromARGB(255, 55, 151, 59),
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                height: 180,
+                                width: MediaQuery.of(context).size.width * 0.89,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                      productProvider.foodProductList.length,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 10, 10, 10), //2 ta box ko distance
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OrderDescription(
+                                                      productId:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productId,
+                                                      productName:
+                                                          productProvider
+                                                              .foodProductList[
+                                                                  index]
+                                                              .productName,
+                                                      productImage:
+                                                          productProvider
+                                                              .foodProductList[
+                                                                  index]
+                                                              .productImage,
+                                                      productPrice:
+                                                          productProvider
+                                                              .foodProductList[
+                                                                  index]
+                                                              .productPrice,
+                                                      productDesc:
+                                                          productProvider
+                                                              .foodProductList[
+                                                                  index]
+                                                              .productDesc,
+                                                      restaurantName: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantName,
+                                                      restaurantId: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantId,
+                                                    )));
+                                      },
                                       child: Container(
                                         height: 150,
                                         width: 150,
@@ -415,11 +306,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             ClipRRect(
                                               borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  topRight: Radius.circular(15)),
-                                              child: Image.asset(
-                                                data[index].image!,
-                                                fit: BoxFit.fill,
+                                                topLeft: Radius.circular(15),
+                                                topRight: Radius.circular(15),
+                                              ),
+                                              child: SizedBox(
+                                                height: 100,// Set your desired height
+                                                child: Image.network(
+                                                  productProvider.foodProductList[index].productImage!,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
                                             Padding(
@@ -427,7 +322,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   top: 10, left: 10),
                                               child: Row(
                                                 children: [
-                                                  Text(data[index].name!,
+                                                  Text(
+                                                      productProvider
+                                                          .foodProductList[
+                                                              index]
+                                                          .productName!,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontWeight:
@@ -437,12 +336,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.only(left: 10),
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    data[index].price!,
+                                                    "Rs. " +
+                                                        productProvider
+                                                            .foodProductList[
+                                                                index]
+                                                            .productPrice!,
                                                     style: TextStyle(
                                                         color: Colors.red,
                                                         fontWeight:
@@ -457,16 +360,123 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 210,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        // border: Border.all(color: Colors.grey.shade400)
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Near you",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "View all",
+                                    style: TextStyle(
+                                        // color: const Color.fromARGB(255, 55, 151, 59),
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                height: 180,
+                                width: MediaQuery.of(context).size.width * 0.89,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 10, 10, 10), //2 ta box ko distance
+                                    child: Container(
+                                      height: 150,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade400),
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Column(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(15),
+                                                topRight: Radius.circular(15)),
+                                            child: Image.asset(
+                                              data[index].image!,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10, left: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(data[index].name!,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16)),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  data[index].price!,
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ))),
-          ),
+                    ),
+                  ],
+                ),
+              ))),
     );
   }
 }

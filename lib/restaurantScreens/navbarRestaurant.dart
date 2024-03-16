@@ -6,6 +6,7 @@ import 'package:foodrush/restaurantScreens/foodAdd.dart';
 import 'package:foodrush/restaurantScreens/restaurantProfile.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome_screen.dart';
+import 'package:foodrush/restaurantScreens/settings.dart';
 
 class NavbarRestaurant extends StatefulWidget {
   const NavbarRestaurant({super.key});
@@ -18,7 +19,7 @@ class _NavbarRestaurantState extends State<NavbarRestaurant> {
   List<Widget> widgetList = [
     HomeRestaurant(),
     AddFood(),
-    NotifRestaurant(),
+    NotifyRestaurant(),
     ProfileRestaurant()
   ];
   int selectedTab = 0;

@@ -33,7 +33,7 @@ class _LoginAsState extends State<LoginAs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FirebaseAuth.instance.currentUser != null ? loginAs == 'user' ? MainScreen(): NavbarRestaurant() :Stack(
+      body: FirebaseAuth.instance.currentUser != null ?  MainScreen() :Stack(
         children: [
           // Background image
           Container(
