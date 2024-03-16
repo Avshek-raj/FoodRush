@@ -114,8 +114,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.white,
-                            primary: Colors.red,
+                            foregroundColor: Colors.white, backgroundColor: Colors.red,
                           ),
                           onPressed: () {},
                           child: Text("Details")),
@@ -128,8 +127,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.red,
-                            primary: Colors.white,
+                            foregroundColor: Colors.red, backgroundColor: Colors.white,
                           ),
                           onPressed: () {},
                           child: Text("Delete")),
@@ -196,8 +194,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.white,
-                            primary: Colors.red,
+                            foregroundColor: Colors.white, backgroundColor: Colors.red,
                           ),
                           onPressed: () {},
                           child: Text("Details")),
@@ -210,8 +207,7 @@ class _NotifRestaurantState extends State<NotifRestaurant> {
                       width: 100,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.red,
-                            primary: Colors.white,
+                            foregroundColor: Colors.red, backgroundColor: Colors.white,
                           ),
                           onPressed: () {},
                           child: Text("Delete")),

@@ -14,6 +14,8 @@ class CartProvider with ChangeNotifier {
     String? cartPrice,
     String? cartName,
     int? cartQuantity,
+    String? restaurantName,
+    String? restaurantId,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -28,7 +30,9 @@ class CartProvider with ChangeNotifier {
         "CartName": cartName,
         "CartImage": cartImage,
         "CartPrice": cartPrice,
-        "CartQuantity": cartQuantity
+        "CartQuantity": cartQuantity,
+        "RestaurantName": restaurantName,
+        "RestaurantId": restaurantId
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Product added successfully'),
@@ -56,7 +60,7 @@ class CartProvider with ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .collection("CartItems").get();
     value.docs.forEach((element) {
-      cartModel = CartModel(cartId: element.get("CartId"),cartName: element.get("CartName"), cartImage: element.get("CartImage"), cartPrice: element.get("CartPrice"), cartQuantity: element.get("CartQuantity"));
+      cartModel = CartModel(cartId: element.get("CartId"),cartName: element.get("CartName"), cartImage: element.get("CartImage"), cartPrice: element.get("CartPrice"), cartQuantity: element.get("CartQuantity"), restaurantId: element.get("RestaurantId"), restaurantName: element.get("RestaurantName"));
       newList.add(cartModel);
     });
     cartList = newList;

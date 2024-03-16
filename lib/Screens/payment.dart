@@ -1,6 +1,9 @@
 // import 'package:firebase1/util/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/service/esewa.service.dart';
+import 'package:foodrush/providers/message_provider.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
+import 'package:foodrush/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:foodrush/Screens/Navigation.dart';
 import '../models/cart_model.dart';
@@ -20,12 +23,18 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
+  late MessageProvider messageProvider;
   late CartProvider cartProvider;
+  late UserProvider userProvider;
+  late RestaurantProvider restaurantProvider;
   bool selectedValue = true; // or whatever initial value you want
 
   @override
   Widget build(BuildContext context) {
     cartProvider = Provider.of(context);
+    messageProvider = Provider.of(context);
+    userProvider = Provider.of(context);
+    restaurantProvider =Provider.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -175,51 +184,60 @@ class _PaymentState extends State<Payment> {
                 width: 250,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    onPrimary: Colors.white,
-                    primary: Colors.red,
+                    foregroundColor: Colors.white, backgroundColor: Colors.red,
                   ),
-                  onPressed: () {
+                  onPressed: () async{
+                    int count = 0;
                     for (var item in widget.cartList){
-                     cartProvider.deleteCartItem(item.cartId);
-                    }
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Center(child: Text("Order Successful")),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min, // To minimize the dialog size
-                            children: [
-                              Image.asset(
-                                'assets/images/success.png',
-                                fit: BoxFit.fill,// Provide the correct asset path here
-                                width: 80, // Adjust the width as needed
-                                height: 80, // Adjust the height as needed
+                     //cartProvider.deleteCartItem(item.cartId);
+                      restaurantProvider.fetchRestaurantDetails(item.restaurantId, (result){
+                        messageProvider.sendNotificationToUser(result.token,
+                            "Order received from ${userProvider.userModel.username}",
+                            "${item.cartQuantity} ${item.cartName} has been order");
+                      });
+                      if (count == widget.cartList.length){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Center(child: Text("Order Successful")),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min, // To minimize the dialog size
+                                children: [
+                                  Image.asset(
+                                    'assets/images/success.png',
+                                    fit: BoxFit.fill,// Provide the correct asset path here
+                                    width: 80, // Adjust the width as needed
+                                    height: 80, // Adjust the height as needed
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    "Your food has been ordered and will be delivered shortly by the restaurant.",
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Center(
+                                    child: Text(
+                                      "Thank you for ordering with us.",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 8),
-                              Text(
-                                  "Your food has been ordered and will be delivered shortly by the restaurant.",
-                              ),
-                              SizedBox(height: 10,),
-                              Center(
-                                child: Text(
-                                  "Thank you for ordering with us.",
-                                  textAlign: TextAlign.center,
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text("Close"),
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen())); // Close dialog
+                                  },
                                 ),
-                              ),
-                            ],
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text("Close"),
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen())); // Close dialog
-                              },
-                            ),
-                          ],
+                              ],
+                            );
+                          },
                         );
-                      },
-                    );
+                      }
+                      count++;
+                    }
+
                   },
                   child: Text(
                     "Complete Order",

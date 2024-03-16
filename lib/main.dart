@@ -13,11 +13,13 @@ import 'package:foodrush/providers/cart_provider.dart';
 import 'package:foodrush/Screens/burger.dart';
 import 'package:foodrush/Screens/ourMenu.dart';
 import 'package:foodrush/login/signup_screen.dart';
+import 'package:foodrush/providers/message_provider.dart';
 import 'package:foodrush/providers/product_provider.dart';
 import 'package:foodrush/providers/RestaurantProduct_provider.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/providers/search_provider.dart';
 import 'package:foodrush/providers/user_provider.dart';
+import 'package:foodrush/providers/message_provider.dart';
 import 'package:foodrush/controllerRestaurant.dart/notification.dart';
 import 'package:foodrush/login/forgotPw1.dart';
 import 'package:foodrush/login/forgotPw2.dart';
@@ -32,6 +34,7 @@ import 'package:foodrush/restaurantScreens/settings.dart';
 import 'package:foodrush/restaurantScreens/signupRestaurant.dart';
 import 'package:provider/provider.dart';
 import 'Screens/Navigation.dart';
+import 'login/emailVerification_screen.dart';
 import 'login/loginAs.dart';
 
 void main() async {
@@ -66,6 +69,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<RestaurantProductProvider>(
           create: (context) => RestaurantProductProvider(),
         ),
+        ChangeNotifierProvider<MessageProvider>(
+          create: (context) => MessageProvider(),
+        ),
 
       ],
       child: MaterialApp(
@@ -74,13 +80,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-<<<<<<< HEAD
         home: LoginAs(),
       )
-=======
-        home:PwChangeService(),
-      ),
->>>>>>> 09db00e774670f1947329720244bdf6a2a31caab
+
     );
   }
 }

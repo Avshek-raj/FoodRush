@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 
 import '../models/location_model.dart';
 import '../providers/cart_provider.dart';
+import '../providers/message_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import 'deliverto.dart';
+import 'map.dart';
 import 'orderDescription_screen.dart';
 
 class TopLiked {
@@ -49,6 +51,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late MessageProvider messageProvider;
   late UserProvider userProvider;
   late ProductProvider productProvider;
   late CartProvider cartProvider;
@@ -66,6 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
     userProvider.fetchUserData((){});
     cartProvider.fetchCartData((){});
     productProvider.fetchFoodProductData();
+    MessageProvider messageProvider = Provider.of(context, listen:false);
+    messageProvider.setupFirebaseMessaging(context);
     super.initState();
   }
 
@@ -142,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(height: 15),
                     reusableTextField("Search Food, Drink, etc",
                         Icons.search_outlined, "search", searchTextController, (value){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search(searchValue: value,)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen()));
                         }),
                     SizedBox(
                       height: 30,
@@ -279,6 +284,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               .foodProductList[
                                                                   index]
                                                               .productDesc,
+                                                      restaurantName: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantName,
+                                                      restaurantId: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantId,
                                                     )));
                                       },
                                       child: Container(
@@ -297,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 topRight: Radius.circular(15),
                                               ),
                                               child: SizedBox(
-                                                height: 500,// Set your desired height
+                                                height: 100,// Set your desired height
                                                 child: Image.network(
                                                   productProvider.foodProductList[index].productImage!,
                                                   fit: BoxFit.cover,

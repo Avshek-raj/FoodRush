@@ -12,7 +12,8 @@ class RestaurantModel {
   String? password;
   String? about;
   XFile? restaurantImage;
-  RestaurantModel({this.restaurantName,this.email,this.address,this.phone,this.password, this.about, this.restaurantImage});
+  String? token;
+  RestaurantModel({this.restaurantName,this.email,this.address,this.phone,this.password, this.about, this.restaurantImage, this.token});
 }
 
 class RestaurantProvider with ChangeNotifier {
@@ -40,6 +41,7 @@ class RestaurantProvider with ChangeNotifier {
         "Address": address,
         "Password": password,
         "About": about,
+        "Role": "Restaurant"
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Data uploaded Successfully'),
@@ -61,11 +63,12 @@ class RestaurantProvider with ChangeNotifier {
 
   List<RestaurantModel> restaurantInfoList = [];
   RestaurantModel restaurantModel = RestaurantModel();
-  fetchUserData(callback) async {
+  fetchRestaurantDetails(userId,callback) async {
+    String uid = userId ?? FirebaseAuth.instance.currentUser?.uid;
     List<RestaurantModel> newList = [];
     QuerySnapshot value = await FirebaseFirestore.instance
         .collection("RestaurantUsers")
-        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .doc(uid)
         .collection("RestaurantInfo")
         .get();
     value.docs.forEach((element) {
@@ -78,10 +81,11 @@ class RestaurantProvider with ChangeNotifier {
           phone: data['phone'],
           password: data["Password"],
           about: data["About"],
+          token: data["Token"],
       );
     });
     restaurantInfoList = newList;
-    callback();
+    callback(restaurantInfoList);
     notifyListeners();
   }
 }

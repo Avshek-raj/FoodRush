@@ -87,8 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 130,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
-                        onPrimary: Colors.black,
+                        foregroundColor: Colors.black, backgroundColor: Colors.red,
                       ),
                       onPressed: () {},
                       child: Text(

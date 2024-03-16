@@ -30,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: FirebaseAuth.instance.currentUser != null ? MainScreen()
+    return Scaffold(body: FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser?.emailVerified == true ? MainScreen()
         :isLoading ?
     Center(
       child: CircularProgressIndicator(),
@@ -137,8 +137,26 @@ class _SignInScreenState extends State<SignInScreen> {
                         FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _emailTextController.text,
                             password: _passwordTextController.text).then ((value) {
-                          print(value.toString());
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => loginAs == "user" ?MainScreen()  : NavbarRestaurant() ));
+                          if (value.user?.emailVerified == true) {
+                            print(value.toString());
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => loginAs == "user" ?MainScreen()  : NavbarRestaurant() ));
+                          } else {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            showDialog(context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Message"),
+                                    content: Text("Your email isn't verified. Please redirect to the link sent to your email to verify and try again"),
+                                    actions: [
+                                      TextButton(onPressed: (){
+                                        Navigator.of(context).pop();
+                                      }, child: Text('OK'))
+                                    ],
+                                  );
+                                });
+                          }
                         }).onError((error, stackTrace) {
                           setState(() {
                             isLoading =false;

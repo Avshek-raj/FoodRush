@@ -279,6 +279,14 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                           .foodProductList[
                                                       index]
                                                           .productDesc,
+                                                      restaurantName: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantName,
+                                                      restaurantId: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantId,
                                                     )));
                                       },
                                       child: Container(

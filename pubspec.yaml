@@ -47,6 +47,12 @@ dependencies:
   gesture_x_detector: ^1.1.1
   image_picker: ^1.0.7
   pinput: ^4.0.0
+  google_maps_flutter: ^2.5.0
+  geocoding: ^2.2.1
+  location: ^5.0.3
+  firebase_admin: ^0.2.0
+  firebase_messaging: ^14.7.20
+  http: ^0.13.0
   # awesome_notifications: ^0.9.2
 
 dev_dependencies:

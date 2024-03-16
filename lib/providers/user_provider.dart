@@ -15,6 +15,7 @@ class UserProvider with ChangeNotifier {
     String? phone,
     String? address,
     String? password,
+    String? role,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -28,7 +29,8 @@ class UserProvider with ChangeNotifier {
         "Email": email,
         "Phone": phone,
         "Address": address,
-        "Password": password
+        "Password": password,
+        "Role": role
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Data uploaded Successfully'),
@@ -68,7 +70,7 @@ class UserProvider with ChangeNotifier {
             address: data["Address"],
             landmark: data["Landmark"],
             phone: data["Phone"]);
-      } else {
+      }
         userModel = UserModel(
             username: data["Username"],
             email: data["Email"],
@@ -76,7 +78,7 @@ class UserProvider with ChangeNotifier {
             phone: data['phone'],
             password: data["Password"],
             deliveryInfo: data["DeliveryInfo"]);
-      }
+            token: data["Token"];
     });
     userInfoList = newList;
     isLoading = false;

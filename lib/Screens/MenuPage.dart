@@ -42,16 +42,23 @@ class _MenuState extends State<Menu> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ),
-          bottom: PreferredSize(
+          bottom:
+    PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 0.0), // Remove space here
-              child: TabBar(
-                isScrollable: true,
-                tabs: _tabs,
+
+              child: Container(
+                padding: const EdgeInsets.only(left: 0.0),
+                child: Transform.translate(offset: Offset(-29,0),
+                child: TabBar(
+                  padding: EdgeInsets.only(left: 0),
+                  isScrollable: true,
+                  tabs: _tabs,
+                  indicatorColor: Colors.red,
+                ),
               ),
+        )
             ),
-          ),
+         //),
         ),
         body: TabBarView(
           children: [
@@ -125,6 +132,14 @@ class SidesState extends State<Menus> {
                                         .foodProductList[
                                     index]
                                         .productDesc,
+                                    restaurantName: productProvider
+                                        .foodProductList[
+                                    index]
+                                        .restaurantName,
+                                    restaurantId: productProvider
+                                        .foodProductList[
+                                    index]
+                                        .restaurantId,
                                   )));
                     },
                     child: Container(
@@ -164,7 +179,7 @@ class SidesState extends State<Menus> {
                             child: Row(
                               children: [
                                 Text(
-                                  productProvider.foodProductList[index].productPrice!,
+                                  "Rs. " + productProvider.foodProductList[index].productPrice!,
                                   style: TextStyle(
                                       color: Colors.red,
                                       fontWeight:

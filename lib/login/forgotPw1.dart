@@ -67,8 +67,7 @@ Text("Enter your phone number to receive your 6 digit OTP code",style: TextStyle
                         width: 250,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    onPrimary: Colors.white,
-                primary: Colors.red,
+                    foregroundColor: Colors.white, backgroundColor: Colors.red,
                   ),
                   onPressed: ()  {
                sendVerificationCode(context);
@@ -92,9 +91,5 @@ sendVerificationCode(BuildContext context)async{
   },
   codeAutoRetrievalTimeout: (String verificationId) {},
 );
-<<<<<<< HEAD
+
 }
-}
-=======
-} 
->>>>>>> 09db00e774670f1947329720244bdf6a2a31caab

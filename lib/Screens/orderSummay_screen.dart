@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foodrush/Screens/deliverto.dart';
 import 'package:foodrush/Screens/payment.dart';
 import 'package:foodrush/providers/user_provider.dart';
@@ -80,62 +81,72 @@ class _OrderSummaryState extends State<OrderSummary> {
                       SizedBox(
                         height: 10,
                       ),
-                      ListView.builder(
-                          shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: widget.cartList.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                          0, 0, 0, 5),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                // shape: BoxShape.rectangle,
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.grey.shade200),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Image.network(
-                                widget.cartList[index].cartImage!,
-                                height: 40,
-                                width: 40,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      Container(
+                        height: MediaQuery.of(context).size.height*0.3,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: widget.cartList.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                            0, 0, 0, 5),
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment:Alignment.centerLeft ,
+                                  child: Text(widget.cartList[index].restaurantName?? "", style: TextStyle(fontWeight: FontWeight.bold),)),
+                              Row(
                                 children: [
-                                  Text(
-                                    widget.cartList[index].cartName.toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15),
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      // shape: BoxShape.rectangle,
+                                        color: Colors.white,
+                                        border: Border.all(color: Colors.grey.shade200),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    child: Image.network(
+                                      widget.cartList[index].cartImage!,
+                                      height: 40,
+                                      width: 40,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.cartList[index].cartName.toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15),
+                                        ),
+                                        Text(
+                                          widget.cartList[index].cartPrice.toString() + "*" + widget.cartList[index].cartQuantity.toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Spacer(),
                                   Text(
-                                    widget.cartList[index].cartPrice.toString() + "*" + widget.cartList[index].cartQuantity.toString(),
+                                    "Rs. " + (int.parse(widget.cartList[index].cartPrice!)*widget.cartList[index].cartQuantity!).toString(),
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  )
+                                        fontWeight: FontWeight.w600, fontSize: 18),
+                                  ),
                                 ],
                               ),
-                            ),
-                            Spacer(),
-                            Text(
-                              "Rs. " + (int.parse(widget.cartList[index].cartPrice!)*widget.cartList[index].cartQuantity!).toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 18),
-                            ),
-                          ],
+                            ],
+                          ),
+                          )
                         ),
-                        )
                       ),
 
                       Divider(),
@@ -290,7 +301,6 @@ class _OrderSummaryState extends State<OrderSummary> {
               ),
               //button halne container
               Container(
-                  height: 200,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -306,8 +316,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         width: 250,
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              onPrimary: myColor,
-                              primary: Colors.white,
+                              foregroundColor: myColor, backgroundColor: Colors.white,
                             ),
                             onPressed: () {
                               Navigator.pop(context);
@@ -326,8 +335,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         width: 250,
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              onPrimary: Colors.white,
-                              primary: myColor,
+                              foregroundColor: Colors.white, backgroundColor: myColor,
                             ),
                             onPressed: () {
                               String productName = "";
