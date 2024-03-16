@@ -26,325 +26,327 @@ class _OrderSummaryState extends State<OrderSummary> {
         // SingleChildScrollView(
         // child:
         SafeArea(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  BackButton(
-                    color: Colors.black,
-                  ), //back jane button
-                  Spacer(),
-                  Text(
-                    "Order Summary",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: Icon(
-                        Icons.question_mark,
-                        color: Colors.black,
-                      ),
-                      alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    BackButton(
+                      color: Colors.black,
+                    ), //back jane button
+                    Spacer(),
+                    Text(
+                      "Order Summary",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                     ),
-                  ),
-                ],
-              ),
-              //Container1
-              Container(
-                height: MediaQuery.of(context).size.height*0.52,
-                width: 350,
-                decoration: BoxDecoration(
-                  // shape: BoxShape.rectangle,
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Order details",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Container(
+                        height: 25,
+                        width: 25,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Icon(
+                          Icons.question_mark,
+                          color: Colors.black,
+                        ),
+                        alignment: Alignment.center,
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ListView.builder(
-                          shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: widget.cartList.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                          0, 0, 0, 5),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                // shape: BoxShape.rectangle,
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.grey.shade200),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Image.network(
-                                widget.cartList[index].cartImage!,
-                                height: 40,
-                                width: 40,
-                                fit: BoxFit.contain,
+                    ),
+                  ],
+                ),
+                //Container1
+                Container(
+                  height: MediaQuery.of(context).size.height*0.52,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    // shape: BoxShape.rectangle,
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Order details",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ListView.builder(
+                            shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: widget.cartList.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                            0, 0, 0, 5),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  // shape: BoxShape.rectangle,
+                                    color: Colors.white,
+                                    border: Border.all(color: Colors.grey.shade200),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Image.network(
+                                  widget.cartList[index].cartImage!,
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.cartList[index].cartName.toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15),
+                                    ),
+                                    Text(
+                                      widget.cartList[index].cartPrice.toString() + "*" + widget.cartList[index].cartQuantity.toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                "Rs. " + (int.parse(widget.cartList[index].cartPrice!)*widget.cartList[index].cartQuantity!).toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 18),
+                              ),
+                            ],
+                          ),
+                          )
+                        ),
+            
+                        Divider(),
+                        //sub total
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Sub total:",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600, fontSize: 18),
+                                ),
+                                SizedBox(height: 15,),
+                                Text(
+                                  "Delivery fee:",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600, fontSize: 18),
+                                ),
+                                SizedBox(height: 15,),
+                                Text(
+                                  "Total Amount:",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700, fontSize: 18),
+                                ),
+                              ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.only(left: 139),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    widget.cartList[index].cartName.toString(),
+                                    "Rs. " + widget.grandTotal.toString(),
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15),
+                                        fontWeight: FontWeight.w600, fontSize: 18),
                                   ),
+                                  SizedBox(height: 15,),
                                   Text(
-                                    widget.cartList[index].cartPrice.toString() + "*" + widget.cartList[index].cartQuantity.toString(),
+                                    "RS: 50",
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  )
+                                        fontWeight: FontWeight.w600, fontSize: 18),
+                                  ),
+                                  SizedBox(height: 15,),
+                                  Text(
+                                    "Rs. " + (widget.grandTotal + 50).toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700, fontSize: 18),
+                                  ),
                                 ],
                               ),
                             ),
-                            Spacer(),
-                            Text(
-                              "Rs. " + (int.parse(widget.cartList[index].cartPrice!)*widget.cartList[index].cartQuantity!).toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 18),
-                            ),
                           ],
-                        ),
                         )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                //delivery address ko container
+                Container(
+                  width: 350,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Delivery Address",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                        ],
                       ),
-
-                      Divider(),
-                      //sub total
+                      SizedBox(
+                        height: 15,
+                      ),
+                      //column for name
                       Row(
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Sub total:",
+                                "Name:",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 18),
+                                    fontWeight: FontWeight.w500, fontSize: 15),
                               ),
-                              SizedBox(height: 15,),
                               Text(
-                                "Delivery fee:",
+                                "Address:",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 18),
+                                    fontWeight: FontWeight.w500, fontSize: 15),
                               ),
-                              SizedBox(height: 15,),
                               Text(
-                                "Total Amount:",
+                                "Landmark:",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 18),
+                                    fontWeight: FontWeight.w500, fontSize: 15),
+                              ),
+                              Text(
+                                "Phone:",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                             ],
                           ),
+            //column for value
                           Padding(
-                            padding: const EdgeInsets.only(left: 139),
+                            padding: const EdgeInsets.only(left: 50),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Rs. " + widget.grandTotal.toString(),
+                                  userProvider.deliveryInfoModel.name??"xxxxx xxxxx",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w600, fontSize: 18),
+                                      fontWeight: FontWeight.w500, fontSize: 15),
                                 ),
-                                SizedBox(height: 15,),
                                 Text(
-                                  "RS: 50",
+                                  userProvider.deliveryInfoModel.address??"xxxxx, xxxxx",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w600, fontSize: 18),
+                                      fontWeight: FontWeight.w500, fontSize: 15),
                                 ),
-                                SizedBox(height: 15,),
                                 Text(
-                                  "Rs. " + (widget.grandTotal + 50).toString(),
+                                  userProvider.deliveryInfoModel.landmark??"xxxxx",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w700, fontSize: 18),
+                                      fontWeight: FontWeight.w500, fontSize: 15),
+                                ),
+                                Text(
+                                  userProvider.deliveryInfoModel.phone??"xxxxxxxxxx",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500, fontSize: 15),
                                 ),
                               ],
                             ),
                           ),
+                          Spacer(),
+                          IconButton(
+                              onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> DeliverTo()));
+                          }, icon: Icon(Icons.edit,)
+                          )
                         ],
-                      )
-                    ],
+                      ),
+                    ]),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              //delivery address ko container
-              Container(
-                width: 350,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(children: [
-                    Row(
+                //button halne container
+                Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
                       children: [
-                        Text(
-                          "Delivery Address",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 250,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: myColor, backgroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Edit Order",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              )),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 250,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white, backgroundColor: myColor,
+                              ),
+                              onPressed: () {
+                                String productName = "";
+                                String productId = "";
+                                for (var item in widget.cartList) {
+                                  productName += item.cartName! + ",";
+                                  productId += item.cartId! + ",";
+                                }
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentUi( price: widget.grandTotal.toString(), productId: productId, productName: productName,cartList: widget.cartList)));
+                              },
+                              child: Text(
+                                "Proceed to payment",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              )),
                         ),
                       ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    //column for name
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Name:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 15),
-                            ),
-                            Text(
-                              "Address:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 15),
-                            ),
-                            Text(
-                              "Landmark:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 15),
-                            ),
-                            Text(
-                              "Phone:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 15),
-                            ),
-                          ],
-                        ),
-//column for value
-                        Padding(
-                          padding: const EdgeInsets.only(left: 50),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                userProvider.deliveryInfoModel.name??"xxxxx xxxxx",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 15),
-                              ),
-                              Text(
-                                userProvider.deliveryInfoModel.address??"xxxxx, xxxxx",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 15),
-                              ),
-                              Text(
-                                userProvider.deliveryInfoModel.landmark??"xxxxx",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 15),
-                              ),
-                              Text(
-                                userProvider.deliveryInfoModel.phone??"xxxxxxxxxx",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 15),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Spacer(),
-                        IconButton(
-                            onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> DeliverTo()));
-                        }, icon: Icon(Icons.edit,)
-                        )
-                      ],
-                    ),
-                  ]),
-                ),
-              ),
-              //button halne container
-              Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        height: 50,
-                        width: 250,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: myColor, backgroundColor: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              "Edit Order",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        height: 50,
-                        width: 250,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white, backgroundColor: myColor,
-                            ),
-                            onPressed: () {
-                              String productName = "";
-                              String productId = "";
-                              for (var item in widget.cartList) {
-                                productName += item.cartName! + ",";
-                                productId += item.cartId! + ",";
-                              }
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentUi( price: widget.grandTotal.toString(), productId: productId, productName: productName,cartList: widget.cartList)));
-                            },
-                            child: Text(
-                              "Proceed to payment",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            )),
-                      ),
-                    ],
-                  )),
-            ],
+                    )),
+              ],
+            ),
           ),
         ),
       //),

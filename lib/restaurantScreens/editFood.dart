@@ -36,7 +36,7 @@ class _EditFoodState extends State<EditFood> {
                 child: Row(
                   children: [
                     BackButton(
-                         onPressed: () {
+                      onPressed: () {
                         // Navigate back to the previous page
                         Navigator.pop(context);
                       },
@@ -146,7 +146,8 @@ class _EditFoodState extends State<EditFood> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Center(
-                                      child: Text("Produt edited successfully")),
+                                      child:
+                                          Text("Produt edited successfully")),
                                   content: Column(
                                     mainAxisSize: MainAxisSize
                                         .min, // To minimize the dialog size
@@ -199,39 +200,34 @@ class _EditFoodState extends State<EditFood> {
                                 });
                           },
                         );
-                      }
+                      }),
+                      SizedBox(
+                        height: 20,
                       ),
-                      SizedBox(height: 20,),
                       //for delete
                       loginButton(context, "Delete", () {
-                        restaurantProductProvider.addProduct(
-                          context: context,
-                          productName: productName.text,
-                          productPrice: productPrice.text,
-                          productDesc: productDesc.text,
-                          productImage: productImage,
+                        restaurantProductProvider.deleteProductFromFirestore(
+                          productName.text,
                           onSuccess: () {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Center(
-                                      child: Text("Produt deleted successfully")),
+                                    child: Text("Product deleted successfully"),
+                                  ),
                                   content: Column(
-                                    mainAxisSize: MainAxisSize
-                                        .min, // To minimize the dialog size
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Image.asset(
                                         'assets/images/success.png',
-                                        fit: BoxFit
-                                            .fill, // Provide the correct asset path here
-                                        width: 80, // Adjust the width as needed
-                                        height:
-                                            80, // Adjust the height as needed
+                                        fit: BoxFit.fill,
+                                        width: 80,
+                                        height: 80,
                                       ),
                                       SizedBox(height: 8),
                                       Text(
-                                        "Your food has been deleted successfully and will be removed from the foodlist.",
+                                        "Your food has been deleted successfully and will be removed from the food list.",
                                       ),
                                     ],
                                   ),
@@ -239,11 +235,7 @@ class _EditFoodState extends State<EditFood> {
                                     TextButton(
                                       child: Text("Close"),
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditFood())); // Close dialog
+                                        Navigator.pop(context); // Close dialog
                                       },
                                     ),
                                   ],
@@ -253,24 +245,25 @@ class _EditFoodState extends State<EditFood> {
                           },
                           onError: (e) {
                             showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'))
-                                    ],
-                                  );
-                                });
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
                           },
                         );
-                      }
-                      )
+                      }),
                     ])),
               ),
             ],

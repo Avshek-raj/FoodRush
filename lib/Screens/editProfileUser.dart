@@ -22,6 +22,10 @@ class _EditProfileState extends State<EditProfileUser> {
            child: Row(
             children: [
               BackButton(
+                 onPressed: () {
+                        // Navigate back to the previous page
+                        Navigator.pop(context);
+                      },
                 color: Colors.black,
               ),
               SizedBox(width: 10,),

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/Screens/editProfileUser.dart';
 import 'package:foodrush/login/loginAs.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:provider/provider.dart';
@@ -89,11 +90,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black, backgroundColor: Colors.red,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditProfileUser()),);
+                      },
                       child: Text(
                         "Edit Profile",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 13),
+                            fontWeight: FontWeight.w400, fontSize: 13,color: Colors.white),
                       )),
                 ),
                 SizedBox(

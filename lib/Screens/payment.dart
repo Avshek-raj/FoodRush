@@ -149,7 +149,7 @@ class _PaymentUiState extends State<PaymentUi> {
                           ]),
                       Spacer(),
                       Radio(
-                        value: true, // value for the radio button
+                        value: false, // value for the radio button
                         groupValue:
                             selectedValue, // selected value of the group
                         onChanged: (value) {

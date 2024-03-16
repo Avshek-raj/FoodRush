@@ -47,6 +47,28 @@ class RestaurantProductProvider with ChangeNotifier{
     }
   }
 
+  //for delete
+
+  Future<void> deleteProductFromFirestore(String productName,
+      {required VoidCallback onSuccess, required Function(dynamic) onError}) async {
+    try {
+      // Get a reference to the Firestore collection
+      CollectionReference products =
+          FirebaseFirestore.instance.collection('products');
+
+      // Delete the document from Firestore based on the product name
+      await products.doc(productName).delete();
+
+      // If successful, call the success callback
+      onSuccess();
+    } catch (e) {
+      // If an error occurs, call the error callback with the error
+      onError(e);
+    }
+  }
+}
+
+
   Future<String?> uploadImageToFirebase(File imageFile) async {
     try {
       // Convert XFile to File
@@ -71,4 +93,3 @@ class RestaurantProductProvider with ChangeNotifier{
       return null;
     }
   }
-}

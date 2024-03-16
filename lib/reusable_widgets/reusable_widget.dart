@@ -78,7 +78,7 @@ TextFormField reusableTextFormField(String text, IconData icon, String fieldInpu
 
 Container loginButton(BuildContext context, String title, Function onTap) {
   return Container(
-    width: MediaQuery.of(context).size.width,
+    width: 250,
     height: 50,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(

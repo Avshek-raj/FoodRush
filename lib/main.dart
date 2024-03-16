@@ -27,7 +27,7 @@ import 'package:foodrush/providers/product_provider.dart';
 import 'package:foodrush/restaurantScreens/editFood.dart';
 import 'package:foodrush/restaurantScreens/formLoginRestaurant.dart';
 import 'package:foodrush/restaurantScreens/foodAdd.dart';
-import 'package:foodrush/restaurantScreens/profile1.dart';
+import 'package:foodrush/restaurantScreens/restaurantProfile.dart';
 import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
 import 'package:foodrush/restaurantScreens/profile2.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-        home: EditFood(),
+        home: MainScreen(),
       )
     );
   }
