@@ -8,7 +8,7 @@ import '../providers/cart_provider.dart';
 import '../utils/color_utils.dart';
 
 import 'package:foodrush/Screens/Navigation.dart';
-import 'orderSummay_screen.dart';
+import 'orderSummary_screen.dart';
 
 class TopLiked {
   String? image, price, name;

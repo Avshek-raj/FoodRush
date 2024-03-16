@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
+import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:foodrush/utils/color_utils.dart';
 
 class ProfileRestaurant extends StatefulWidget {
@@ -54,17 +55,17 @@ child: ClipRRect(
                                 width: 1,
                               )),
                           child: CircleAvatar(
-                            // backgroundImage: NetworkImage(
-                            //     " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8u9rnEzITf3Kzpe_5YIEz4Z0RPb2vxe2ySlTG8uc&ss"),
-                            radius: 20,
-                            child: 
-                            // Text(
-                            //   "SS",
-                            //   style:
-                            //       TextStyle(color: Colors.white, fontSize: 23),
-                            // ),
-                            Icon(Icons.person_outlined,color: Colors.red,size: 30,),
-                            backgroundColor: Colors.grey.shade200,
+  // Icon(Icons.person_outlined,color: Colors.red,size: 30,),
+                            // backgroundColor: Colors.grey.shade200,              
+    radius: 35,
+    backgroundColor: Colors.transparent,
+    child: ClipOval(
+      child: Image.asset(
+        "assets/images/newalahana.png",
+        fit: BoxFit.cover,
+      ),
+    ),
+
                           ),
                         ),
                       ),
@@ -114,7 +115,7 @@ child: ClipRRect(
                 Spacer(),
                   Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Lahana Newari Khaja Ghar",style: TextStyle(fontWeight: FontWeight.w500),),
+                  child: Text("Newa Lahana",style: TextStyle(fontWeight: FontWeight.w500),),
                 ),
                   ],
                 ),
@@ -174,6 +175,53 @@ child: ClipRRect(
                 ),
               ),
               Divider(),
+              SizedBox(
+                height: 50,
+              ),
+              //log out button
+
+                   CustomElevatedButton(
+                onPressed: () {
+                  // Show the logout confirmation dialog
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Confirm Logout",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 18), ),
+                        content: Text("Are you sure you want to log out?",style:TextStyle(fontWeight: FontWeight.w500,fontSize: 16),),
+                        actions: <Widget>[
+                          // Button to logout
+                          ElevatedButton(
+                               style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white, backgroundColor: Colors.red,
+                            ),
+                            onPressed: () {
+                           
+                              // Perform logout actions
+                              // For example, you can navigate to the login screen or clear user data
+                              Navigator.of(context).pop(); // Close the dialog
+                              // Call the logout function
+                              logoutUser();
+                            },
+                            child: Text("Yes"),
+                          ),
+                          // Button to cancel logout
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white, backgroundColor: Colors.red,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: Text("No"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Text("Log Out",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+              ),
             ],
           ),
         ),
@@ -181,3 +229,9 @@ child: ClipRRect(
     );
   }
 }
+
+void logoutUser() {
+    // Perform the logout action here
+    // For example, you can navigate to the login screen or clear user data
+    print("User logged out");
+  }

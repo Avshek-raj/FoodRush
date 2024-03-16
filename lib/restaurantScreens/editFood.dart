@@ -8,14 +8,14 @@ import 'package:provider/provider.dart';
 
 import '../reusable_widgets/reusable_widget.dart';
 
-class AddFood extends StatefulWidget {
-  const AddFood({super.key});
+class EditFood extends StatefulWidget {
+  const EditFood({super.key});
 
   @override
-  State<AddFood> createState() => _AddFoodState();
+  State<EditFood> createState() => _EditFoodState();
 }
 
-class _AddFoodState extends State<AddFood> {
+class _EditFoodState extends State<EditFood> {
   final _formKey = new GlobalKey<FormState>();
   TextEditingController productName = TextEditingController();
   TextEditingController productPrice = TextEditingController();
@@ -48,7 +48,7 @@ class _AddFoodState extends State<AddFood> {
 
                     // Spacer(),
                     Text(
-                      "Add Food",
+                      "Edit Food",
                       style:
                           TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                     ),
@@ -132,6 +132,7 @@ class _AddFoodState extends State<AddFood> {
                       const SizedBox(
                         height: 20,
                       ),
+                      //for save button
                       loginButton(context, "Save", () {
                         restaurantProductProvider.addProduct(
                           context: context,
@@ -145,7 +146,7 @@ class _AddFoodState extends State<AddFood> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Center(
-                                      child: Text("Produt added successfully")),
+                                      child: Text("Produt edited successfully")),
                                   content: Column(
                                     mainAxisSize: MainAxisSize
                                         .min, // To minimize the dialog size
@@ -160,7 +161,7 @@ class _AddFoodState extends State<AddFood> {
                                       ),
                                       SizedBox(height: 8),
                                       Text(
-                                        "Your food has been added successfully and will be shown in the foodlist.",
+                                        "Your food has been edited successfully and will be shown in the foodlist.",
                                       ),
                                     ],
                                   ),
@@ -172,7 +173,7 @@ class _AddFoodState extends State<AddFood> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AddFood())); // Close dialog
+                                                    EditFood())); // Close dialog
                                       },
                                     ),
                                   ],
@@ -198,7 +199,78 @@ class _AddFoodState extends State<AddFood> {
                                 });
                           },
                         );
-                      })
+                      }
+                      ),
+                      SizedBox(height: 20,),
+                      //for delete
+                      loginButton(context, "Delete", () {
+                        restaurantProductProvider.addProduct(
+                          context: context,
+                          productName: productName.text,
+                          productPrice: productPrice.text,
+                          productDesc: productDesc.text,
+                          productImage: productImage,
+                          onSuccess: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Center(
+                                      child: Text("Produt deleted successfully")),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize
+                                        .min, // To minimize the dialog size
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/success.png',
+                                        fit: BoxFit
+                                            .fill, // Provide the correct asset path here
+                                        width: 80, // Adjust the width as needed
+                                        height:
+                                            80, // Adjust the height as needed
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "Your food has been deleted successfully and will be removed from the foodlist.",
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text("Close"),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditFood())); // Close dialog
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          onError: (e) {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'))
+                                    ],
+                                  );
+                                });
+                          },
+                        );
+                      }
+                      )
                     ])),
               ),
             ],
