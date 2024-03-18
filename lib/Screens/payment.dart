@@ -1,4 +1,5 @@
 // import 'package:firebase1/util/string_const.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/service/esewa.service.dart';
 import 'package:foodrush/providers/message_provider.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:foodrush/Screens/Navigation.dart';
 import '../models/cart_model.dart';
 import '../providers/cart_provider.dart';
+import '../providers/order_provider.dart';
 
 // import 'package:text_divider/text_divider.dart';
 
@@ -27,6 +29,7 @@ class _PaymentState extends State<Payment> {
   late CartProvider cartProvider;
   late UserProvider userProvider;
   late RestaurantProvider restaurantProvider;
+  late OrderProvider orderProvider;
   bool selectedValue = true; // or whatever initial value you want
 
   @override
@@ -35,6 +38,7 @@ class _PaymentState extends State<Payment> {
     messageProvider = Provider.of(context);
     userProvider = Provider.of(context);
     restaurantProvider =Provider.of(context);
+    orderProvider =Provider.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -188,14 +192,45 @@ class _PaymentState extends State<Payment> {
                   ),
                   onPressed: () async{
                     int count = 0;
-                    for (var item in widget.cartList){
-                     //cartProvider.deleteCartItem(item.cartId);
-                      restaurantProvider.fetchRestaurantDetails(item.restaurantId, (result){
-                        messageProvider.sendNotificationToUser(result.token,
-                            "Order received from ${userProvider.userModel.username}",
-                            "${item.cartQuantity} ${item.cartName} has been order");
-                      });
-                      if (count == widget.cartList.length){
+                    String sameRestaurantFoods = "";
+                    String? oldRestaurantName;
+                    // for (var item in widget.cartList){
+                      widget.cartList.asMap().forEach((index, item) async {
+                        String orderId = DateTime.now().millisecondsSinceEpoch.toString();
+                        orderProvider.addOrderData(
+                          orderId: orderId,
+                          userImage: userProvider.userModel.userImage?? "",
+                          orderPrice: item.cartPrice,
+                          orderName: item.cartName,
+                          orderQuantity: item.cartQuantity,
+                          userId: FirebaseAuth.instance.currentUser?.uid,
+                          userName: userProvider.userModel.username,
+                          restaurantId: item.restaurantId
+                        );
+                     cartProvider.deleteCartItem(item.cartId);
+                      if (item.restaurantName == oldRestaurantName){
+                        sameRestaurantFoods += ", ${item.cartQuantity} ${item.cartName} ";
+                      } else {
+                        if (sameRestaurantFoods != ""){
+                          await restaurantProvider.fetchRestaurantDetails(widget.cartList[index-1].restaurantId, (result){
+                            messageProvider.sendNotificationToUser(result.token,
+                                "Order received from ${userProvider.userModel.username}",
+                                "${sameRestaurantFoods} has been order");
+                          });
+                        }
+                        sameRestaurantFoods = "";
+                        oldRestaurantName = item.restaurantName;
+                        sameRestaurantFoods = "${item.cartQuantity} ${item.cartName} ";
+
+                      }
+                      if (index == widget.cartList.length - 1){
+                        restaurantProvider.fetchRestaurantDetails(widget.cartList[index-1].restaurantId, (result){
+                          messageProvider.sendNotificationToUser(result.token,
+                              "Order received from ${userProvider.userModel.username}",
+                              "${sameRestaurantFoods} has been order");
+                        });
+                      }
+                      if (count == widget.cartList.length - 1){
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -236,7 +271,7 @@ class _PaymentState extends State<Payment> {
                         );
                       }
                       count++;
-                    }
+                    });
 
                   },
                   child: Text(

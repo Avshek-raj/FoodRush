@@ -15,6 +15,7 @@ import 'package:foodrush/Screens/burger.dart';
 import 'package:foodrush/Screens/ourMenu.dart';
 import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/providers/message_provider.dart';
+import 'package:foodrush/providers/order_provider.dart';
 import 'package:foodrush/providers/product_provider.dart';
 import 'package:foodrush/providers/RestaurantProduct_provider.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
@@ -75,6 +76,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<MessageProvider>(
           create: (context) => MessageProvider(),
         ),
+        ChangeNotifierProvider<OrderProvider>(
+          create: (context) => OrderProvider(),
+        ),
 
       ],
       child: MaterialApp(
@@ -83,11 +87,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-<<<<<<< HEAD
-        home: MainScreen(),
-=======
         home: LoginAs(),
->>>>>>> 968e0b56760f4f3e8d17c6566e69caf34cf46989
       )
 
     );

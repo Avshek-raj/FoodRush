@@ -6,6 +6,7 @@ import 'package:foodrush/models/location_model.dart';
 
 import '../Screens/home_screen.dart';
 import '../models/user_model.dart';
+import '../reusable_widgets/reusable_widget.dart';
 
 class UserProvider with ChangeNotifier {
   void addUserDetails({
@@ -53,36 +54,45 @@ class UserProvider with ChangeNotifier {
   List<UserModel> userInfoList = [];
   UserModel userModel = UserModel();
   DeliveryInfoModel deliveryInfoModel = DeliveryInfoModel();
+
   fetchUserData(callback) async {
-    isLoading = true;
-    List<UserModel> newList = [];
-    QuerySnapshot value = await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .collection("UserInfo")
-        .get();
-    value.docs.forEach((element) {
-      Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-      bool deliveryInfo = data.containsKey("Name");
-      if (deliveryInfo) {
-        deliveryInfoModel = DeliveryInfoModel(
-            name: data["Name"],
-            address: data["Address"],
-            landmark: data["Landmark"],
-            phone: data["Phone"]);
-      }
-        userModel = UserModel(
-            username: data["Username"],
-            email: data["Email"],
-            address: data["Address"],
-            phone: data['phone'],
-            password: data["Password"],
-            deliveryInfo: data["DeliveryInfo"]);
-            token: data["Token"];
-    });
-    userInfoList = newList;
-    isLoading = false;
-    callback();
-    notifyListeners();
+    try {
+      isLoading = true;
+      List<UserModel> newList = [];
+      QuerySnapshot value = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("UserInfo")
+          .get();
+      value.docs.forEach((element) {
+        Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+        bool deliveryInfo = data.containsKey("Name");
+        if (deliveryInfo) {
+          deliveryInfoModel = DeliveryInfoModel(
+              name: data["Name"],
+              address: data["Address"],
+              landmark: data["Landmark"],
+              phone: data["Phone"]);
+        } else if (data.containsKey("Token")){
+          userModel = UserModel(token: data["Token"]);
+        } else {
+          userModel = UserModel(
+              username: data["Username"],
+              email: data["Email"],
+              address: data["Address"],
+              phone: data['phone'],
+              password: data["Password"],
+              deliveryInfo: data["DeliveryInfo"],
+              token:data["Token"]);
+        }
+      });
+      userInfoList = newList;
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading = false;
+      callback();
+      notifyListeners();
+    }
   }
 }

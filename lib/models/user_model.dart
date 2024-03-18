@@ -7,7 +7,8 @@ class UserModel {
   String? phone;
   String? password;
   String? role;
+  String? userImage;
   List<DeliveryInfoModel>? deliveryInfo;
   String? token;
-  UserModel({this.username,this.email,this.address,this.phone,this.password, this.role, this.deliveryInfo, this.token});
+  UserModel({this.username,this.email,this.address,this.phone,this.password, this.role, this.deliveryInfo, this.token, this.userImage});
 }

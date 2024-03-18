@@ -13,6 +13,9 @@ int? cartItemNumber;
 String? deliveryAddress;
 String? deliveryLandmark;
 
+
+bool isLoading = false;
+
 DeliveryInfoModel deliveryIngoModel = DeliveryInfoModel();
 
 Image logoWidget(String imageName) {

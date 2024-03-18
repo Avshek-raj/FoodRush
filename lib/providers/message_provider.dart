@@ -3,16 +3,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:provider/provider.dart';
+
+import 'order_provider.dart';
 
 class MessageProvider with ChangeNotifier{
+  late OrderProvider orderProvider;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   void setupFirebaseMessaging(BuildContext context) {
+    orderProvider = Provider.of(context);
+
     _firebaseMessaging.getToken().then((token) {
       print('Firebase Token: $token');
-      setMessageToken(context, token!);
+        setMessageToken(context, token!);
       // Send this token to your server to associate it with the user
     });
 
@@ -41,6 +48,11 @@ class MessageProvider with ChangeNotifier{
         'notification': <String, dynamic>{
           'title': title,
           'body': body,
+          'id': DateTime.now().millisecondsSinceEpoch.toString(),
+          'custom_data': {
+            'user_id': '123',
+            'order_id': '456',
+          },
         },
       }),
     ).then((value) {
@@ -58,20 +70,19 @@ class MessageProvider with ChangeNotifier{
           .collection("Users")
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection("UserInfo")
+         //.doc("MessageToken")
           .add({
         "Token": token,
       }).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Data uploaded Successfully'),
-        ));
+          print('Token uploaded Successfully');
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to upload token for messaging'),
+          content: Text('Failed to upload token for messaging: $error'),
         ));
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to upload data: $e'),
+        content: Text('Failed to upload token: $e'),
       ));
     }
   }

@@ -41,7 +41,6 @@ List<TopLiked> data = [
     name: "Korean Corn Dog",
   )
 ];
-bool isLoading = false;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -69,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
     userProvider.fetchUserData((){});
     cartProvider.fetchCartData((){});
     productProvider.fetchFoodProductData();
-    MessageProvider messageProvider = Provider.of(context, listen:false);
-    messageProvider.setupFirebaseMessaging(context);
+    // MessageProvider messageProvider = Provider.of(context, listen:false);
+    // messageProvider.setupFirebaseMessaging(context);
     super.initState();
   }
 
@@ -310,6 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 topRight: Radius.circular(15),
                                               ),
                                               child: SizedBox(
+                                                width: MediaQuery.of(context).size.width,
                                                 height: 100,// Set your desired height
                                                 child: Image.network(
                                                   productProvider.foodProductList[index].productImage!,

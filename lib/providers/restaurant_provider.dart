@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,8 +15,9 @@ class RestaurantModel {
   String? password;
   String? about;
   XFile? restaurantImage;
+  String? restaurantImageLink;
   String? token;
-  RestaurantModel({this.restaurantName,this.email,this.address,this.phone,this.password, this.about, this.restaurantImage, this.token});
+  RestaurantModel({this.restaurantName,this.email,this.address,this.phone,this.password, this.about, this.restaurantImage, this.token, this.restaurantImageLink});
 }
 
 class RestaurantProvider with ChangeNotifier {
@@ -25,23 +29,26 @@ class RestaurantProvider with ChangeNotifier {
     String? address,
     String? password,
     String? about,
-    XFile? restaurantImage,
+    File? restaurantImage,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
     try {
+      String imageUrl = await uploadImageToFirebase(restaurantImage!) as String;
       await FirebaseFirestore.instance
           .collection("RestaurantUsers")
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection("RestaurantInfo")
           .add({
+        "RestaurantId": FirebaseAuth.instance.currentUser?.uid,
         "RestaurantName": restaurantName,
         "Email": email,
         "Phone": phone,
         "Address": address,
         "Password": password,
         "About": about,
-        "Role": "Restaurant"
+        "Role": "Restaurant",
+        "RestaurantImage" : imageUrl
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Data uploaded Successfully'),
@@ -64,7 +71,10 @@ class RestaurantProvider with ChangeNotifier {
   List<RestaurantModel> restaurantInfoList = [];
   RestaurantModel restaurantModel = RestaurantModel();
   fetchRestaurantDetails(userId,callback) async {
-    String uid = userId ?? FirebaseAuth.instance.currentUser?.uid;
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    if (userId != ""){
+      uid = userId;
+    }
     List<RestaurantModel> newList = [];
     QuerySnapshot value = await FirebaseFirestore.instance
         .collection("RestaurantUsers")
@@ -75,17 +85,43 @@ class RestaurantProvider with ChangeNotifier {
       Map<String, dynamic> data = element.data() as Map<String, dynamic>;
 
       restaurantModel = RestaurantModel(
-          restaurantName: data["Username"],
+          restaurantName: data["RestaurantName"],
           email: data["Email"],
           address: data["Address"],
           phone: data['phone'],
           password: data["Password"],
           about: data["About"],
           token: data["Token"],
+          restaurantImageLink:data["RestaurantImage"]
       );
     });
     restaurantInfoList = newList;
-    callback(restaurantInfoList);
+    callback(restaurantModel);
     notifyListeners();
+  }
+
+  Future<String?> uploadImageToFirebase(File imageFile) async {
+    try {
+      // Convert XFile to File
+      File file = File(imageFile.path);
+
+      // Create a reference to the location you want to upload to in Firebase Storage
+      Reference storageReference = FirebaseStorage.instance.ref().child('RestaurantImages').child(DateTime.now().millisecondsSinceEpoch.toString());
+
+      // Upload the file to Firebase Storage
+      UploadTask uploadTask = storageReference.putFile(file);
+
+      // Await the completion of the upload task
+      await uploadTask;
+
+      // Get the download URL for the image
+      String imageUrl = await storageReference.getDownloadURL();
+
+      // Return the download URL
+      return imageUrl;
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
+      return null;
+    }
   }
 }
