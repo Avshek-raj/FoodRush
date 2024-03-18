@@ -83,11 +83,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-<<<<<<< HEAD
-        home: MainScreen(),
-=======
         home: LoginAs(),
->>>>>>> 968e0b56760f4f3e8d17c6566e69caf34cf46989
       )
 
     );

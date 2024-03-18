@@ -5,7 +5,6 @@ import 'package:foodrush/controllerRestaurant.dart/notification.dart';
 import 'package:foodrush/restaurantScreens/foodAdd.dart';
 import 'package:foodrush/restaurantScreens/restaurantProfile.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
-import 'package:foodrush/restaurantScreens/restaurantHome_screen.dart';
 import 'package:foodrush/restaurantScreens/settings.dart';
 
 class NavbarRestaurant extends StatefulWidget {

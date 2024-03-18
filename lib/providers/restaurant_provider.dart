@@ -85,7 +85,7 @@ class RestaurantProvider with ChangeNotifier {
       );
     });
     restaurantInfoList = newList;
-    callback(restaurantInfoList);
+    callback(restaurantModel);
     notifyListeners();
   }
 }
