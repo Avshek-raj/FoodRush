@@ -25,8 +25,9 @@ class OrderProvider with ChangeNotifier {
           .collection("Order")
           .doc(restaurantId)
           .collection("OrderItems")
-          .doc(orderId)
-          .set({
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection(orderId!)
+          .add({
         "OrderId": orderId,
         "OrderName": orderName,
         "UserImage": userImage,
@@ -35,14 +36,14 @@ class OrderProvider with ChangeNotifier {
         "UserName": userName,
         "UserId": userId
       }).then((_) {
-        print("Orders pulled successfully");
+        print("Orders pushed successfully");
         if (onSuccess != null) onSuccess(); // Call success callback
       }).catchError((error) {
-        print("Order pull failed");
+        print("Order push failed");
         if (onError != null) onError(error); // Call error callback
       });
     } catch (e) {
-      print('Order pull failed: $e');
+      print('Order push failed: $e');
     }
   }
 
@@ -92,4 +93,63 @@ class OrderProvider with ChangeNotifier {
   getNumOfCartItem(){
     return cartList.length;
   }
+
+  void addOrderList({// Add required BuildContext parameter
+    String? user,
+    String? userImage,
+    String? order,
+    String? userId,
+    VoidCallback? onSuccess, // Callback for success
+    Function(dynamic)? onError,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("OrderList")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection(DateTime.now().millisecondsSinceEpoch.toString())
+          .add({
+        "userId": userId,
+        "User": user,
+        "UserImage": userImage,
+        "Order": order,
+        "OrderedTime": DateTime.now().millisecondsSinceEpoch.toString(),
+      }).then((_) {
+        print("Orders list pused successfully");
+        if (onSuccess != null) onSuccess(); // Call success callback
+      }).catchError((error) {
+        print("Order list push failed");
+        if (onError != null) onError(error); // Call error callback
+      });
+    } catch (e) {
+      print('Order list push failed: $e');
+    }
+  }
+
+  List<OrderListModel> orderList = [];
+  late OrderListModel orderListModel;
+
+  fetchOrderList(callback) async{
+    isLoading = true;
+    List<OrderListModel> newList = [];
+    QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection("OrderItems").get();
+    value.docs.forEach((element) {
+      orderListModel = OrderListModel(user: element.get("User"),userImage: element.get("UserImage"), order: element.get("order"), userId: element.get("userId"));
+      newList.add(orderListModel);
+    });
+    orderList = newList;
+    cartItemNumber = cartList.length;
+    isLoading = false;
+    callback();
+    notifyListeners();
+  }
+}
+
+class OrderListModel {
+  String? user;
+  String? userImage;
+  String? order;
+  String? userId;
+  OrderListModel({this.user, this.userImage, this.order, this.userId});
 }

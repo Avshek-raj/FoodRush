@@ -50,20 +50,14 @@ class RestaurantProvider with ChangeNotifier {
         "Role": "Restaurant",
         "RestaurantImage" : imageUrl
       }).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Data uploaded Successfully'),
-        ));
+        print('Restaurant info uploaded Successfully');
         if (onSuccess != null) onSuccess();
       }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to upload data: $error'),
-        ));
-        if (onError != null) onError(error); // Call error callback
+        print('Error:Error on restaurant info upload');
+        if (onError != null) onError(error); 
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to upload data: $e'),
-      ));
+      print('Error:Error on restaurant info upload');
       if (onError != null) onError(e);
     }
   }

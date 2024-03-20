@@ -212,10 +212,14 @@ class _PaymentState extends State<Payment> {
                         sameRestaurantFoods += ", ${item.cartQuantity} ${item.cartName} ";
                       } else {
                         if (sameRestaurantFoods != ""){
+                          int lastCommaIndex = sameRestaurantFoods.lastIndexOf(',');
+                          if (lastCommaIndex != -1) {
+                            sameRestaurantFoods = sameRestaurantFoods.replaceRange(lastCommaIndex, lastCommaIndex + 1, ' and');
+                          }
                           await restaurantProvider.fetchRestaurantDetails(widget.cartList[index-1].restaurantId, (result){
                             messageProvider.sendNotificationToUser(result.token,
                                 "Order received from ${userProvider.userModel.username}",
-                                "${sameRestaurantFoods} has been order");
+                                "${sameRestaurantFoods} has been order",sameRestaurantFoods, userProvider.userModel);
                           });
                         }
                         sameRestaurantFoods = "";
@@ -224,10 +228,14 @@ class _PaymentState extends State<Payment> {
 
                       }
                       if (index == widget.cartList.length - 1){
+                        int lastCommaIndex = sameRestaurantFoods.lastIndexOf(',');
+                        if (lastCommaIndex != -1) {
+                          sameRestaurantFoods = sameRestaurantFoods.replaceRange(lastCommaIndex, lastCommaIndex + 1, ' and');
+                        }
                         restaurantProvider.fetchRestaurantDetails(widget.cartList[index-1].restaurantId, (result){
                           messageProvider.sendNotificationToUser(result.token,
                               "Order received from ${userProvider.userModel.username}",
-                              "${sameRestaurantFoods} has been order");
+                              "${sameRestaurantFoods} has been order", sameRestaurantFoods, userProvider.userModel);
                         });
                       }
                       if (count == widget.cartList.length - 1){

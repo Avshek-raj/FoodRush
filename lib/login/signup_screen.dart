@@ -250,18 +250,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   });
                 }
-                //)
-                // })
-                // FirebaseAuth.instance
-                //     .signInWithEmailAndPassword(
-                //     email: _emailTextController.text,
-                //     password: _passwordTextController.text)
-                //     .then((value) {
-                //   Navigator.push(context,
-                //       MaterialPageRoute(builder: (context) => HomeScreen()));
-                // }).onError((error, stackTrace) {
-                //   print("Error ${error.toString()}");
-                // });
               }),
               loginOption(),
             ],
