@@ -101,7 +101,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                           Spacer(),
                           Container(
                             height: 30,
-                            width: 107,
+                            width: 118,
                             decoration: BoxDecoration(
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(40),
@@ -129,6 +129,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                                 ),
                                 IconButton(
                                   onPressed: () {
+                                    
                                     setState(() {
                                       itemCount++;
                                     });
