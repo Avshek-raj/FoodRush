@@ -2,14 +2,18 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
 import 'package:foodrush/utils/color_utils.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 import '../Screens/home_screen.dart';
+import '../Screens/map.dart';
 import '../providers/restaurant_provider.dart';
 import '../restaurantScreens/navbarRestaurant.dart';
 import '../reusable_widgets/reusable_widget.dart';
@@ -21,18 +25,77 @@ class RegisterRestaurantScreen extends StatefulWidget {
   State<RegisterRestaurantScreen> createState() => _RegisterRestaurantScreenState();
 }
 
-class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen> {
+class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen>  with SingleTickerProviderStateMixin{
+  late AnimationController animationController;
+  late Animation<Offset> _offsetAnimation;
+  late GoogleMapController mapController;
+  late LatLng _center;
+  late LatLng address ;
+  late LocationData _currentLocation;
+  late String restaurantLocation;
   late RestaurantProvider restaurantProvider;
   final _formKey = new GlobalKey<FormState>();
   TextEditingController restaurantName = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController address = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController about = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
   File? file;
   XFile? restaurantImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0.0, 1.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    animationController.forward();
+  }
+
+  void _getLocation() async {
+    Location location = Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _currentLocation = await location.getLocation();
+    setState(() {
+      _center = LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
+      address = LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
+    });
+  }
+
+  Set<Marker> _markers = {};
+  LatLng? _markerPosition;
+
   @override
   Widget build(BuildContext context) {
     restaurantProvider = Provider.of(context);
@@ -86,11 +149,7 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        reusableTextFormField("Address", Icons.home, "address", address),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        reusableTextFormField("About Restaurant", Icons.description_outlined, "address", about),
+                        reusableTextFormField("About Restaurant", Icons.description_outlined, "text", about),
                         const SizedBox(
                           height: 20,
                         ),
@@ -147,6 +206,117 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text(
+                          "Set restaurant location",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                        SizedBox(height: 30,),
+                        Container(
+                          height: 250,
+                          child:
+                          GoogleMap(
+                            buildingsEnabled : true,
+                            myLocationEnabled : true,
+                            myLocationButtonEnabled :true,
+                            onMapCreated: (GoogleMapController controller) {
+                              mapController = controller;
+                            },
+                            initialCameraPosition: CameraPosition(
+                              target: _center,
+                              zoom: 15.0,
+                            ),
+                            markers: _markerPosition != null ? Set<Marker>.from([
+                              Marker(
+                                markerId: MarkerId('chosen-location'),
+                                position: _markerPosition!,
+                              ),
+                            ]) : <Marker>{},
+                            onTap: (LatLng latLng) async {
+                              //  setState(() async{
+                              //   address.text = await getAddressFromLatLng(latLng);
+                              // });
+                              showGeneralDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                transitionDuration: Duration(milliseconds: 500),
+                                pageBuilder: (BuildContext buildContext, Animation<double> animation,
+                                    Animation<double> secondaryAnimation) {
+                                  return SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: Offset(0, 1), // Adjust as needed, this is for sliding up from the bottom
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: Align(
+                                      alignment: Alignment.bottomCenter, // Align dialog to the bottom
+                                      child: Dialog(
+                                        insetPadding: EdgeInsets.fromLTRB(0, 100, 0, 0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min, // Ensure the dialog takes minimum space
+                                          children: [
+                                            GestureDetector(
+                                              onVerticalDragUpdate: (details) {
+                                                if (details.primaryDelta! > 0) {
+                                                  Navigator.of(context).pop(); // Close the dialog
+                                                }
+                                              },
+                                              child: Text(
+                                                'Tap on your location or swipe down to close',
+                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: MediaQuery.of(context).size.height-121, // Adjust the height as needed
+                                              width: MediaQuery.of(context).size.width,
+                                              child: GoogleMap(
+                                                myLocationEnabled: true,
+                                                myLocationButtonEnabled: true,
+                                                onMapCreated: (GoogleMapController controller) {
+                                                  mapController = controller;
+                                                },
+                                                initialCameraPosition: CameraPosition(
+                                                  target: latLng,
+                                                  zoom: 15.0,
+                                                ),
+                                                onTap: (LatLng latLng) async{
+                                                  setState(() {
+                                                    _markerPosition = latLng;
+                                                    address = latLng;// Update marker position
+                                                  });
+                                                  restaurantLocation = (await getAddressFromLatLng(latLng))!;
+                                                  Navigator.of(context).pop();
+                                                  //widget.onLocationSelected(latLng); // Call callback to pass location to parent widget
+                                                },
+                                                markers: _markerPosition != null
+                                                    ? Set<Marker>.from([
+                                                  Marker(
+                                                    markerId: MarkerId('chosen-location'),
+                                                    position: _markerPosition!,
+                                                  ),
+                                                ])
+                                                    : <Marker>{},
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+
+                              );
+
+
+
+                              print(address); // Handle tapped location
+                            },
+                          ),
+                        ),
                       ],
                     )),
                 SizedBox(
@@ -167,7 +337,8 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen> {
                           restaurantName: restaurantName.text,
                           email: email.text,
                           phone: phone.text,
-                          address: address.text,
+                          address: "",
+                          restaurantLatLng: _center,
                           password: password.text,
                           about: about.text,
                           restaurantImage: file,
@@ -257,6 +428,21 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen> {
     setState(() {
       file;
       restaurantImage; //file and image dubai aaye paxi dubai lai aru thau ma notify garnu xa tyesaile
+    });
+  }
+
+  void _onMapTapped(LatLng tappedLatLng) {
+    setState(() {
+      // Clear previous markers
+      _markers.clear();
+      // Add a new marker at the tapped location
+      _markers.add(
+        Marker(
+          markerId: MarkerId(tappedLatLng.toString()),
+          position: tappedLatLng,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        ),
+      );
     });
   }
 }

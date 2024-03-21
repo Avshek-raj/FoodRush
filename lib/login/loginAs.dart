@@ -49,22 +49,30 @@ class _LoginAsState extends State<LoginAs> {
   Widget build(BuildContext context) {
     userProvider = Provider.of(context);
     if (FirebaseAuth.instance.currentUser != null){
-      if (userProvider.userModel.role == "restaurant"){
+      if (userProvider.userModel.role?.toLowerCase() == "restaurant"){
+        return Scaffold(
+          body: isLoading
+              ? Center(
+            child: CircularProgressIndicator(),
+          ): NavbarRestaurant(),
+        );
+      } else if (userProvider.userModel.role?.toLowerCase() == "user"){
         return Scaffold(
           body: isLoading
               ? Center(
             child: CircularProgressIndicator(),
           )
-              : NavbarRestaurant(),
+              : MainScreen(),
+        );
+      }else {
+        return Scaffold(
+          body: isLoading
+              ? Center(
+            child: CircularProgressIndicator(),
+          )
+              : MainScreen(),
         );
       }
-      return Scaffold(
-        body: isLoading
-            ? Center(
-          child: CircularProgressIndicator(),
-        )
-            : MainScreen(),
-      );
     } else {
       return Scaffold(
         body: isLoading

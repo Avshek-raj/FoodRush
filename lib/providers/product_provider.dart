@@ -1,28 +1,57 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:foodrush/models/product_model.dart';
+import 'package:foodrush/providers/location_provider.dart';
+import 'package:foodrush/providers/user_provider.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 import '../Screens/home_screen.dart';
+import '../models/user_model.dart';
 import '../reusable_widgets/reusable_widget.dart';
 
-class ProductProvider with ChangeNotifier{
-
+class ProductProvider with ChangeNotifier {
   List<ProductModel> foodProductList = [];
   late ProductModel productModel;
+  late LocationProvider locationProvider;
+  Location location = Location();
 
-  fetchFoodProductData() async{
+  fetchFoodProductData() async {
     isLoading = true;
     List<ProductModel> newList = [];
-    QuerySnapshot value = await FirebaseFirestore.instance.collection("FoodProducts").get();
+    try {
+    QuerySnapshot value =
+    await FirebaseFirestore.instance.collection("FoodProducts").get();
     value.docs.forEach((element) {
-      productModel = ProductModel(productId: element.get("productId"),productName: element.get("productName"), productImage: element.get("productImage"), productPrice: element.get("productPrice"), productDesc: element.get("productDescription"), restaurantId: element.get("restaurantId"), restaurantName: element.get("restaurantName"));
-      newList.add(productModel);
+      try{
+        String? restaurantLatLng = element.get("restaurantLatLng");
+
+        // Check if "restaurantLatLng" field exists
+        if (restaurantLatLng != null) {
+          productModel = ProductModel(
+            productId: element.get("productId"),
+            productName: element.get("productName"),
+            productImage: element.get("productImage"),
+            productPrice: element.get("productPrice"),
+            productDesc: element.get("productDescription"),
+            restaurantId: element.get("restaurantId"),
+            restaurantName: element.get("restaurantName"),
+            restaurantLatLng: restaurantLatLng, // Assign the value if it exists
+          );
+          newList.add(productModel);
+        }
+      }catch (e) {
+        print(e);
+      }
+
     });
     foodProductList = newList;
-    isLoading = false;
+    fetchNearestFoods(newList);
+  }catch (e) {
+    print(e);
+  }
     notifyListeners();
   }
 
@@ -32,7 +61,8 @@ class ProductProvider with ChangeNotifier{
       List<ProductModel> newList = [];
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("FoodProducts")
-          .where('restaurantId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .where('restaurantId',
+              isEqualTo: FirebaseAuth.instance.currentUser?.uid)
           .get();
 
       querySnapshot.docs.forEach((document) {
@@ -58,9 +88,46 @@ class ProductProvider with ChangeNotifier{
     }
   }
 
-
-  get getFoodProductsDataList{
+  get getFoodProductsDataList {
     return foodProductList;
   }
 
+  List<ProductModel> nearestFoods = [];
+  fetchNearestFoods(foodList) async {
+    isLoading = true;
+    try{
+    LocationData currentLocation = await location.getLocation();
+    if (currentLocation != null) {
+      for (int i = 0; i < foodList.length; i++) {
+        LatLng restaurantLocation = getLatLngFromString(foodList[i].restaurantLatLng)!;
+        double haversine = calculateDistance(
+          currentLocation!.latitude!,
+          currentLocation!.longitude!,
+          restaurantLocation!.latitude!,
+          restaurantLocation!.longitude!,
+        );
+        if (haversine <=20){
+          nearestFoods.add(ProductModel(
+            productId: foodList[i].productId,
+            productName: foodList[i].productName,
+            productImage: foodList[i].productImage,
+            productPrice: foodList[i].productPrice,
+            productDesc: foodList[i].productDesc,
+            restaurantId: foodList[i].restaurantId,
+            restaurantName: foodList[i].restaurantName,
+            restaurantLatLng: foodList[i].restaurantLatLng,
+            distance: haversine,
+          ));
+        }
+      }
+      if (nearestFoods.length >1){
+        nearestFoods.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
+      }
+    }
+  }catch(e) {
+  print(e);
+  }
+  isLoading = false;
+    notifyListeners();
+  }
 }

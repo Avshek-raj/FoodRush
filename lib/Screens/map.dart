@@ -74,12 +74,12 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 
-Future<String> getAddressFromLatLng(LatLng latLng) async {
+Future<String?> getAddressFromLatLng(LatLng latLng) async {
   try {
     List<Placemark> placemarks = await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
     if (placemarks != null && placemarks.isNotEmpty) {
       Placemark placemark = placemarks[0];
-      return placemark.locality.toString() ??  placemark.subAdministrativeArea.toString() ;
+      return placemark.locality.toString() != ""? placemark.locality.toString() : placemark.subAdministrativeArea.toString() ;
       // You can access other details like placemark.locality, placemark.country, etc.
     } else {
       return "Address not found";

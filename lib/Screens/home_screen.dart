@@ -68,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
     userProvider.fetchUserData(() {});
     cartProvider.fetchCartData(() {});
     productProvider.fetchFoodProductData();
-    // MessageProvider messageProvider = Provider.of(context, listen:false);
-    // messageProvider.setupFirebaseMessaging(context);
+    MessageProvider messageProvider = Provider.of(context, listen:false);
+    messageProvider.setupFirebaseMessaging(context, "");
     super.initState();
   }
 
@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  "Near You",
+                                  "Near you",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount:
-                                      productProvider.foodProductList.length,
+                                      productProvider.nearestFoods.length,
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         0, 10, 10, 10), //2 ta box ko distance
@@ -275,40 +275,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     OrderDescription(
-                                                      productId: productProvider
-                                                          .foodProductList[
-                                                              index]
+                                                      productId:
+                                                      productProvider
+                                                          .nearestFoods[
+                                                      index]
                                                           .productId,
                                                       productName:
                                                           productProvider
-                                                              .foodProductList[
+                                                              .nearestFoods[
                                                                   index]
                                                               .productName,
                                                       productImage:
                                                           productProvider
-                                                              .foodProductList[
+                                                              .nearestFoods[
                                                                   index]
                                                               .productImage,
                                                       productPrice:
                                                           productProvider
-                                                              .foodProductList[
+                                                              .nearestFoods[
                                                                   index]
                                                               .productPrice,
                                                       productDesc:
                                                           productProvider
-                                                              .foodProductList[
+                                                              .nearestFoods[
                                                                   index]
                                                               .productDesc,
-                                                      restaurantName:
-                                                          productProvider
-                                                              .foodProductList[
-                                                                  index]
-                                                              .restaurantName,
-                                                      restaurantId:
-                                                          productProvider
-                                                              .foodProductList[
-                                                                  index]
-                                                              .restaurantId,
+                                                      restaurantName: productProvider
+                                                          .nearestFoods[
+                                                      index]
+                                                          .restaurantName,
+                                                      restaurantId: productProvider
+                                                          .nearestFoods[
+                                                      index]
+                                                          .restaurantId,
                                                     )));
                                       },
                                       child: Container(
@@ -407,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  "All Food",
+                                  "Full Menu",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -418,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(
                                     "View all",
                                     style: TextStyle(
-                                        // color: const Color.fromARGB(255, 55, 151, 59),
+                                      // color: const Color.fromARGB(255, 55, 151, 59),
                                         color: Colors.red,
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
@@ -434,60 +433,117 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: MediaQuery.of(context).size.width * 0.89,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: data.length,
+                                  itemCount:
+                                  productProvider.foodProductList.length,
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         0, 10, 10, 10), //2 ta box ko distance
-                                    child: Container(
-                                      height: 150,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.grey.shade400),
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: Column(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.only(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OrderDescription(
+                                                      productId:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productId,
+                                                      productName:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productName,
+                                                      productImage:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productImage,
+                                                      productPrice:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productPrice,
+                                                      productDesc:
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productDesc,
+                                                      restaurantName: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantName,
+                                                      restaurantId: productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .restaurantId,
+                                                    )));
+                                      },
+                                      child: Container(
+                                        height: 150,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.grey.shade400),
+                                            borderRadius:
+                                            BorderRadius.circular(15)),
+                                        child: Column(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(15),
-                                                topRight: Radius.circular(15)),
-                                            child: Image.asset(
-                                              data[index].image!,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10, left: 10),
-                                            child: Row(
-                                              children: [
-                                                Text(data[index].name!,
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16)),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  data[index].price!,
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
+                                                topRight: Radius.circular(15),
+                                              ),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context).size.width,
+                                                height: 100,// Set your desired height
+                                                child: Image.network(
+                                                  productProvider.foodProductList[index].productImage!,
+                                                  fit: BoxFit.cover,
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10, left: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                      productProvider
+                                                          .foodProductList[
+                                                      index]
+                                                          .productName!,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: 16)),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Rs. " +
+                                                        productProvider
+                                                            .foodProductList[
+                                                        index]
+                                                            .productPrice!,
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),

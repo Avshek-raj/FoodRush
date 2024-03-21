@@ -85,7 +85,6 @@ class HomeRestaurant extends StatefulWidget {
 
 class _HomeRestaurantState extends State<HomeRestaurant> {
   TextEditingController searchTextController = TextEditingController();
-
   late MessageProvider messageProvider;
   late RestaurantProvider restaurantProvider;
   late ProductProvider productProvider;
@@ -111,7 +110,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
       productProvider.fetchRestaurantProducts();
       orderProvider.fetchOrderData(() {});
       messageProvider = Provider.of(context, listen: false);
-      messageProvider.setupFirebaseMessaging(context);
+      messageProvider.setupFirebaseMessaging(context, "Restaurant");
     });
 
   }
@@ -125,8 +124,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
       body: _isLoading
           ? Center(
         child: CircularProgressIndicator(),
-      )
-          : SafeArea(
+      ): SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [

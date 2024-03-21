@@ -8,25 +8,31 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user_model.dart';
 import 'order_provider.dart';
 
 class MessageProvider with ChangeNotifier{
   late OrderProvider orderProvider;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  void setupFirebaseMessaging(BuildContext context) {
-    orderProvider = Provider.of(context);
+  void setupFirebaseMessaging(BuildContext context,String? role) {
+    orderProvider = Provider.of(context, listen: false);
 
     _firebaseMessaging.getToken().then((token) {
       print('Firebase Token: $token');
-        setMessageToken(context, token!);
+        setMessageToken(context, token!, role);
       // Send this token to your server to associate it with the user
     });
 
 
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('wah message: ${message.notification?.title}');
+      print('New message: ${message.notification?.title}');
+      String user = message.data['custom_data']['username'];
+      String orders = message.data['custom_data']['orders'];
+      String userImage = message.data['custom_data']['userImage'];
+      String userId = message.data['custom_data']['user_id'];
+      orderProvider.addOrderList(userId: userId, user: user, userImage: userImage, order: orders);
       // Display notification or handle the message as needed
     });
 
@@ -36,7 +42,7 @@ class MessageProvider with ChangeNotifier{
     });
   }
 
-  void sendNotificationToUser(String receiverToken, String title, String body) async {
+  void sendNotificationToUser(String receiverToken, String title, String body, String orders, UserModel userModel) async {
     await http.post(
       Uri.parse('https://fcm.googleapis.com/fcm/send'),
       headers: <String, String>{
@@ -48,10 +54,11 @@ class MessageProvider with ChangeNotifier{
         'notification': <String, dynamic>{
           'title': title,
           'body': body,
-          'id': DateTime.now().millisecondsSinceEpoch.toString(),
           'custom_data': {
-            'user_id': '123',
-            'order_id': '456',
+            'user_id': FirebaseAuth.instance.currentUser?.uid,
+            'username': userModel.username,
+            'userImage': userModel.userImage,
+            'orders': orders,
           },
         },
       }),
@@ -64,14 +71,14 @@ class MessageProvider with ChangeNotifier{
     print("sucess");
   }
 
-  void setMessageToken (BuildContext context, String token) async{
+  void setMessageToken (BuildContext context, String token, String? role) async{
     try {
       await FirebaseFirestore.instance
-          .collection("Users")
+          .collection("${role}Users")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection("UserInfo")
-         //.doc("MessageToken")
-          .add({
+          .collection(role=="Restaurant" ? "${role}Info" : "Info")
+          .doc("MessageToken")
+          .set({
         "Token": token,
       }).then((_) {
           print('Token uploaded Successfully');

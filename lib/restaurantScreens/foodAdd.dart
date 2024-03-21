@@ -168,11 +168,7 @@ class _AddFoodState extends State<AddFood> {
                                     TextButton(
                                       child: Text("Close"),
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddFood())); // Close dialog
+                                        Navigator.of(context).pop(); // Close dialog
                                       },
                                     ),
                                   ],
