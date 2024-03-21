@@ -181,7 +181,7 @@ class _CartState extends State<Cart> {
                           //for counter
                           Container(
                             height: 25,
-                            width: 94, // Adjust the width as needed
+                            width: 95, // Adjust the width as needed
                             decoration: BoxDecoration(
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(40),
