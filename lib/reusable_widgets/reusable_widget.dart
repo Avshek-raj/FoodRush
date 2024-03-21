@@ -353,6 +353,9 @@ class CartBadge extends StatelessWidget {
 
 
 LatLng? getLatLngFromString( coordinatesString) {
+  if (coordinatesString == null) {
+    return null;
+  }
   String cleanedString = coordinatesString.replaceAll("LatLng(", "").replaceAll(")", "");
 
   List<String> parts = cleanedString.split(", ");

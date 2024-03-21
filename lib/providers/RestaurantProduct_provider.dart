@@ -35,7 +35,7 @@ class RestaurantProductProvider with ChangeNotifier{
         "productPrice": productPrice,
         "restaurantId": FirebaseAuth.instance.currentUser?.uid,
         "restaurantName": restaurantProvider.restaurantModel.restaurantName,
-        "RestaurantLatLng":restaurantProvider.restaurantModel.restaurantLatLng
+        "RestaurantLatLng":restaurantProvider.restaurantModel.restaurantLatLng,
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Product added successfully'),

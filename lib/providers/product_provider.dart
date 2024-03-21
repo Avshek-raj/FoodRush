@@ -26,8 +26,12 @@ class ProductProvider with ChangeNotifier {
     await FirebaseFirestore.instance.collection("FoodProducts").get();
     value.docs.forEach((element) {
       try{
-        String? restaurantLatLng = element.get("restaurantLatLng");
-
+        String? restaurantLatLng;
+        try {
+           restaurantLatLng = element.get("restaurantLatLng");
+        } catch (e){
+          restaurantLatLng = null;
+        }
         // Check if "restaurantLatLng" field exists
         if (restaurantLatLng != null) {
           productModel = ProductModel(
@@ -39,6 +43,17 @@ class ProductProvider with ChangeNotifier {
             restaurantId: element.get("restaurantId"),
             restaurantName: element.get("restaurantName"),
             restaurantLatLng: restaurantLatLng, // Assign the value if it exists
+          );
+          newList.add(productModel);
+        } else {
+          productModel = ProductModel(
+            productId: element.get("productId"),
+            productName: element.get("productName"),
+            productImage: element.get("productImage"),
+            productPrice: element.get("productPrice"),
+            productDesc: element.get("productDescription"),
+            restaurantId: element.get("restaurantId"),
+            restaurantName: element.get("restaurantName"), // Assign the value if it exists
           );
           newList.add(productModel);
         }
@@ -99,26 +114,29 @@ class ProductProvider with ChangeNotifier {
     LocationData currentLocation = await location.getLocation();
     if (currentLocation != null) {
       for (int i = 0; i < foodList.length; i++) {
-        LatLng restaurantLocation = getLatLngFromString(foodList[i].restaurantLatLng)!;
-        double haversine = calculateDistance(
-          currentLocation!.latitude!,
-          currentLocation!.longitude!,
-          restaurantLocation!.latitude!,
-          restaurantLocation!.longitude!,
-        );
-        if (haversine <=20){
-          nearestFoods.add(ProductModel(
-            productId: foodList[i].productId,
-            productName: foodList[i].productName,
-            productImage: foodList[i].productImage,
-            productPrice: foodList[i].productPrice,
-            productDesc: foodList[i].productDesc,
-            restaurantId: foodList[i].restaurantId,
-            restaurantName: foodList[i].restaurantName,
-            restaurantLatLng: foodList[i].restaurantLatLng,
-            distance: haversine,
-          ));
+        if (foodList[i].restaurantLatLng!= null){
+          LatLng restaurantLocation = getLatLngFromString(foodList[i].restaurantLatLng)!;
+          double haversine = calculateDistance(
+            currentLocation!.latitude!,
+            currentLocation!.longitude!,
+            restaurantLocation!.latitude!,
+            restaurantLocation!.longitude!,
+          );
+          if (haversine <=20){
+            nearestFoods.add(ProductModel(
+              productId: foodList[i].productId,
+              productName: foodList[i].productName,
+              productImage: foodList[i].productImage,
+              productPrice: foodList[i].productPrice,
+              productDesc: foodList[i].productDesc,
+              restaurantId: foodList[i].restaurantId,
+              restaurantName: foodList[i].restaurantName,
+              restaurantLatLng: foodList[i].restaurantLatLng,
+              distance: haversine,
+            ));
+          }
         }
+
       }
       if (nearestFoods.length >1){
         nearestFoods.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
