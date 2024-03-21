@@ -8,6 +8,16 @@ import 'package:provider/provider.dart';
 
 import '../reusable_widgets/reusable_widget.dart';
 
+List<String> categories = [
+  'Snacks',
+  'Breakfast',
+  'Lunch',
+  'Dinner',
+  'Desserts',
+  'Beverage',
+  'Comboset',
+];
+
 class AddFood extends StatefulWidget {
   const AddFood({super.key});
 
@@ -16,6 +26,7 @@ class AddFood extends StatefulWidget {
 }
 
 class _AddFoodState extends State<AddFood> {
+  String? selectedCategory;
   final _formKey = new GlobalKey<FormState>();
   TextEditingController productName = TextEditingController();
   TextEditingController productPrice = TextEditingController();
@@ -78,6 +89,34 @@ class _AddFoodState extends State<AddFood> {
                       const SizedBox(
                         height: 20,
                       ),
+                    DropdownButtonFormField<Map<String, dynamic>>(
+                      value: selectedCategory,
+                      onChanged: (Map<String, dynamic>? newValue) {
+                        setState(() {
+                          selectedCategory = newValue;
+                        });
+                      },
+                      items: categories.map<DropdownMenuItem<Map<String, dynamic>>>((category) {
+                        return DropdownMenuItem<Map<String, dynamic>>(
+                          value: category,
+                          child: Row(
+                            children: [
+                              Icon(category['icon']),
+                              SizedBox(width: 8), // Adjust the space between icon and text
+                              Text(category['name']),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                        labelText: 'Category',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12), // Adjust the border radius
+                        ),
+                      ),
+                      isDense: true, // Reduce the height of the dropdown menu
+                    ),
+                      SizedBox(height: 20),
                       reusableTextFormField("Food Description",
                           Icons.description_outlined, "address", productDesc),
                       const SizedBox(

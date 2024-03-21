@@ -79,8 +79,8 @@ class _SearchState extends State<Search> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('FoodProducts')
-                  .where('productCode', isGreaterThanOrEqualTo: _searchController.text.toLowerCase())
-                  .orderBy('productCode')
+                  .where('productName', isGreaterThanOrEqualTo: _searchController.text.toLowerCase())
+                  .orderBy('productName')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
