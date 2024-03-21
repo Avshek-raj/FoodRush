@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/restaurantScreens/editFood.dart';
+import 'package:foodrush/restaurantScreens/profile2.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
 import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:foodrush/utils/color_utils.dart';
@@ -216,29 +218,34 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
               ),
 
               Divider(),
-              Padding(
-                padding: const EdgeInsets.all(13),
-                child: Row(
-                  children: [
-          
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Edit Your Food",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Spacer(),
-                              GestureDetector(
-                      onTap: () {
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(13),
+                  child: Row(
+                    children: [
 
-                      },
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.red,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Edit Profile",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
                       ),
-                    ),
-                  ],
+                      Spacer(),
+                                GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+                        },
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Divider(),

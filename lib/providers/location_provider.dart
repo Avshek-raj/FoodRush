@@ -1,5 +1,6 @@
 import 'dart:math';
 
+
 class LocationProvider {
   double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
     const earthRadius = 6371.0; // Radius of the Earth in kilometers
@@ -9,7 +10,6 @@ class LocationProvider {
     final lonRad1 = radians(lon1);
     final latRad2 = radians(lat2);
     final lonRad2 = radians(lon2);
-
     // Calculate differences in latitude and longitude
     final dLat = latRad2 - latRad1;
     final dLon = lonRad2 - lonRad1;
@@ -27,4 +27,5 @@ class LocationProvider {
   double radians(double degrees) {
     return degrees * (pi / 180);
   }
+
 }

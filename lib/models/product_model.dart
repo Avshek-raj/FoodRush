@@ -6,6 +6,8 @@ class ProductModel {
   String productDesc;
   String restaurantId;
   String restaurantName;
+  double? distance;
+  String? restaurantLatLng;
   ProductModel(
       {
       required this.productId,
@@ -14,6 +16,8 @@ class ProductModel {
       required this.productPrice,
       required this.productDesc,
       required this.restaurantId,
-      required this.restaurantName
+      required this.restaurantName,
+      this.distance,
+      this.restaurantLatLng,
       });
 }

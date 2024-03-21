@@ -1,7 +1,10 @@
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../Screens/MenuPage.dart';
 import '../Screens/cart_screen.dart';
@@ -327,6 +330,59 @@ class CartBadge extends StatelessWidget {
       ),
     );
   }
+}
+
+
+LatLng? getLatLngFromString( coordinatesString) {
+  String cleanedString = coordinatesString.replaceAll("LatLng(", "").replaceAll(")", "");
+
+  List<String> parts = cleanedString.split(", ");
+  if (parts.length == 2) {
+    double? latitude = double.tryParse(parts[0]);
+    double? longitude = double.tryParse(parts[1]);
+
+    if (latitude != null && longitude != null) {
+      return LatLng(latitude, longitude);
+    } else {
+      print('Invalid coordinates format.');
+      return null;
+    }
+  } else {
+    print('Invalid coordinates format.');
+    return null;
+  }
+}
+
+
+double calculateDistance(
+    double startLat,
+    double startLong,
+    double endLat,
+    double endLong,
+    ) {
+  const int earthRadius = 6371; // Earth's radius in kilometers
+
+  // Convert degrees to radians
+  double startLatRad = _degreesToRadians(startLat);
+  double startLongRad = _degreesToRadians(startLong);
+  double endLatRad = _degreesToRadians(endLat);
+  double endLongRad = _degreesToRadians(endLong);
+
+  // Calculate the difference between coordinates
+  double latDiff = endLatRad - startLatRad;
+  double longDiff = endLongRad - startLongRad;
+
+  // Calculate distance using Haversine formula
+  double a = pow(sin(latDiff / 2), 2) +
+      cos(startLatRad) * cos(endLatRad) * pow(sin(longDiff / 2), 2);
+  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+  double distance = earthRadius * c;
+
+  return distance;
+}
+
+double _degreesToRadians(double degrees) {
+  return degrees * pi / 180;
 }
 
 

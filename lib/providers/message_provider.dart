@@ -15,12 +15,12 @@ class MessageProvider with ChangeNotifier{
   late OrderProvider orderProvider;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  void setupFirebaseMessaging(BuildContext context) {
+  void setupFirebaseMessaging(BuildContext context,String? role) {
     orderProvider = Provider.of(context, listen: false);
 
     _firebaseMessaging.getToken().then((token) {
       print('Firebase Token: $token');
-        setMessageToken(context, token!);
+        setMessageToken(context, token!, role);
       // Send this token to your server to associate it with the user
     });
 
@@ -71,14 +71,14 @@ class MessageProvider with ChangeNotifier{
     print("sucess");
   }
 
-  void setMessageToken (BuildContext context, String token) async{
+  void setMessageToken (BuildContext context, String token, String? role) async{
     try {
       await FirebaseFirestore.instance
-          .collection("Users")
+          .collection("${role}Users")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection("UserInfo")
-         //.doc("MessageToken")
-          .add({
+          .collection(role=="Restaurant" ? "${role}Info" : "Info")
+          .doc("MessageToken")
+          .set({
         "Token": token,
       }).then((_) {
           print('Token uploaded Successfully');

@@ -20,7 +20,7 @@ class RestaurantProductProvider with ChangeNotifier{
     Function(dynamic)? onError,
   }) async {
     try{
-      restaurantProvider = Provider.of(context);
+      restaurantProvider = Provider.of(context, listen:false);
       String imageUrl = await uploadImageToFirebase(productImage!) as String;
       String documentId = DateTime.now().millisecondsSinceEpoch.toString();
       await FirebaseFirestore.instance
@@ -35,6 +35,7 @@ class RestaurantProductProvider with ChangeNotifier{
         "productPrice": productPrice,
         "restaurantId": FirebaseAuth.instance.currentUser?.uid,
         "restaurantName": restaurantProvider.restaurantModel.restaurantName,
+        "RestaurantLatLng":restaurantProvider.restaurantModel.restaurantLatLng
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Product added successfully'),

@@ -1,36 +1,42 @@
-//
-// getCurrentLocation(AddFutsal Provider addFutsalProvider, String role) async { LocationPermission permission= await Helper().getPermission();
-// if (permission==
-// LocationPermission.whileInUse ||
-// permission LocationPermission. always) {
-// Stream<Coordinate> coordinateStream
-// =
-// Helper().getCoordinateStream();
-// coordinateStream.listen((Coordinate coordinate) async {
-// setState(() {
-// lat =
-// coordinate.latitude;
-// long coordinate.longitude; address coordinate.address!;
-// });
-// ==
-// false)
-// if (addFutsal Provider.isValueDisplayed addFutsalProvider.setIsValueDisplayed (true);
-// if (role
-// ==
-// userStr) {
-// for (int i = 0; i < addFutsalProvider. futsallist.length; i++) { List<Location> startLocations = await locationFromAddress( addFutsalProvider.futsallist[i].address!);
-// }
-// double haversine = await Helper().calculateDistance(
-// lat!, long!,
-// startLocations.first.latitude, startLocations.first.longitude);
-// addFutsalProvider.futsalDetailsList.add(Futsal DetailsList(
-// } else {
-// }
-// futsalModel: addFutsalProvider.futsallist[i], distance: haversine));
-// List<Location> startLocations = await locationFromAddress( addFutsalProvider.futsalModel!.address!);
-// double haversine = await Helper().calculateDistance(lat!, long!, startLocations.first.latitude, startLocations.first.longitude);
-// addFutsalProvider.futsalDetailsList.add(FutsalDetailsList( futsalModel: addFutsalProvider.futsalModel,
-// distance: haversine));
-// addFutsalProvider.futsalDetailsList
-//     .sort((a, b) => (a.distance ?? 0).compareTo(b. distance ?? 0)); print(addFutsalProvider.futsalDetailsList);
-// });
+import 'dart:html';
+
+import 'package:foodrush/models/product_model.dart';
+import 'package:geocoding/geocoding.dart';
+
+import '../reusable_widgets/reusable_widget.dart';
+
+Future<void> fetchNearestFoods(currentLocation, restaurantLocation, foodList) async {
+  if (currentLocation != null) {
+    List<ProductModel> nearestFoods = [];
+
+    double lat = restaurantLocation.latitude;
+    double long = restaurantLocation.longitude;
+
+
+    // Calculate distances and get nearest foods
+    for (int i = 0; i < foodList.length; i++) {
+      double haversine = calculateDistance(
+        currentLocation!.latitude!,
+        currentLocation!.longitude!,
+        lat,
+        long,
+      );
+
+
+      nearestFoods.add(foodList(
+        productId: foodList[i].productId,
+        productName: foodList[i].productName,
+        productImage: foodList[i].productImage,
+        productPrice: foodList[i].productPrice,
+        productDesc: foodList[i].productDescription,
+        restaurantId: foodList[i].restaurantId,
+        restaurantName: foodList[i].restaurantName,
+        distance: haversine,
+      ));
+    }
+
+    nearestFoods.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
+
+
+  }
+}

@@ -10,5 +10,6 @@ class UserModel {
   String? userImage;
   List<DeliveryInfoModel>? deliveryInfo;
   String? token;
-  UserModel({this.username,this.email,this.address,this.phone,this.password, this.role, this.deliveryInfo, this.token, this.userImage});
+  String? userLatLng;
+  UserModel({this.username,this.email,this.address,this.phone,this.password, this.role, this.deliveryInfo, this.token, this.userImage, this.userLatLng});
 }

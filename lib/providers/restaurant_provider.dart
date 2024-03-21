@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RestaurantModel {
@@ -17,7 +18,9 @@ class RestaurantModel {
   XFile? restaurantImage;
   String? restaurantImageLink;
   String? token;
-  RestaurantModel({this.restaurantName,this.email,this.address,this.phone,this.password, this.about, this.restaurantImage, this.token, this.restaurantImageLink});
+  String? restaurantLatLng;
+  String? role;
+  RestaurantModel({this.role, this.restaurantLatLng, this.restaurantName,this.email,this.address,this.phone,this.password, this.about, this.restaurantImage, this.token, this.restaurantImageLink});
 }
 
 class RestaurantProvider with ChangeNotifier {
@@ -27,6 +30,7 @@ class RestaurantProvider with ChangeNotifier {
     String? email,
     String? phone,
     String? address,
+    LatLng? restaurantLatLng,
     String? password,
     String? about,
     File? restaurantImage,
@@ -39,11 +43,13 @@ class RestaurantProvider with ChangeNotifier {
           .collection("RestaurantUsers")
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection("RestaurantInfo")
-          .add({
+          .doc("Details")
+          .set({
         "RestaurantId": FirebaseAuth.instance.currentUser?.uid,
         "RestaurantName": restaurantName,
         "Email": email,
         "Phone": phone,
+        "RestaurantLatLng": restaurantLatLng.toString(),
         "Address": address,
         "Password": password,
         "About": about,
@@ -86,7 +92,9 @@ class RestaurantProvider with ChangeNotifier {
           password: data["Password"],
           about: data["About"],
           token: data["Token"],
-          restaurantImageLink:data["RestaurantImage"]
+          restaurantImageLink:data["RestaurantImage"],
+        restaurantLatLng: data["RestaurantLatLng"],
+        role: data["Role"],
       );
     });
     restaurantInfoList = newList;

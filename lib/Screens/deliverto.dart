@@ -328,7 +328,7 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
                                         setState(() {
                                           _markerPosition = latLng; // Update marker position
                                         });
-                                        address.text = await getAddressFromLatLng(latLng);
+                                        address.text = (await getAddressFromLatLng(latLng))!;
                                         Navigator.of(context).pop();
                                         //widget.onLocationSelected(latLng); // Call callback to pass location to parent widget
                                       },

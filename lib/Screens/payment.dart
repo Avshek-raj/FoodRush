@@ -207,7 +207,7 @@ class _PaymentState extends State<Payment> {
                           userName: userProvider.userModel.username,
                           restaurantId: item.restaurantId
                         );
-                     cartProvider.deleteCartItem(item.cartId);
+                      cartProvider.deleteCartItem(item.cartId);
                       if (item.restaurantName == oldRestaurantName){
                         sameRestaurantFoods += ", ${item.cartQuantity} ${item.cartName} ";
                       } else {
@@ -220,7 +220,7 @@ class _PaymentState extends State<Payment> {
                             messageProvider.sendNotificationToUser(result.token,
                                 "Order received from ${userProvider.userModel.username}",
                                 "${sameRestaurantFoods} has been order",sameRestaurantFoods, userProvider.userModel);
-                          });
+                            });
                         }
                         sameRestaurantFoods = "";
                         oldRestaurantName = item.restaurantName;
