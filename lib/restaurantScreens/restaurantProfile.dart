@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/restaurantScreens/editFood.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
 import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:foodrush/utils/color_utils.dart';
+import 'package:provider/provider.dart';
+
+import '../login/loginAs.dart';
 
 class ProfileRestaurant extends StatefulWidget {
   const ProfileRestaurant({super.key});
@@ -13,8 +18,10 @@ class ProfileRestaurant extends StatefulWidget {
 }
 
 class _ProfileRestaurantState extends State<ProfileRestaurant> {
+  late RestaurantProvider restaurantProvider;
   @override
   Widget build(BuildContext context) {
+    restaurantProvider = Provider.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -33,8 +40,8 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(14),
-                      child: Image.asset(
-                        "assets/images/deliveryPhoto.png",
+                      child: Image.network(
+                        restaurantProvider.restaurantModel.restaurantImageLink! as String,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -119,7 +126,7 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "Newa Lahana",
+                        restaurantProvider.restaurantModel.restaurantName?? "",
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -146,7 +153,7 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "Banepa, Ram-Mandir",
+                        restaurantProvider.restaurantModel.address??"",
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -173,7 +180,7 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "Lahana234@gmail.com",
+                        restaurantProvider.restaurantModel.email??"",
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -200,7 +207,7 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "+977 9823231250",
+                        "+977 ${restaurantProvider.restaurantModel.phone??""}",
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -224,9 +231,7 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                     Spacer(),
                               GestureDetector(
                       onTap: () {
-                           Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => EditFood()),);
+
                       },
                       child: Icon(
                         Icons.edit,
@@ -266,12 +271,9 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                               foregroundColor: Colors.white,
                               backgroundColor: Colors.red,
                             ),
-                            onPressed: () {
-                              // Perform logout actions
-                              // For example, you can navigate to the login screen or clear user data
-                              Navigator.of(context).pop(); // Close the dialog
-                              // Call the logout function
-                              logoutUser();
+                            onPressed: () async{
+                              await FirebaseAuth.instance.signOut().then((value) =>
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginAs())));
                             },
                             child: Text("Yes"),
                           ),
@@ -304,8 +306,3 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
   }
 }
 
-void logoutUser() {
-  // Perform the logout action here
-  // For example, you can navigate to the login screen or clear user data
-  print("User logged out");
-}

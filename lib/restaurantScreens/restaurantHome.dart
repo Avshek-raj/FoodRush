@@ -1,4 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
+import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/message_provider.dart';
+import '../providers/order_provider.dart';
+import '../providers/product_provider.dart';
+import 'editFood.dart';
 
 List<OrderStatus> data = [
   OrderStatus(
@@ -52,8 +61,8 @@ List<YourFood> data2 = [
       price: "Rs. 320",
       name: "Newari Khaja-Set"),
   YourFood(
-      image: "assets/images/jhol-momo.png", 
-      price: "Rs. 140", 
+      image: "assets/images/jhol-momo.png",
+      price: "Rs. 140",
       name: "Jhol Mo:Mo"),
   YourFood(
       image: "assets/images/spicychicken.png",
@@ -65,9 +74,10 @@ List<YourFood> data2 = [
     name: "Korean Corn Dog",
   )
 ];
+bool _isLoading = false;
 
 class HomeRestaurant extends StatefulWidget {
-  const HomeRestaurant({Key? key}) : super(key: key);
+  const HomeRestaurant({super.key});
 
   @override
   State<HomeRestaurant> createState() => _HomeRestaurantState();
@@ -76,46 +86,81 @@ class HomeRestaurant extends StatefulWidget {
 class _HomeRestaurantState extends State<HomeRestaurant> {
   TextEditingController searchTextController = TextEditingController();
 
+  late MessageProvider messageProvider;
+  late RestaurantProvider restaurantProvider;
+  late ProductProvider productProvider;
+  late OrderProvider orderProvider;
+
+  @override
+  void initState()  {
+    super.initState();
+    // RestaurantProvider restaurantProvider = Provider.of(context, listen:false);
+    // ProductProvider productProvider = Provider.of(context, listen: false);
+    // OrderProvider orderProvider = Provider.of(context, listen:false);
+    //  restaurantProvider.fetchRestaurantDetails("",(){});
+    //  productProvider.fetchRestaurantProducts();
+    //  orderProvider.fetchOrderData((){});
+    // MessageProvider messageProvider = Provider.of(context, listen:false);
+    // messageProvider.setupFirebaseMessaging(context);
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      // Access inherited widgets or elements here
+      restaurantProvider = Provider.of(context, listen: false);
+      productProvider = Provider.of(context, listen: false);
+      orderProvider = Provider.of(context, listen: false);
+      restaurantProvider.fetchRestaurantDetails("", () {});
+      productProvider.fetchRestaurantProducts();
+      orderProvider.fetchOrderData(() {});
+      messageProvider = Provider.of(context, listen: false);
+      messageProvider.setupFirebaseMessaging(context);
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    restaurantProvider = Provider.of(context);
+    productProvider = Provider.of(context);
+    orderProvider = Provider.of(context);
     return Scaffold(
-      body: SafeArea(
+      body: _isLoading
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.only(right: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(18),
                       child: Container(
-  decoration: BoxDecoration(
-    shape: BoxShape.circle,
-    border: Border.all(
-      color: Colors.grey.shade200,
-      width: 1,
-    ),
-  ),
-  child: CircleAvatar(
-    radius: 35,
-    backgroundColor: Colors.transparent,
-    child: ClipOval(
-      child: Image.asset(
-        "assets/images/newalahana.png",
-        fit: BoxFit.cover,
-      ),
-    ),
-  ),
-),
-
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.grey.shade200,
+                            width: 1,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.network(
+                            restaurantProvider.restaurantModel.restaurantImageLink.toString(),
+                            fit: BoxFit.cover,
+                            width: 70, // Adjust the width as needed
+                            height: 70, // Adjust the height as needed
+                          ),
+                        ),
+                      ),
                     ),
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Hello,",
+                          "Greetings,",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,
@@ -123,7 +168,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                           ),
                         ),
                         Text(
-                          "Newa Lahana",
+                          restaurantProvider.restaurantModel.restaurantName??"",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -133,9 +178,14 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                       ],
                     ),
                     Spacer(),
-                    Icon(
-                      Icons.notifications_on_outlined,
-                      color: Colors.red,
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => NavbarRestaurant(page: 2,)));
+                      },
+                      child: Icon(
+                        Icons.notifications_on_outlined,
+                        color: Colors.red,
+                      ),
                     ),
                   ],
                 ),
@@ -178,9 +228,9 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:10 ),
+                    padding: const EdgeInsets.symmetric( horizontal: 20),
                     child: Text(
-                    
+
                       "Order Status",
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,),
                     ),
@@ -200,8 +250,23 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                 child: Padding(
                   padding: const EdgeInsets.all(7),
                   child: ListView.builder(
-                    itemCount: data.length,
+                    itemCount: orderProvider.cartList.length == 0? 1:  orderProvider.cartList.length ,
                     itemBuilder: (context, index) {
+                      if (orderProvider.cartList.length == 0){
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 100),
+                          child: Center(
+                            child: Text(
+                              "You don't have any orders currently",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }else
                       return Column(
                         children: [
                           Row(
@@ -217,7 +282,9 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                 ),
                                 child: CircleAvatar(
                                   radius: 20,
-                                  child: Image.asset(data[index].avatarImage),
+                                  child: orderProvider.cartList[index].userImage != ""
+                                      ?Image.network(orderProvider.cartList[index].userImage!)
+                                  : Icon(Icons.supervised_user_circle),
                                   backgroundColor: Colors.transparent,
                                 ),
                               ),
@@ -226,12 +293,12 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    data[index].customerName!,
+                                    orderProvider.cartList[index].userName??"",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                      'Order Number: ${data[index].orderNumber}'),
+                                      'Order Number: ${orderProvider.cartList[index].orderId}'),
                                   Text('Address: ${data[index].address}'),
                                 ],
                               ),
@@ -240,7 +307,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    '\RS:${data[index].amount}',
+                                    '\RS:${int.parse(orderProvider.cartList[index].orderPrice!) * orderProvider.cartList[index].orderQuantity!}',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                         overflow: TextOverflow.ellipsis,
@@ -281,7 +348,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
               //for  YourFood
               SizedBox(height: 10,),
                      Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                       child: Row(
                         children: [
                           Text(
@@ -300,66 +367,95 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                         ],
                       ),
                     ),
-                    
+
                  Padding(
-                   padding: const EdgeInsets.symmetric(horizontal: 10),
+                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                    child: Row(
                         children: [
                           SizedBox(
                             height: 230,
-                            width: MediaQuery.of(context).size.width * 0.90,
+                            width: MediaQuery.of(context).size.width * 0.89,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: data.length,
-                              itemBuilder: (context, index) => Padding(
+                              itemCount: productProvider.foodProductList.length == 0? 1 : productProvider.foodProductList.length,
+                              itemBuilder: (context, index) =>
+                              productProvider.foodProductList.length == 0 ?
+                              Container(
+                                width: MediaQuery.of(context).size.width* 0.89,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "You haven't uploaded any foods yet",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                                :  Padding(
                                 padding: const EdgeInsets.all(
                                     10), //2 ta box ko distance
-                                child: Container(
-                                  height: 200,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: Colors.grey.shade400),
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: Column(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.only(
+                                child: GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => EditFood( productModel: productProvider.foodProductList[index],)),);
+                                  },
+                                  child: Container(
+                                    height: 200,
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.grey.shade400),
+                                        borderRadius: BorderRadius.circular(15)),
+                                    child: Column(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(15),
-                                            topRight: Radius.circular(15)),
-                                        child: Image.asset(
-                                          data2[index].image!,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10, left: 10),
-                                        child: Row(
-                                          children: [
-                                            Text(data2[index].name!,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 18)),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 10),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              data2[index].price!,
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 18),
+                                            topRight: Radius.circular(15),
+                                          ),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            height: 145,// Set your desired height
+                                            child: Image.network(
+                                              productProvider.foodProductList[index].productImage??"",
+                                              fit: BoxFit.cover,
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10, left: 10),
+                                          child: Row(
+                                            children: [
+                                              Text(productProvider.foodProductList[index].productName??"",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 18)),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 10),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Rs. " +productProvider.foodProductList[index].productPrice??"",
+                                                style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 18),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

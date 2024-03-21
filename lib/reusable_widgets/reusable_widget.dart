@@ -13,6 +13,9 @@ int? cartItemNumber;
 String? deliveryAddress;
 String? deliveryLandmark;
 
+
+bool isLoading = false;
+
 DeliveryInfoModel deliveryIngoModel = DeliveryInfoModel();
 
 Image logoWidget(String imageName) {
@@ -212,10 +215,12 @@ TextField reusableTextField(String text, IconData icon, String fieldInputType,
   );
 }
 
-GestureDetector menuItem(context, String itemName, String icon){
+
+GestureDetector menuItem(BuildContext context, String itemName, String icon, int page) {
   return GestureDetector(
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Menu()));
+      // Navigate to the menu screen when the menu item is tapped
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Menu(initialTabIndex: page,)));
     },
     child: Container(
       height: 76,
@@ -225,18 +230,35 @@ GestureDetector menuItem(context, String itemName, String icon){
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            icon,
-            height: 40,
-            width: 40,
+          Padding(
+            padding: const EdgeInsets.all(3),
+            child: Container(
+              child: Image.asset(
+                icon,
+                height: 45,
+                width: 45,
+              ),
+            ),
           ),
-          Text(itemName),
+          SizedBox(height: 4), // Adding some space between icon and text
+          // Wrap the Text widget with Flexible to prevent overflow
+          Flexible(
+            child: Text(
+              style: TextStyle(fontWeight: FontWeight.w400),
+              itemName,
+              textAlign: TextAlign.center, // Adjust text alignment if needed
+              overflow: TextOverflow.clip, // Handle overflow by ellipsis
+              maxLines: 2, // Limit maximum lines to prevent excessive overflow
+            ),
+          ),
         ],
       ),
     ),
-  ) ;
+  );
 }
+
 
 Container setItemCount(int count) {
   return Container(

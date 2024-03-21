@@ -161,6 +161,7 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen> {
                     FirebaseAuth.instance.createUserWithEmailAndPassword(
                         email: email.text,
                         password: password.text).then ((value) {
+                      value.user?.sendEmailVerification();
                         restaurantProvider.addRestaurantDetails(
                           context: context,
                           restaurantName: restaurantName.text,
@@ -169,9 +170,24 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen> {
                           address: address.text,
                           password: password.text,
                           about: about.text,
+                          restaurantImage: file,
                           onSuccess: (){
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => SignInScreen()));
+                            setState(() {
+                              isLoading = false;
+                            });
+                            showDialog(context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Message"),
+                                    content: Text("Verification link is sent to your email. Please verify before login"),
+                                    actions: [
+                                      TextButton(onPressed: (){
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) => SignInScreen()));
+                                      }, child: Text('OK'))
+                                    ],
+                                  );
+                                });
                           },
                           onError: (e){
                             setState(() {

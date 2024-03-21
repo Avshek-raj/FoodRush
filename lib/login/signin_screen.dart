@@ -30,11 +30,15 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser?.emailVerified == true ? MainScreen()
-        :isLoading ?
-    Center(
-      child: CircularProgressIndicator(),
-    ) :Container(
+    return Scaffold(body:
+    // FirebaseAuth.instance.currentUser != null
+    //     // && FirebaseAuth.instance.currentUser?.emailVerified == true
+    //     ? ()
+    //     :isLoading ?
+    // Center(
+    //   child: CircularProgressIndicator(),
+    // ) :
+    Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       // decoration: BoxDecoration(

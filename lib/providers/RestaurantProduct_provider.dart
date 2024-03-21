@@ -4,8 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
+import 'package:foodrush/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class RestaurantProductProvider with ChangeNotifier{
+  late RestaurantProvider restaurantProvider;
   void addProduct({
     required BuildContext context,
     String? productName,
@@ -16,6 +20,7 @@ class RestaurantProductProvider with ChangeNotifier{
     Function(dynamic)? onError,
   }) async {
     try{
+      restaurantProvider = Provider.of(context);
       String imageUrl = await uploadImageToFirebase(productImage!) as String;
       String documentId = DateTime.now().millisecondsSinceEpoch.toString();
       await FirebaseFirestore.instance
@@ -28,7 +33,8 @@ class RestaurantProductProvider with ChangeNotifier{
         "productDescription": productDesc,
         "productId": documentId,
         "productPrice": productPrice,
-        "restaurantId": FirebaseAuth.instance.currentUser?.uid
+        "restaurantId": FirebaseAuth.instance.currentUser?.uid,
+        "restaurantName": restaurantProvider.restaurantModel.restaurantName,
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Product added successfully'),

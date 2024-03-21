@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     Search(),
-    Menu(),
+    Menu(initialTabIndex: 0,),
     Cart(),
     ProfileScreen(),
   ];

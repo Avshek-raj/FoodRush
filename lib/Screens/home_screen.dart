@@ -13,35 +13,34 @@ import 'deliverto.dart';
 import 'map.dart';
 import 'orderDescription_screen.dart';
 
-class TopLiked {
+class NearYou {
   String? image, price, name;
-  TopLiked({this.image, this.name, this.price});
+  NearYou({this.image, this.name, this.price});
 }
 
-List<TopLiked> data = [
-  TopLiked(
+List<NearYou> data = [
+  NearYou(
       image: "assets/images/cheeseburger.png",
       price: "Rs. 400",
       name: "Cheese Burger"),
-  TopLiked(
+  NearYou(
       image: "assets/images/jhol-momo.png",
       price: "Rs. 140",
       name: "Jhol Mo:Mo"),
-  TopLiked(
+  NearYou(
       image: "assets/images/garlicnaan.png",
       price: "Rs. 320",
       name: "Garlic Naan"),
-  TopLiked(
+  NearYou(
       image: "assets/images/spicychicken.png",
       price: "Rs. 500",
       name: "Spicy Chicken"),
-  TopLiked(
+  NearYou(
     image: "assets/images/cd.png",
     price: "Rs. 350",
     name: "Korean Corn Dog",
   )
 ];
-bool isLoading = false;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,14 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    UserProvider userProvider = Provider.of(context, listen:false);
+    UserProvider userProvider = Provider.of(context, listen: false);
     ProductProvider productProvider = Provider.of(context, listen: false);
     CartProvider cartProvider = Provider.of(context, listen: false);
-    userProvider.fetchUserData((){});
-    cartProvider.fetchCartData((){});
+    userProvider.fetchUserData(() {});
+    cartProvider.fetchCartData(() {});
     productProvider.fetchFoodProductData();
-    MessageProvider messageProvider = Provider.of(context, listen:false);
-    messageProvider.setupFirebaseMessaging(context);
+    // MessageProvider messageProvider = Provider.of(context, listen:false);
+    // messageProvider.setupFirebaseMessaging(context);
     super.initState();
   }
 
@@ -90,13 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: SingleChildScrollView(
-                child: Padding(
+                  child: Padding(
                 padding: EdgeInsets.fromLTRB(
                     20, MediaQuery.of(context).size.height * 0.02, 20, 0),
                 child: Column(
                   children: [
                     SizedBox(height: 20),
-                     Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
@@ -113,26 +112,31 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DeliverTo()));
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DeliverTo()));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "Deliver to",
-                                style:
-                                TextStyle(color: Colors.black, fontSize: 15),
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 15),
                               ),
                               Text(
-                                userProvider.deliveryInfoModel.address?? "street,city",
+                                userProvider.deliveryInfoModel.address ??
+                                    "street,city",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16),
                               ),
                               Text(
-                                userProvider.deliveryInfoModel.landmark ?? "Nearest landmark",
+                                userProvider.deliveryInfoModel.landmark ??
+                                    "Nearest landmark",
                                 style: TextStyle(
                                     color: Colors.black45, fontSize: 12),
                               ),
@@ -141,14 +145,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Spacer(), // Add some spacing between buttons
                         CartBadge(
-                          itemCount: cartProvider.cartList.length,)
+                          itemCount: cartProvider.cartList.length,
+                        )
                       ],
                     ),
                     SizedBox(height: 15),
-                    reusableTextField("Search Food, Drink, etc",
-                        Icons.search_outlined, "search", searchTextController, (value){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen()));
-                        }),
+                    reusableTextField(
+                        "Search Food, Drink, etc",
+                        Icons.search_outlined,
+                        "search",
+                        searchTextController, (value) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MapScreen()));
+                    }),
                     SizedBox(
                       height: 30,
                     ),
@@ -163,20 +172,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Row(
                               children: [
-                                menuItem(context, "Pizza", "assets/images/pizza.png"),
+                                
+                                menuItem(context, "Snacks",
+                                    "assets/images/Vsnacks.png", 1),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(context, "Burger", "assets/images/burger.png"),
+                                menuItem(context, "Breakfast",
+                                    "assets/images/Vbreakfast.png", 2),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(context,
-                                    "Chicken", "assets/images/chickenfry.png"),
+                                menuItem(context, "Lunch",
+                                    "assets/images/Vlunch.png", 3),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(context, "Hotdog", "assets/images/hotdog.png"),
+                                menuItem(context, "Dinner",
+                                    "assets/images/Vdinner.png", 4),
                               ],
                             ),
                             SizedBox(
@@ -184,26 +197,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Row(
                               children: [
-                                menuItem(context, "Yomari", "assets/images/yomari.png"),
+                                menuItem(context, "Desserts",
+                                    "assets/images/Vdessert.png", 5),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(context, "Sushi", "assets/images/sushi.png"),
+                                menuItem(context, "Beverage",
+                                    "assets/images/Vbeverage.png", 6),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(context,
-                                    "Noodles", "assets/images/noodles.png"),
+                                menuItem(context, "Combo Set",
+                                    "assets/images/VCombo.png", 7),
                                 SizedBox(
                                   width: 15,
                                 ),
-                                menuItem(context, "All", "assets/images/more.png"),
+                                menuItem(context, "All",
+                                    "assets/images/more.png", 0),
                               ],
                             ),
                           ],
                         )),
 
-                    //Top liked container
+                    //Near You container
                     Container(
                       height: 210,
                       width: 350,
@@ -220,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  "Top Liked",
+                                  "Near You",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -259,10 +275,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     OrderDescription(
-                                                      productId:
-                                                      productProvider
+                                                      productId: productProvider
                                                           .foodProductList[
-                                                      index]
+                                                              index]
                                                           .productId,
                                                       productName:
                                                           productProvider
@@ -284,14 +299,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               .foodProductList[
                                                                   index]
                                                               .productDesc,
-                                                      restaurantName: productProvider
-                                                          .foodProductList[
-                                                      index]
-                                                          .restaurantName,
-                                                      restaurantId: productProvider
-                                                          .foodProductList[
-                                                      index]
-                                                          .restaurantId,
+                                                      restaurantName:
+                                                          productProvider
+                                                              .foodProductList[
+                                                                  index]
+                                                              .restaurantName,
+                                                      restaurantId:
+                                                          productProvider
+                                                              .foodProductList[
+                                                                  index]
+                                                              .restaurantId,
                                                     )));
                                       },
                                       child: Container(
@@ -310,9 +327,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 topRight: Radius.circular(15),
                                               ),
                                               child: SizedBox(
-                                                height: 100,// Set your desired height
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height:
+                                                    100, // Set your desired height
                                                 child: Image.network(
-                                                  productProvider.foodProductList[index].productImage!,
+                                                  productProvider
+                                                      .foodProductList[index]
+                                                      .productImage!,
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -367,6 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                    //All Food container
                     Container(
                       height: 210,
                       width: 350,
@@ -383,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  "Near you",
+                                  "All Food",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -480,5 +504,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-

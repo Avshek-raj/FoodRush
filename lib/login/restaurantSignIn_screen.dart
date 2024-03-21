@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Screens/home_screen.dart';
 import '../Screens/Navigation.dart';
+import '../restaurantScreens/navbarRestaurant.dart';
 import '../utils/color_utils.dart';
 
 class RestaurantSignInScreen extends StatefulWidget {
@@ -128,13 +129,13 @@ class _RestaurantSignInScreenState extends State<RestaurantSignInScreen> {
                                 isLoading = true;
                               });
                               if (username == 'admin' && password == 'admin'){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => NavbarRestaurant()));
                               }
                               FirebaseAuth.instance.signInWithEmailAndPassword(
                                   email: _emailTextController.text,
                                   password: _passwordTextController.text).then ((value) {
                                 print(value.toString());
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => NavbarRestaurant()));
                               }).onError((error, stackTrace) {
                                 setState(() {
                                   isLoading =false;

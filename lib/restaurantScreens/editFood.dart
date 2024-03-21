@@ -6,10 +6,12 @@ import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../models/product_model.dart';
 import '../reusable_widgets/reusable_widget.dart';
 
 class EditFood extends StatefulWidget {
-  const EditFood({super.key});
+  ProductModel productModel;
+  EditFood({Key? key, required this.productModel}) : super(key: key);
 
   @override
   State<EditFood> createState() => _EditFoodState();
@@ -25,6 +27,8 @@ class _EditFoodState extends State<EditFood> {
   XFile? image;
   @override
   Widget build(BuildContext context) {
+    productName.text = widget.productModel.productName;
+    productName.text = widget.productModel.productName;
     restaurantProductProvider = Provider.of(context);
     return Scaffold(
       body: SafeArea(
@@ -174,7 +178,7 @@ class _EditFoodState extends State<EditFood> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    EditFood())); // Close dialog
+                                                    HomeRestaurant())); // Close dialog
                                       },
                                     ),
                                   ],

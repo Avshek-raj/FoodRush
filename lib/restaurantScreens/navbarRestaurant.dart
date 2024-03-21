@@ -8,7 +8,8 @@ import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 import 'package:foodrush/restaurantScreens/settings.dart';
 
 class NavbarRestaurant extends StatefulWidget {
-  const NavbarRestaurant({super.key});
+  int? page;
+   NavbarRestaurant({super.key, this.page});
 
   @override
   State<NavbarRestaurant> createState() => _NavbarRestaurantState();
@@ -24,6 +25,10 @@ class _NavbarRestaurantState extends State<NavbarRestaurant> {
   int selectedTab = 0;
   @override
   Widget build(BuildContext context) {
+    if (widget.page != null){
+      selectedTab = widget.page!;
+      widget.page = null;
+    }
     return Scaffold(
       body: widgetList[selectedTab],
       bottomNavigationBar: BottomNavigationBar(

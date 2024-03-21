@@ -11,10 +11,11 @@ import 'package:foodrush/login/changePwUI.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:foodrush/providers/RestaurantProduct_provider.dart';
 import 'package:foodrush/providers/cart_provider.dart';
-import 'package:foodrush/Screens/burger.dart';
+import 'package:foodrush/Screens/Breakfast.dart';
 import 'package:foodrush/Screens/ourMenu.dart';
 import 'package:foodrush/login/signup_screen.dart';
 import 'package:foodrush/providers/message_provider.dart';
+import 'package:foodrush/providers/order_provider.dart';
 import 'package:foodrush/providers/product_provider.dart';
 import 'package:foodrush/providers/RestaurantProduct_provider.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
@@ -74,6 +75,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<MessageProvider>(
           create: (context) => MessageProvider(),
+        ),
+        ChangeNotifierProvider<OrderProvider>(
+          create: (context) => OrderProvider(),
         ),
 
       ],

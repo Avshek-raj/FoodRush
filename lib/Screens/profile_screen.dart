@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/Screens/editProfileUser.dart';
 import 'package:foodrush/login/loginAs.dart';
 import 'package:foodrush/login/signin_screen.dart';
+import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user_model.dart';
@@ -11,7 +12,7 @@ import '../providers/user_provider.dart';
 import 'deliverto.dart';
 
 class ProfileScreen extends StatefulWidget {
-   ProfileScreen({super.key});
+  ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -33,12 +34,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 Spacer(),
-                IconButton(
-                  onPressed: () async{
-                    await FirebaseAuth.instance.signOut().then((value) =>
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginAs())));
-                  },
-                  icon: Icon(Icons.exit_to_app),)
+                // IconButton(
+                //   onPressed: () async {
+                //     await FirebaseAuth.instance.signOut().then((value) =>
+                //         Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (context) => LoginAs())));
+                //   },
+                //   icon: Icon(Icons.exit_to_app),
+                // )
               ],
             ),
           ),
@@ -65,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 Text(
-                  userProvider.userModel.username?? 'Username',
+                  userProvider.userModel.username ?? 'Username',
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
                 ),
                 Row(
@@ -75,54 +80,158 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text(
-                        userProvider.userModel.email??
-                        "Email"
-                    ),
+                    Text(userProvider.userModel.email ?? "Email"),
                   ],
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 SizedBox(
-                  width: 130,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black, backgroundColor: Colors.red,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => EditProfileUser()),);
-                      },
-                      child: Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 13,color: Colors.white),
-                      )),
-                ),
-                SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: 20,
           ),
           //next wala
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Container(
+              height: 300,
+              width: MediaQuery.of(context).size.width * 0.95,
               child: Column(
                 children: [
-                  profileMenuItem ("My Favourites",Icon(Icons.favorite), context, ""),
+                  Row(
+                    children: [
+                      Text(
+                        "Order History",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.history,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
 
                   Divider(),
-                  profileMenuItem ("Order History",Icon(Icons.history), context, ""),
+                  Row(
+                    children: [
+                      Text(
+                        "Delivery Address",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.my_location_outlined,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+
                   Divider(),
-                  profileMenuItem ( "Delivery Address",Icon(Icons.my_location), context, DeliverTo()),
+                  Row(
+                    children: [
+                      Text(
+                        "Edit Profile",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfileUser()),
+                          );
+                        },
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+
                   Divider(),
+                  SizedBox(
+                    height: 50,
+                  ),
+
+                  //log out button
+
+                  CustomElevatedButton(
+                    onPressed: () {
+                      // Show the logout confirmation dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              "Confirm Logout",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            content: Text(
+                              "Are you sure you want to log out?",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
+                            actions: <Widget>[
+                              // Button to logout
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.red,
+                                ),
+                                onPressed: () async {
+                                  await FirebaseAuth.instance.signOut().then(
+                                      (value) => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginAs())));
+                                },
+                                child: Text("Yes"),
+                              ),
+                              // Button to cancel logout
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.red,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                                child: Text("No"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text(
+                      "Log Out",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -133,10 +242,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-GestureDetector profileMenuItem( String menuName, Icon icon, BuildContext context, function){
+GestureDetector profileMenuItem(
+    String menuName, Icon icon, BuildContext context, function) {
   return GestureDetector(
-    onTap: (){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => function));
+    onTap: () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => function));
     },
     child: Row(
       children: [
@@ -155,12 +266,11 @@ GestureDetector profileMenuItem( String menuName, Icon icon, BuildContext contex
         Text(
           menuName,
           style: TextStyle(color: Colors.grey.shade800),
-        )
+        ),
       ],
     ),
   );
 }
-
 // Row profileMenuItem (menuName,Icon icon){
 //   return Row(
 //     children: [

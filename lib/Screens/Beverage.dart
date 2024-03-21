@@ -1,31 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-List<Pizzaclass> data = [
-  Pizzaclass(
+List<BeverageClass> data = [
+  BeverageClass(
       image: "assets/images/mixpizza.png",
       price: "Rs. 400",
       name: "Mixed Pizza"),
-  Pizzaclass(
+  BeverageClass(
       image: "assets/images/pepperoni.png",
       price: "Rs. 500",
       name: "Pepperoni Pizza"),
-  Pizzaclass(
+  BeverageClass(
       image: "assets/images/pineapple.png",
       price: "Rs. 550",
       name: "Pineapple Pizza"),
   
 ];
 
-class Pizza extends StatefulWidget {
-  const Pizza({super.key});
+class Beverage extends StatefulWidget {
+  const Beverage({super.key});
 
   @override
-  State<Pizza> createState() => SidesState();
+  State<Beverage> createState() => SidesState();
 }
 
 
-class SidesState extends State<Pizza> {
+class SidesState extends State<Beverage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +100,7 @@ class SidesState extends State<Pizza> {
 }
 
 
-class Pizzaclass {
+class BeverageClass {
   String? image, price, name;
-  Pizzaclass({this.image, this.name, this.price});
+  BeverageClass({this.image, this.name, this.price});
 }

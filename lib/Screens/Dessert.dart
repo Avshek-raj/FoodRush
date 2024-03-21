@@ -1,30 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-List<BurgerClass> data = [
-  BurgerClass(
-      image: "assets/images/cheeseburger.png",
+List<DessertClass> data = [
+  DessertClass(
+      image: "assets/images/mixpizza.png",
       price: "Rs. 400",
-      name: "Cheese Burger"),
-  BurgerClass(
-      image: "assets/images/TurkeyBurger.png",
+      name: "Mixed Pizza"),
+  DessertClass(
+      image: "assets/images/pepperoni.png",
       price: "Rs. 500",
-      name: "Turkey Burger"),
-  BurgerClass(
-      image: "assets/images/LambBurger.png",
-      price: "Rs. 320",
-      name: "Lamb Burger"),
+      name: "Pepperoni Pizza"),
+  DessertClass(
+      image: "assets/images/pineapple.png",
+      price: "Rs. 550",
+      name: "Pineapple Pizza"),
+  
 ];
 
-class Burger extends StatefulWidget {
-  const Burger({super.key});
+class Dessert extends StatefulWidget {
+  const Dessert({super.key});
 
   @override
-  State<Burger> createState() => BurgerState();
+  State<Dessert> createState() => SidesState();
 }
 
 
-class BurgerState extends State<Burger> {
+class SidesState extends State<Dessert> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +100,7 @@ class BurgerState extends State<Burger> {
 }
 
 
-class BurgerClass {
+class DessertClass {
   String? image, price, name;
-  BurgerClass({this.image, this.name, this.price});
+  DessertClass({this.image, this.name, this.price});
 }
