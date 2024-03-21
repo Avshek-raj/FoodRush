@@ -52,15 +52,20 @@ class OrderProvider with ChangeNotifier {
   fetchOrderData(callback) async{
     isLoading = true;
     List<OrderModel> newList = [];
-    QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .collection("OrderItems").get();
-    value.docs.forEach((element) {
-      orderModel = OrderModel(orderId: element.get("OrderId"),orderName: element.get("OrderName"), userImage: element.get("UserImage"), orderPrice: element.get("OrderPrice"), orderQuantity: element.get("OrderQuantity"), userName: element.get("UserName"), userId: element.get("UserId"));
-      newList.add(orderModel);
-    });
-    cartList = newList;
-    cartItemNumber = cartList.length;
+    try{
+      QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("OrderItems").get();
+      value.docs.forEach((element) {
+        orderModel = OrderModel(orderId: element.get("OrderId"),orderName: element.get("OrderName"), userImage: element.get("UserImage"), orderPrice: element.get("OrderPrice"), orderQuantity: element.get("OrderQuantity"), userName: element.get("UserName"), userId: element.get("UserId"));
+        newList.add(orderModel);
+      });
+      cartList = newList;
+      cartItemNumber = cartList.length;
+    }catch (e) {
+      print(e);
+    }
+
     isLoading = false;
     callback();
     notifyListeners();
@@ -131,15 +136,20 @@ class OrderProvider with ChangeNotifier {
   fetchOrderList(callback) async{
     isLoading = true;
     List<OrderListModel> newList = [];
-    QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .collection("OrderItems").get();
-    value.docs.forEach((element) {
-      orderListModel = OrderListModel(user: element.get("User"),userImage: element.get("UserImage"), order: element.get("order"), userId: element.get("userId"));
-      newList.add(orderListModel);
-    });
-    orderList = newList;
-    cartItemNumber = cartList.length;
+    try {
+      QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("OrderItems").get();
+      value.docs.forEach((element) {
+        orderListModel = OrderListModel(user: element.get("UserName"),userImage: element.get("UserImage"), order: element.get("order"), userId: element.get("userId"));
+        newList.add(orderListModel);
+      });
+      orderList = newList;
+      cartItemNumber = cartList.length;
+    } catch (e) {
+      print(e);
+    }
+
     isLoading = false;
     callback();
     notifyListeners();
