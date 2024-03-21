@@ -16,6 +16,7 @@ class RestaurantProductProvider with ChangeNotifier{
     File? productImage,
     String? productPrice,
     String? productDesc,
+    String? category,
     VoidCallback? onSuccess,
     Function(dynamic)? onError,
   }) async {
@@ -27,8 +28,9 @@ class RestaurantProductProvider with ChangeNotifier{
           .collection("FoodProducts")
           .doc(DateTime.now().millisecondsSinceEpoch.toString())
           .set({
-        "prodcutCode": productName,
+        "productCode": productName?.toLowerCase(),
         "productName": productName,
+        "category": category,
         "productImage": imageUrl,
         "productDescription": productDesc,
         "productId": documentId,

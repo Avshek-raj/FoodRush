@@ -30,20 +30,14 @@ class foodProvider with ChangeNotifier {
         "CartPrice": cartPrice,
         "CartQuantity": cartQuantity
       }).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Product added successfully'),
-        ));
+          print('Product added in cart successfully');
         if (onSuccess != null) onSuccess(); // Call success callback
       }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to add product: $error'),
-        ));
+        print('Product add in cart failed:$error');
         if (onError != null) onError(error); // Call error callback
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to add product: $e'),
-      ));
+      print('Product add in cart failed:$e');
     }
   }
 

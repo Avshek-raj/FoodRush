@@ -8,14 +8,14 @@ import 'package:provider/provider.dart';
 
 import '../reusable_widgets/reusable_widget.dart';
 
-List<String> categories = [
-  'Snacks',
-  'Breakfast',
-  'Lunch',
-  'Dinner',
-  'Desserts',
-  'Beverage',
-  'Comboset',
+List<Map<String, dynamic>> categories = [
+  {'name': 'Snacks', 'icon': Icons.fastfood},
+  {'name': 'Breakfast', 'icon': Icons.free_breakfast},
+  {'name': 'Lunch', 'icon': Icons.restaurant},
+  {'name': 'Dinner', 'icon': Icons.dinner_dining},
+  {'name': 'Desserts', 'icon': Icons.cake},
+  {'name': 'Beverage', 'icon': Icons.local_cafe},
+  {'name': 'Comboset', 'icon': Icons.fastfood}, // Example icon, replace as needed
 ];
 
 class AddFood extends StatefulWidget {
@@ -26,7 +26,7 @@ class AddFood extends StatefulWidget {
 }
 
 class _AddFoodState extends State<AddFood> {
-  String? selectedCategory;
+  Map<String, dynamic>? selectedCategory;
   final _formKey = new GlobalKey<FormState>();
   TextEditingController productName = TextEditingController();
   TextEditingController productPrice = TextEditingController();
@@ -101,20 +101,31 @@ class _AddFoodState extends State<AddFood> {
                           value: category,
                           child: Row(
                             children: [
-                              Icon(category['icon']),
+                              Icon(category['icon'], color: Colors.red,),
                               SizedBox(width: 8), // Adjust the space between icon and text
-                              Text(category['name']),
+                              Text(category['name'], style: TextStyle(fontSize: 15),),
                             ],
                           ),
                         );
                       }).toList(),
                       decoration: InputDecoration(
-                        labelText: 'Category',
+                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 15),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12), // Adjust the border radius
+                          borderRadius: BorderRadius.circular(50), // Adjust the border radius
                         ),
-                      ),
-                      isDense: true, // Reduce the height of the dropdown menu
+                        labelStyle: TextStyle(
+                          color: Colors.black, // Label text color
+                          fontSize: 16, // Label text font size
+                        ),
+                        // Custom label with icon
+                        label: Row(
+                          children: [
+                            Icon(Icons.category_outlined, color: Colors.red,), // Icon for the label
+                            SizedBox(width: 8), // Adjust the space between icon and text
+                            Text('Category', style: TextStyle(color: Colors.black.withOpacity(0.5)),), // Text for the label
+                          ],
+                        ),
+                      ),// Reduce the height of the dropdown menu
                     ),
                       SizedBox(height: 20),
                       reusableTextFormField("Food Description",
@@ -178,6 +189,7 @@ class _AddFoodState extends State<AddFood> {
                           productPrice: productPrice.text,
                           productDesc: productDesc.text,
                           productImage: productImage,
+                          category: selectedCategory.toString(),
                           onSuccess: () {
                             showDialog(
                               context: context,

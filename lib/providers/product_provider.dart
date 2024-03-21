@@ -28,7 +28,7 @@ class ProductProvider with ChangeNotifier {
       try{
         String? restaurantLatLng;
         try {
-           restaurantLatLng = element.get("restaurantLatLng");
+           restaurantLatLng = element.get("RestaurantLatLng");
         } catch (e){
           restaurantLatLng = null;
         }
@@ -110,6 +110,7 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> nearestFoods = [];
   fetchNearestFoods(foodList) async {
     isLoading = true;
+    List<ProductModel> newList = [];
     try{
     LocationData currentLocation = await location.getLocation();
     if (currentLocation != null) {
@@ -123,7 +124,7 @@ class ProductProvider with ChangeNotifier {
             restaurantLocation!.longitude!,
           );
           if (haversine <=20){
-            nearestFoods.add(ProductModel(
+            newList.add(ProductModel(
               productId: foodList[i].productId,
               productName: foodList[i].productName,
               productImage: foodList[i].productImage,
@@ -138,14 +139,18 @@ class ProductProvider with ChangeNotifier {
         }
 
       }
-      if (nearestFoods.length >1){
-        nearestFoods.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
+      if (newList.length >1){
+        newList.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
       }
     }
   }catch(e) {
   print(e);
-  }
-  isLoading = false;
-    notifyListeners();
+  } finally {
+
+      nearestFoods = newList;
+      isLoading = false;
+      notifyListeners();
+    }
+
   }
 }

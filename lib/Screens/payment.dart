@@ -207,6 +207,15 @@ class _PaymentState extends State<Payment> {
                           userName: userProvider.userModel.username,
                           restaurantId: item.restaurantId
                         );
+                        orderProvider.addOrderInHistory(
+                            orderId: orderId,
+                            orderImage: item.cartImage?? "",
+                            orderPrice: item.cartPrice,
+                            orderName: item.cartName,
+                            orderQuantity: item.cartQuantity,
+                            restaurantName: item.restaurantName,
+                            restaurantId: item.restaurantId
+                        );
                       cartProvider.deleteCartItem(item.cartId);
                       if (item.restaurantName == oldRestaurantName){
                         sameRestaurantFoods += ", ${item.cartQuantity} ${item.cartName} ";
@@ -232,8 +241,8 @@ class _PaymentState extends State<Payment> {
                         if (lastCommaIndex != -1) {
                           sameRestaurantFoods = sameRestaurantFoods.replaceRange(lastCommaIndex, lastCommaIndex + 1, ' and');
                         }
-                        restaurantProvider.fetchRestaurantDetails(widget.cartList[index-1].restaurantId, (result){
-                          messageProvider.sendNotificationToUser(result.token,
+                        restaurantProvider.fetchRestaurantToken(widget.cartList[index]!.restaurantId!,onSuccess: (){
+                          messageProvider.sendNotificationToUser(restaurantProvider.token,
                               "Order received from ${userProvider.userModel.username}",
                               "${sameRestaurantFoods} has been order", sameRestaurantFoods, userProvider.userModel);
                         });

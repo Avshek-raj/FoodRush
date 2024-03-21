@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foodrush/Screens/editProfileUser.dart';
+import 'package:foodrush/Screens/orderHistory_screen.dart';
 import 'package:foodrush/login/loginAs.dart';
 import 'package:foodrush/login/signin_screen.dart';
 import 'package:foodrush/ui_custom/customElevatedButton.dart';
@@ -56,16 +58,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
                 SizedBox(height: 30),
-                CircleAvatar(
-                  child: Icon(
-                    Icons.person_outline,
-                    size: 40,
-                    color: Colors.white,
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 18, 18, 18),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.red, // Optional: Set the background color of the avatar
+                    child: ClipOval(
+                      child: Image.network(
+                        userProvider.userModel.userImage ?? "", // Provide the image URL
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  backgroundColor: Colors
-                      .red, // Optional: you can set the background color of the avatar
-                  radius: 40,
                 ),
+
                 SizedBox(
                   height: 10,
                 ),
@@ -100,42 +106,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: MediaQuery.of(context).size.width * 0.95,
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Order History",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Icon(
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => OrderHistory()));
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "Order History",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Spacer(),
+                        Icon(
                           Icons.history,
                           color: Colors.red,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 15,
                   ),
 
                   Divider(),
-                  Row(
-                    children: [
-                      Text(
-                        "Delivery Address",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Icon(
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DeliverTo()));
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "Delivery Address",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Spacer(),
+                        Icon(
                           Icons.my_location_outlined,
                           color: Colors.red,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 15,

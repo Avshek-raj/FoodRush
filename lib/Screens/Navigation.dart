@@ -7,7 +7,8 @@ import 'cart_screen.dart';
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  int? page;
+  MainScreen({super.key, this.page});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -23,17 +24,22 @@ class _MainScreenState extends State<MainScreen> {
     Cart(),
     ProfileScreen(),
   ];
+  int selectedTab = 0;
   @override
   Widget build(BuildContext context) {
+    if (widget.page != null){
+      selectedTab = widget.page!;
+      widget.page = null;
+    }
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: _pages[selectedTab],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed, // Ensure all items are visible
         iconSize: 30,
-        currentIndex: _currentIndex,
+        currentIndex: selectedTab,
         onTap: (index) {
           setState(() {
-            _currentIndex = index;
+            selectedTab = index;
           });
         },
           selectedItemColor: Colors.red,

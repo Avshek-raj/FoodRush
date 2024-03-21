@@ -17,6 +17,7 @@ class OrderProvider with ChangeNotifier {
     String? userName,
     String? userId,
     String? restaurantId,
+    String? userAddress,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -34,7 +35,8 @@ class OrderProvider with ChangeNotifier {
         "OrderPrice": orderPrice,
         "OrderQuantity": orderQuantity,
         "UserName": userName,
-        "UserId": userId
+        "UserId": userId,
+        "UserAddress": userAddress,
       }).then((_) {
         print("Orders pushed successfully");
         if (onSuccess != null) onSuccess(); // Call success callback
@@ -44,6 +46,41 @@ class OrderProvider with ChangeNotifier {
       });
     } catch (e) {
       print('Order push failed: $e');
+    }
+  }
+
+  void addOrderInHistory({// Add required BuildContext parameter
+    String? orderId,
+    String? orderImage,
+    String? orderPrice,
+    String? orderName,
+    int? orderQuantity,
+    String? restaurantName,
+    String? restaurantId,
+    VoidCallback? onSuccess, // Callback for success
+    Function(dynamic)? onError,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("OrderHistory")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("OrderList")
+          .add({
+        "OrderId": orderId,
+        "OrderName": orderName,
+        "OrderImage": orderImage,
+        "OrderPrice": orderPrice,
+        "OrderQuantity": orderQuantity,
+        "RestaurantName": restaurantName,
+      }).then((_) {
+        print("Orders pushed in history successfully");
+        if (onSuccess != null) onSuccess(); // Call success callback
+      }).catchError((error) {
+        print("Order push in history failed");
+        if (onError != null) onError(error); // Call error callback
+      });
+    } catch (e) {
+      print('Order push in history failed: $e');
     }
   }
 
@@ -57,7 +94,7 @@ class OrderProvider with ChangeNotifier {
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection("OrderItems").get();
       value.docs.forEach((element) {
-        orderModel = OrderModel(orderId: element.get("OrderId"),orderName: element.get("OrderName"), userImage: element.get("UserImage"), orderPrice: element.get("OrderPrice"), orderQuantity: element.get("OrderQuantity"), userName: element.get("UserName"), userId: element.get("UserId"));
+        orderModel = OrderModel(userAddress: element.get("UserAddress"),orderId: element.get("OrderId"),orderName: element.get("OrderName"), userImage: element.get("UserImage"), orderPrice: element.get("OrderPrice"), orderQuantity: element.get("OrderQuantity"), userName: element.get("UserName"), userId: element.get("UserId"), );
         newList.add(orderModel);
       });
       cartList = newList;
@@ -139,7 +176,7 @@ class OrderProvider with ChangeNotifier {
     try {
       QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection("OrderItems").get();
+          .collection("OrderList").get();
       value.docs.forEach((element) {
         orderListModel = OrderListModel(user: element.get("UserName"),userImage: element.get("UserImage"), order: element.get("order"), userId: element.get("userId"));
         newList.add(orderListModel);
