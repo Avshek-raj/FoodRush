@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/providers/RestaurantProduct_provider.dart';
+import 'package:foodrush/providers/product_provider.dart';
+import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +26,18 @@ class _EditFoodState extends State<EditFood> {
   TextEditingController productDesc = TextEditingController();
   late RestaurantProductProvider restaurantProductProvider;
   File? productImage;
+  String? foodImage;
   XFile? image;
+
   @override
   Widget build(BuildContext context) {
     productName.text = widget.productModel.productName;
-    productName.text = widget.productModel.productName;
+    foodImage=widget.productModel.productImage;
+        productPrice.text=widget.productModel.productPrice;
+            productDesc.text=widget.productModel.productDesc;
+
+
+
     restaurantProductProvider = Provider.of(context);
     return Scaffold(
       body: SafeArea(
@@ -99,8 +108,9 @@ class _EditFoodState extends State<EditFood> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             child: Container(
-                              child: productImage == null
-                                  ? Column(
+                    child: productImage == null
+                                  ? foodImage !=null?
+                                  Image.network(foodImage??"", fit: BoxFit.cover) : Column(
                                       children: [
                                         SizedBox(
                                           height: 80,
@@ -138,8 +148,9 @@ class _EditFoodState extends State<EditFood> {
                       ),
                       //for save button
                       loginButton(context, "Save", () {
-                        restaurantProductProvider.addProduct(
+                        restaurantProductProvider.editProduct(
                           context: context,
+                          productId: widget.productModel.productId ,
                           productName: productName.text,
                           productPrice: productPrice.text,
                           productDesc: productDesc.text,
@@ -178,7 +189,7 @@ class _EditFoodState extends State<EditFood> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    HomeRestaurant())); // Close dialog
+                                                    NavbarRestaurant())); // Close dialog
                                       },
                                     ),
                                   ],
@@ -211,7 +222,7 @@ class _EditFoodState extends State<EditFood> {
                       //for delete
                       loginButton(context, "Delete", () {
                         restaurantProductProvider.deleteProductFromFirestore(
-                          productName.text,
+                         widget.productModel.productId,
                           onSuccess: () {
                             showDialog(
                               context: context,

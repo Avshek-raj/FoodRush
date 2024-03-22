@@ -247,17 +247,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontSize: 18),
                                 ),
                                 Spacer(),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Text(
-                                    "View all",
-                                    style: TextStyle(
-                                        // color: const Color.fromARGB(255, 55, 151, 59),
-                                        color: Colors.red,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                                // GestureDetector(
+                                //   onTap: () {},
+                                //   child: Text(
+                                //     "View all",
+                                //     style: TextStyle(
+                                //         // color: const Color.fromARGB(255, 55, 151, 59),
+                                //         color: Colors.red,
+                                //         fontSize: 12,
+                                //         fontWeight: FontWeight.bold),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -316,6 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     )));
                                       },
                                       child: Container(
+                                        clipBehavior: Clip.antiAlias,
                                         height: 150,
                                         width: 150,
                                         decoration: BoxDecoration(
@@ -358,7 +359,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           color: Colors.black,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          fontSize: 16)),
+                                                          fontSize: 14),
+                                                          overflow: TextOverflow.clip, // or TextOverflow.clip
+  maxLines: 1,
+                                                           
+                                                          ),
                                                 ],
                                               ),
                                             ),
@@ -417,17 +422,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontSize: 18),
                                 ),
                                 Spacer(),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Text(
-                                    "View all",
-                                    style: TextStyle(
-                                      // color: const Color.fromARGB(255, 55, 151, 59),
-                                        color: Colors.red,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                                // GestureDetector(
+                                //   onTap: () {},
+                                //   child: Text(
+                                //     "View all",
+                                //     style: TextStyle(
+                                //       // color: const Color.fromARGB(255, 55, 151, 59),
+                                //         color: Colors.red,
+                                //         fontSize: 12,
+                                //         fontWeight: FontWeight.bold),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -523,7 +528,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           color: Colors.black,
                                                           fontWeight:
                                                           FontWeight.bold,
-                                                          fontSize: 16)),
+                                                          fontSize: 14)),
                                                 ],
                                               ),
                                             ),
