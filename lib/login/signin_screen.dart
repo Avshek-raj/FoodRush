@@ -10,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Screens/home_screen.dart';
 import '../Screens/Navigation.dart';
+import '../providers/user_provider.dart';
 import '../restaurantScreens/navbarRestaurant.dart';
 import '../restaurantScreens/signupRestaurant.dart';
 import '../utils/color_utils.dart';
@@ -211,18 +212,55 @@ class _SignInScreenState extends State<SignInScreen> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterRestaurantScreen()));
 
               }) : SizedBox(),
-              loginAs == "user" ? customLoginButton(context, "Login with Google", "assets/images/google.png", Colors.green,() async{
-                 GoogleSignIn _googleSignIn = GoogleSignIn();
+              loginAs == "user" ? customLoginButton(context, "Login with Google", "assets/images/google.png", Colors.green,() async {
+                try{
+                GoogleSignIn _googleSignIn = GoogleSignIn();
                 await _googleSignIn.signOut();
-                final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-                final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+                final GoogleSignInAccount? gUser = await GoogleSignIn()
+                    .signIn();
+                final GoogleSignInAuthentication gAuth = await gUser!
+                    .authentication;
                 final credential = GoogleAuthProvider.credential(
-                  accessToken: gAuth.accessToken,
-                  idToken: gAuth.idToken
+                    accessToken: gAuth.accessToken,
+                    idToken: gAuth.idToken
                 );
-                FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  MainScreen()));
-                }).onError((error, stackTrace) {
+                UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+                User? user = userCredential.user;
+                if (await checkDocumentExists("Users", user!.uid)) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                }else {
+                  UserProvider userProvider = UserProvider();
+                  userProvider.addUserDetails(
+                      context: context,
+                      username:user.displayName,
+                      email: user.email,
+                      phone: user.phoneNumber,
+                      address: "",
+                      password: _passwordTextController.text,
+                      role: "User",
+                      userImage: user.photoURL,
+                      onSuccess: (){
+                        setState(() {
+                          isLoading = false;
+                        });
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                      },
+                      onError: (e){
+                        showDialog(context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error"),
+                                content: Text(e.toString()),
+                                actions: [
+                                  TextButton(onPressed: (){
+                                    Navigator.of(context).pop();
+                                  }, child: Text('OK'))
+                                ],
+                              );
+                            });
+                      });
+                }
+              }catch(error) {
                   showDialog(context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
@@ -235,17 +273,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ],
                         );
                       });
-                });
-                // FirebaseAuth.instance
-                //     .signInWithEmailAndPassword(
-                //     email: _emailTextController.text,
-                //     password: _passwordTextController.text)
-                //     .then((value) {
-                //   Navigator.push(context,
-                //       MaterialPageRoute(builder: (context) => HomeScreen()));
-                // }).onError((error, stackTrace) {
-                //   print("Error ${error.toString()}");
-                // });
+                };
               }) : SizedBox(),
               loginAs == "user" ? customLoginButton(context, "Login with mobile number", "assets/images/phone.png", Colors.green,() async{
                 Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneLoginScreen()));

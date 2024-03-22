@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:foodrush/Screens/Navigation.dart';
 
 import '../providers/cart_provider.dart';
 import '../reusable_widgets/reusable_widget.dart';
@@ -295,7 +296,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                   restaurantName: widget.restaurantName,
                   restaurantId: widget.restaurantId,
                   onSuccess: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(page: 3,)));
                     // Execute any additional code on success
                   },
                   onError: (error) {

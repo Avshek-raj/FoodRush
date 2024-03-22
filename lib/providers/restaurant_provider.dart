@@ -71,33 +71,36 @@ class RestaurantProvider with ChangeNotifier {
   List<RestaurantModel> restaurantInfoList = [];
   RestaurantModel restaurantModel = RestaurantModel();
   fetchRestaurantDetails(userId,callback) async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    if (userId != ""){
-      uid = userId;
-    }
-    List<RestaurantModel> newList = [];
-    QuerySnapshot value = await FirebaseFirestore.instance
-        .collection("RestaurantUsers")
-        .doc(uid)
-        .collection("RestaurantInfo")
-        .get();
-    value.docs.forEach((element) {
-      Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+    try{
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      if (userId != ""){
+        uid = userId;
+      }
+      List<RestaurantModel> newList = [];
+      QuerySnapshot value = await FirebaseFirestore.instance
+          .collection("RestaurantUsers")
+          .doc(uid)
+          .collection("RestaurantInfo")
+          .get();
+      value.docs.forEach((element) {
+        Map<String, dynamic> data = element.data() as Map<String, dynamic>;
 
-      restaurantModel = RestaurantModel(
+        restaurantModel = RestaurantModel(
           restaurantName: data["RestaurantName"],
           email: data["Email"],
           address: data["Address"],
           phone: data['phone'],
           password: data["Password"],
           about: data["About"],
-          token: data["Token"],
           restaurantImageLink:data["RestaurantImage"],
-        restaurantLatLng: data["RestaurantLatLng"],
-        role: data["Role"],
-      );
-    });
-    restaurantInfoList = newList;
+          restaurantLatLng: data["RestaurantLatLng"],
+          role: data["Role"],
+        );
+      });
+      restaurantInfoList = newList;
+    }catch (e){
+      print(e);
+    }
     callback(restaurantModel);
     notifyListeners();
   }
@@ -124,6 +127,33 @@ class RestaurantProvider with ChangeNotifier {
     } catch (e) {
       print('Error uploading image to Firebase Storage: $e');
       return null;
+    }
+  }
+
+  String token = "";
+  void fetchRestaurantToken(String restaurantId, {
+    VoidCallback? onSuccess, // Callback for success
+    Function(dynamic)? onError,
+  }) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> value = await FirebaseFirestore.instance
+          .collection("RestaurantUsers")
+          .doc(restaurantId)
+          .collection("RestaurantInfo")
+          .doc("MessageToken")
+          .get();
+
+      if (value.exists) {
+        Map<String, dynamic> data = value.data()!;
+          token =  data["Token"];
+        if (onSuccess != null) onSuccess();
+      }
+
+    } catch (e) {
+      if (onError != null) onError(e);
+      print('Error fetching token: $e');
+    } finally {
+      notifyListeners();
     }
   }
 }

@@ -76,7 +76,7 @@ class MessageProvider with ChangeNotifier{
       await FirebaseFirestore.instance
           .collection("${role}Users")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection(role=="Restaurant" ? "${role}Info" : "Info")
+          .collection(role=="Restaurant" ? "${role}Info" : "UserInfo")
           .doc("MessageToken")
           .set({
         "Token": token,

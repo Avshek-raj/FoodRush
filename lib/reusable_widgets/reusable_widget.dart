@@ -2,8 +2,11 @@
 
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodrush/Screens/Navigation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../Screens/MenuPage.dart';
@@ -377,7 +380,7 @@ class CartBadge extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Cart()),
+          MaterialPageRoute(builder: (context) => MainScreen(page: 4,)),
         );
       },
       alignment: Alignment.center,
@@ -468,5 +471,25 @@ double calculateDistance(
 double _degreesToRadians(double degrees) {
   return degrees * pi / 180;
 }
+
+
+Future<bool> checkDocumentExists(String collectionName, String documentId) async {
+  bool exist = false;
+  try {
+    QuerySnapshot value = await FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(documentId)
+        .collection("UserInfo")
+        .get();
+    value.docs.forEach((element) {
+      exist = true;
+    });
+    return exist;
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
 
 

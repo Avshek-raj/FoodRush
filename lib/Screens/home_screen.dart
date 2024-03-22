@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     UserProvider userProvider = Provider.of(context, listen: false);
     ProductProvider productProvider = Provider.of(context, listen: false);
     CartProvider cartProvider = Provider.of(context, listen: false);
-    userProvider.fetchUserData(() {});
+    userProvider.fetchUserData("",() {});
     cartProvider.fetchCartData(() {});
     productProvider.fetchFoodProductData();
     MessageProvider messageProvider = Provider.of(context, listen:false);
@@ -80,6 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
     cartProvider = Provider.of(context);
     // ProductProvider productProvider = Provider.of(context);
     // productProvider.fetchFoodProductData();
+    if (productProvider.nearestFoods !=null) {
+      isLoading = false;
+    }
     return Scaffold(
       body: isLoading
           ? Center(
@@ -101,14 +104,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 18, 18, 18),
                           child: CircleAvatar(
-                            child: Icon(
-                              Icons.person_outline,
-                              size: 30,
-                              color: Colors.white,
-                            ),
-                            backgroundColor: Colors
-                                .red, // Optional: you can set the background color of the avatar
                             radius: 35,
+                            backgroundColor: Colors.red, // Optional: Set the background color of the avatar
+                            child: ClipOval(
+                              child: Image.network(
+                                userProvider.userModel.userImage ?? "", // Provide the image URL
+                                fit: BoxFit.cover, // Adjust the fit as per your requirement
+                                width: 70, // Set the width of the clipped image
+                                height: 70, // Set the height of the clipped image
+                              ),
+                            ),
                           ),
                         ),
                         GestureDetector(
@@ -156,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "search",
                         searchTextController, (value) {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MapScreen()));
+                          MaterialPageRoute(builder: (context) => Search(searchValue: searchTextController.text,)));
                     }),
                     SizedBox(
                       height: 30,
@@ -333,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     100, // Set your desired height
                                                 child: Image.network(
                                                   productProvider
-                                                      .foodProductList[index]
+                                                      .nearestFoods[index]
                                                       .productImage!,
                                                   fit: BoxFit.cover,
                                                 ),
@@ -346,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 children: [
                                                   Text(
                                                       productProvider
-                                                          .foodProductList[
+                                                          .nearestFoods[
                                                               index]
                                                           .productName!,
                                                       style: TextStyle(
@@ -365,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Text(
                                                     "Rs. " +
                                                         productProvider
-                                                            .foodProductList[
+                                                            .nearestFoods[
                                                                 index]
                                                             .productPrice!,
                                                     style: TextStyle(

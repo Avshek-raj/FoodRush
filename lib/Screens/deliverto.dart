@@ -30,6 +30,7 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
   TextEditingController address = new TextEditingController();
   TextEditingController landmark = new TextEditingController();
   TextEditingController phone = new TextEditingController();
+  bool firstLoad = true;
 
   @override
   void initState() {
@@ -84,10 +85,14 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
-    name.text = userProvider.deliveryInfoModel.name?? "";
-    address.text = userProvider.deliveryInfoModel.address?? "";
-    landmark.text = userProvider.deliveryInfoModel.landmark?? "";
-    phone.text = userProvider.deliveryInfoModel.phone?? "";
+    if (firstLoad) {
+      name.text = userProvider.deliveryInfoModel.name?? userProvider.userModel.username??"";
+      address.text = userProvider.deliveryInfoModel.address??userProvider.userModel.address?? "";
+      landmark.text = userProvider.deliveryInfoModel.landmark?? "";
+      phone.text = userProvider.deliveryInfoModel.phone??userProvider.userModel.phone?? "";
+      firstLoad = false;
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -188,6 +193,30 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
                               ),
                               child: TextField(
                                 controller: phone,
+                              )
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Landmark:",
+                            style: TextStyle(fontSize: 17),
+                          ),
+                          Spacer(),
+                          Container(
+                              height: 40,
+                              width: 250,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.white),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: TextField(
+                                controller: landmark,
                               )
                           )
                         ],
@@ -369,8 +398,16 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
                           foregroundColor: Colors.white, backgroundColor: Colors.red,
                         ),
                         onPressed: (){
-                          deliveryProvider.addDeliveryData(context: context, name: name.text, address: address.text, landmark: landmark.text, phone: phone.text, onSuccess: () {
-                            Navigator.pop(context);
+                          deliveryProvider.addDeliveryData(context: context,
+                            name: name.text,
+                            address: address.text,
+                            landmark: landmark.text,
+                            phone: phone.text,
+                            latLng: _markerPosition.toString()?? _center.toString(),
+                            onSuccess: () {
+                            userProvider.fetchDeliveryInfo(onSuccess: (){
+                              Navigator.of(context, rootNavigator: true).pop();
+                            });
                             // Execute any additional code on success
                           },
                             onError: (error) {

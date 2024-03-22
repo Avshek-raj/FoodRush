@@ -12,6 +12,7 @@ class DeliveryProvider with ChangeNotifier {
     String? address,
     String? landmark,
     String? phone,
+    String? latLng,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -26,6 +27,7 @@ class DeliveryProvider with ChangeNotifier {
         "Address": address,
         "Landmark": landmark,
         "Phone": phone,
+        "latLng": latLng,
       }).then((_) {
         deliveryIngoModel.name  = name;
         deliveryIngoModel.landmark = landmark;
@@ -47,5 +49,33 @@ class DeliveryProvider with ChangeNotifier {
       ));
     }
   }
+  void fetchDeliveryInfo(Function callback) async {
+    try {
+      isLoading = true;
+      List<DeliveryInfoModel> newList = [];
+      DocumentSnapshot<Map<String, dynamic>> value = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("UserInfo")
+          .doc("DeliveryInfo")
+          .get();
 
+      if (value.exists) {
+        Map<String, dynamic> data = value.data()!;
+        DeliveryInfoModel deliveryInfoModel = DeliveryInfoModel(
+          name: data["Name"] ?? "",
+          address: data["Address"] ?? "",
+          landmark: data["Landmark"] ?? "",
+          phone: data["Phone"] ?? "",
+        );
+        newList.add(deliveryInfoModel);
+      }
+      callback(newList);
+    } catch (e) {
+      print('Error fetching delivery info: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 }

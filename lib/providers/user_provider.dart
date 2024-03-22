@@ -17,6 +17,7 @@ class UserProvider with ChangeNotifier {
     String? address,
     String? password,
     String? role,
+    String? userImage,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -25,13 +26,15 @@ class UserProvider with ChangeNotifier {
           .collection("Users")
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection("UserInfo")
-          .add({
+          .doc("Details")
+          .set({
         "Username": username,
         "Email": email,
         "Phone": phone,
         "Address": address,
         "Password": password,
-        "Role": role
+        "Role": role,
+        "PhotoUrl": userImage??"",
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Data uploaded Successfully'),
@@ -54,14 +57,18 @@ class UserProvider with ChangeNotifier {
   List<UserModel> userInfoList = [];
   UserModel userModel = UserModel();
   DeliveryInfoModel deliveryInfoModel = DeliveryInfoModel();
+  String token = "";
 
-  fetchUserData(callback) async {
+  fetchUserData(String? userId, callback) async {
     try {
       isLoading = true;
       List<UserModel> newList = [];
+      if (userId == null || userId ==""){
+        userId = FirebaseAuth.instance.currentUser?.uid;
+      }
       QuerySnapshot value = await FirebaseFirestore.instance
           .collection("Users")
-          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .doc(userId)
           .collection("UserInfo")
           .get();
       value.docs.forEach((element) {
@@ -73,17 +80,20 @@ class UserProvider with ChangeNotifier {
               address: data["Address"],
               landmark: data["Landmark"],
               phone: data["Phone"]);
+              latLng: data["LatLng"];
         } else if (data.containsKey("Token")){
-          userModel = UserModel(token: data["Token"]);
+          token = data["Token"];
         } else {
           userModel = UserModel(
               username: data["Username"],
               email: data["Email"],
               address: data["Address"],
-              phone: data['phone'],
+              phone: data['Phone'],
               password: data["Password"],
               deliveryInfo: data["DeliveryInfo"],
-              token:data["Token"]);
+              token:data["Token"],
+              userImage: data["PhotoUrl"]
+          );
         }
       });
       userInfoList = newList;
@@ -92,6 +102,41 @@ class UserProvider with ChangeNotifier {
     } finally {
       isLoading = false;
       callback();
+      notifyListeners();
+    }
+  }
+
+  void fetchDeliveryInfo({
+    VoidCallback? onSuccess, // Callback for success
+    Function(dynamic)? onError,
+  }) async {
+    try {
+      isLoading = true;
+      List<DeliveryInfoModel> newList = [];
+      DocumentSnapshot<Map<String, dynamic>> value = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("UserInfo")
+          .doc("DeliveryInfo")
+          .get();
+
+      if (value.exists) {
+        Map<String, dynamic> data = value.data()!;
+        deliveryInfoModel = DeliveryInfoModel(
+          name: data["Name"] ?? "",
+          address: data["Address"] ?? "",
+          landmark: data["Landmark"] ?? "",
+          phone: data["Phone"] ?? "",
+        );
+        newList.add(deliveryInfoModel);
+        if (onSuccess != null) onSuccess();
+      }
+
+    } catch (e) {
+      if (onError != null) onError(e);
+      print('Error fetching delivery info: $e');
+    } finally {
+      isLoading = false;
       notifyListeners();
     }
   }

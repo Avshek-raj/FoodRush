@@ -34,20 +34,14 @@ class CartProvider with ChangeNotifier {
         "RestaurantName": restaurantName,
         "RestaurantId": restaurantId
       }).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Product added successfully'),
-        ));
+        print('Product added in cart successfully');
         if (onSuccess != null) onSuccess(); // Call success callback
       }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to add product: $error'),
-        ));
+        print('Product add in cart failed:$error');
         if (onError != null) onError(error); // Call error callback
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to add product: $e'),
-      ));
+      print('Product add in cart failed:$e');
     }
   }
 
@@ -97,4 +91,42 @@ class CartProvider with ChangeNotifier {
   getNumOfCartItem(){
     return cartList.length;
   }
+  List<CartModel> historyList = [];
+  late CartModel historyModel;
+  fetchHistoryData(callback) async {
+    try {
+      isLoading = true;
+      List<CartModel> newList = [];
+
+      QuerySnapshot value = await FirebaseFirestore.instance
+          .collection("OrderHistory")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("OrderList")
+          .get();
+
+      value.docs.forEach((element) {
+         historyModel = CartModel(
+          cartId: element.get("OrderId"),
+          cartName: element.get("OrderName"),
+          cartImage: element.get("OrderImage"),
+          cartPrice: element.get("OrderPrice"),
+          cartQuantity: element.get("OrderQuantity"),
+          restaurantName: element.get("RestaurantName"),
+        );
+
+        newList.add(historyModel);
+      });
+
+      historyList = newList;
+      cartItemNumber = historyList.length;
+    } catch (e) {
+      print("Error fetching history data: $e");
+    } finally {
+      isLoading = false;
+      callback();
+      notifyListeners();
+    }
+  }
+
+
 }

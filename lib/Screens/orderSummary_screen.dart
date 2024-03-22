@@ -266,12 +266,12 @@ class _OrderSummaryState extends State<OrderSummary> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                userProvider.deliveryInfoModel.name??"xxxxx xxxxx",
+                                userProvider.deliveryInfoModel.name?? userProvider.userModel.username??"xxxxx xxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Text(
-                                userProvider.deliveryInfoModel.address??"xxxxx, xxxxx",
+                                userProvider.deliveryInfoModel.address??userProvider.userModel.address??"xxxxx, xxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
@@ -281,7 +281,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Text(
-                                userProvider.deliveryInfoModel.phone??"xxxxxxxxxx",
+                                userProvider.deliveryInfoModel.phone??userProvider.userModel.phone??"xxxxxxxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
