@@ -1,5 +1,6 @@
 class OrderModel{
   String? orderId;
+  String? orderImage;
       String? userImage;
   String? orderPrice;
       String? orderName;
@@ -8,5 +9,7 @@ class OrderModel{
   String? userId;
       String? restaurantId;
       String? userAddress;
-  OrderModel({this.userAddress, this.orderId,this.userImage,this.orderPrice,this.orderName,this.orderQuantity, this.userName, this.userId, this.restaurantId});
+      String? deliveryLatLng;
+      String? payment;
+  OrderModel({this.payment ,this.deliveryLatLng, this.orderImage,this.userAddress, this.orderId,this.userImage,this.orderPrice,this.orderName,this.orderQuantity, this.userName, this.userId, this.restaurantId});
 }

@@ -398,7 +398,13 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
                           foregroundColor: Colors.white, backgroundColor: Colors.red,
                         ),
                         onPressed: (){
-                          deliveryProvider.addDeliveryData(context: context, name: name.text, address: address.text, landmark: landmark.text, phone: phone.text, onSuccess: () {
+                          deliveryProvider.addDeliveryData(context: context,
+                            name: name.text,
+                            address: address.text,
+                            landmark: landmark.text,
+                            phone: phone.text,
+                            latLng: _markerPosition.toString()?? _center.toString(),
+                            onSuccess: () {
                             userProvider.fetchDeliveryInfo(onSuccess: (){
                               Navigator.of(context, rootNavigator: true).pop();
                             });

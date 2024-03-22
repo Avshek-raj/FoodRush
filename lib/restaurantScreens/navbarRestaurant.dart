@@ -7,6 +7,8 @@ import 'package:foodrush/restaurantScreens/restaurantProfile.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 import 'package:foodrush/restaurantScreens/settings.dart';
 
+import 'order_screen.dart';
+
 class NavbarRestaurant extends StatefulWidget {
   int? page;
    NavbarRestaurant({super.key, this.page});
@@ -19,7 +21,7 @@ class _NavbarRestaurantState extends State<NavbarRestaurant> {
   List<Widget> widgetList = [
     HomeRestaurant(),
     AddFood(),
-    NotifyRestaurant(),
+    OrderRequests(),
     ProfileRestaurant()
   ];
   int selectedTab = 0;
@@ -44,7 +46,7 @@ class _NavbarRestaurantState extends State<NavbarRestaurant> {
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",),
             BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: "Add Food"),
-            BottomNavigationBarItem(icon: Icon(Icons.notifications_none_rounded), label: "Notification"),
+            BottomNavigationBarItem(icon: Icon(Icons.notifications_none_rounded), label: "Orders"),
             BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: "Profile"),
           ]),
     );

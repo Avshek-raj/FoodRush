@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     UserProvider userProvider = Provider.of(context, listen: false);
     ProductProvider productProvider = Provider.of(context, listen: false);
     CartProvider cartProvider = Provider.of(context, listen: false);
-    userProvider.fetchUserData(() {});
+    userProvider.fetchUserData("",() {});
     cartProvider.fetchCartData(() {});
     productProvider.fetchFoodProductData();
     MessageProvider messageProvider = Provider.of(context, listen:false);

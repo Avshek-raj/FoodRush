@@ -3,5 +3,6 @@ class DeliveryInfoModel{
   String? address;
   String? landmark;
   String? phone;
-  DeliveryInfoModel({this.name,this.address,this.landmark,this.phone});
+  String? latLng;
+  DeliveryInfoModel({this.name,this.address,this.landmark,this.phone,this.latLng});
 }

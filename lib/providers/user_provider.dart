@@ -59,13 +59,16 @@ class UserProvider with ChangeNotifier {
   DeliveryInfoModel deliveryInfoModel = DeliveryInfoModel();
   String token = "";
 
-  fetchUserData(callback) async {
+  fetchUserData(String? userId, callback) async {
     try {
       isLoading = true;
       List<UserModel> newList = [];
+      if (userId == null || userId ==""){
+        userId = FirebaseAuth.instance.currentUser?.uid;
+      }
       QuerySnapshot value = await FirebaseFirestore.instance
           .collection("Users")
-          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .doc(userId)
           .collection("UserInfo")
           .get();
       value.docs.forEach((element) {
@@ -77,6 +80,7 @@ class UserProvider with ChangeNotifier {
               address: data["Address"],
               landmark: data["Landmark"],
               phone: data["Phone"]);
+              latLng: data["LatLng"];
         } else if (data.containsKey("Token")){
           token = data["Token"];
         } else {
@@ -84,7 +88,7 @@ class UserProvider with ChangeNotifier {
               username: data["Username"],
               email: data["Email"],
               address: data["Address"],
-              phone: data['phone'],
+              phone: data['Phone'],
               password: data["Password"],
               deliveryInfo: data["DeliveryInfo"],
               token:data["Token"],

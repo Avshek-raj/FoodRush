@@ -199,13 +199,17 @@ class _PaymentState extends State<Payment> {
                         String orderId = DateTime.now().millisecondsSinceEpoch.toString();
                         orderProvider.addOrderData(
                           orderId: orderId,
+                          orderImage: item.cartImage,
                           userImage: userProvider.userModel.userImage?? "",
                           orderPrice: item.cartPrice,
                           orderName: item.cartName,
                           orderQuantity: item.cartQuantity,
                           userId: FirebaseAuth.instance.currentUser?.uid,
                           userName: userProvider.userModel.username,
-                          restaurantId: item.restaurantId
+                          userAddress: userProvider.deliveryInfoModel.address?? userProvider.userModel.address?? "",
+                          restaurantId: item.restaurantId,
+                          deliveryLatLng: userProvider.deliveryInfoModel.latLng,
+                          payment: "Cash on delivery"
                         );
                         orderProvider.addOrderInHistory(
                             orderId: orderId,

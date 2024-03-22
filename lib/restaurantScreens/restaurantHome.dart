@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../providers/message_provider.dart';
 import '../providers/order_provider.dart';
 import '../providers/product_provider.dart';
+import '../reusable_widgets/reusable_widget.dart';
 import 'editFood.dart';
 
 List<OrderStatus> data = [
@@ -102,6 +103,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
     // MessageProvider messageProvider = Provider.of(context, listen:false);
     // messageProvider.setupFirebaseMessaging(context);
     WidgetsBinding.instance?.addPostFrameCallback((_) {
+      isLoading = true;
       // Access inherited widgets or elements here
       restaurantProvider = Provider.of(context, listen: false);
       productProvider = Provider.of(context, listen: false);
@@ -121,7 +123,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
     productProvider = Provider.of(context);
     orderProvider = Provider.of(context);
     return Scaffold(
-      body: _isLoading
+      body: isLoading
           ? Center(
         child: CircularProgressIndicator(),
       ): SafeArea(
@@ -296,8 +298,8 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                      'Order Number: ${orderProvider.cartList[index].orderId}'),
-                                  Text('Address: ${data[index].address}'),
+                                      'Order: ${orderProvider.cartList[index].orderQuantity} ${orderProvider.cartList[index].orderName}'),
+                                  Text('Address: ${orderProvider.cartList[index].userAddress}'),
                                 ],
                               ),
                               Spacer(),

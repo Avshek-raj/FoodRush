@@ -12,6 +12,7 @@ class DeliveryProvider with ChangeNotifier {
     String? address,
     String? landmark,
     String? phone,
+    String? latLng,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -26,6 +27,7 @@ class DeliveryProvider with ChangeNotifier {
         "Address": address,
         "Landmark": landmark,
         "Phone": phone,
+        "latLng": latLng,
       }).then((_) {
         deliveryIngoModel.name  = name;
         deliveryIngoModel.landmark = landmark;

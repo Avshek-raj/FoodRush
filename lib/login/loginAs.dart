@@ -27,7 +27,7 @@ class _LoginAsState extends State<LoginAs> {
   void initState() {
     if (FirebaseAuth.  instance.currentUser != null){
       userProvider = Provider.of(context, listen: false);
-      userProvider.fetchUserData((){
+      userProvider.fetchUserData("",(){
         setState(() {
           isLoading = false;
         });

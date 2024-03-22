@@ -10,6 +10,7 @@ import '../models/order_model.dart';
 class OrderProvider with ChangeNotifier {
   void addOrderData({// Add required BuildContext parameter
     String? orderId,
+    String? orderImage,
     String? userImage,
     String? orderPrice,
     String? orderName,
@@ -18,6 +19,8 @@ class OrderProvider with ChangeNotifier {
     String? userId,
     String? restaurantId,
     String? userAddress,
+    String? deliveryLatLng,
+    String? payment,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
   }) async {
@@ -25,11 +28,11 @@ class OrderProvider with ChangeNotifier {
       await FirebaseFirestore.instance
           .collection("Order")
           .doc(restaurantId)
-          .collection("OrderItems")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(orderId!)
-          .add({
+          .collection("OrderList")
+          .doc(orderId)
+          .set({
         "OrderId": orderId,
+        "OrderImage": orderImage,
         "OrderName": orderName,
         "UserImage": userImage,
         "OrderPrice": orderPrice,
@@ -37,6 +40,8 @@ class OrderProvider with ChangeNotifier {
         "UserName": userName,
         "UserId": userId,
         "UserAddress": userAddress,
+        "DeliveryLatLng": deliveryLatLng,
+        "Payment": payment,
       }).then((_) {
         print("Orders pushed successfully");
         if (onSuccess != null) onSuccess(); // Call success callback
@@ -92,20 +97,36 @@ class OrderProvider with ChangeNotifier {
     try{
       QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection("OrderItems").get();
+      .collection("OrderList")
+          .get();
       value.docs.forEach((element) {
-        orderModel = OrderModel(userAddress: element.get("UserAddress"),orderId: element.get("OrderId"),orderName: element.get("OrderName"), userImage: element.get("UserImage"), orderPrice: element.get("OrderPrice"), orderQuantity: element.get("OrderQuantity"), userName: element.get("UserName"), userId: element.get("UserId"), );
-        newList.add(orderModel);
+        orderModel = OrderModel(
+          userAddress: element.get("UserAddress"),
+          orderId: element.get("OrderId"),
+          orderImage: element.get("OrderImage"),
+          orderName: element.get("OrderName"),
+          userImage: element.get("UserImage"),
+          orderPrice: element.get("OrderPrice"),
+          orderQuantity: element.get("OrderQuantity"),
+          userName: element.get("UserName"),
+          userId: element.get("UserId"),
+          deliveryLatLng: element.get("DeliveryLatLng"),
+            payment: element.get("Payment")
+        );
+        newList.insert(0,orderModel);
       });
-      cartList = newList;
-      cartItemNumber = cartList.length;
+
     }catch (e) {
       print(e);
+    }finally{
+      cartList = newList;
+      cartItemNumber = cartList.length;
+      isLoading = false;
+      callback();
+      notifyListeners();
     }
 
-    isLoading = false;
-    callback();
-    notifyListeners();
+
   }
 
   deleteOrder(orderId) async{
@@ -190,6 +211,46 @@ class OrderProvider with ChangeNotifier {
     isLoading = false;
     callback();
     notifyListeners();
+  }
+
+  List<OrderModel> userOrderList = [];
+  fetchUserOrderData(userId, callback) async{
+    isLoading = true;
+    List<OrderModel> newList = [];
+    try{
+      QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("OrderList")
+          .where("userId", isEqualTo: userId)
+          .get();
+      value.docs.forEach((element) {
+        orderModel = OrderModel(
+            userAddress: element.get("UserAddress"),
+            orderId: element.get("OrderId"),
+            orderImage: element.get("OrderImage"),
+            orderName: element.get("OrderName"),
+            userImage: element.get("UserImage"),
+            orderPrice: element.get("OrderPrice"),
+            orderQuantity: element.get("OrderQuantity"),
+            userName: element.get("UserName"),
+            userId: element.get("UserId"),
+            deliveryLatLng: element.get("DeliveryLatLng"),
+            payment: element.get("Payment")
+        );
+        userOrderList.insert(0,orderModel);
+      });
+
+    }catch (e) {
+      print(e);
+    }finally{
+      userOrderList = newList;
+      cartItemNumber = cartList.length;
+      isLoading = false;
+      callback();
+      notifyListeners();
+    }
+
+
   }
 }
 
