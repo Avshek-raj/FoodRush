@@ -32,10 +32,65 @@ Image logoWidget(String imageName) {
     height: 320,
   );
 }
+//for textformfiled
+// TextFormField reusableTextFormField(String text, IconData icon, String fieldInputType,
+//     TextEditingController controller) {
+//   bool isPasswordType = fieldInputType == 'password'? true : false;
+//   return TextFormField(
+//     controller: controller,
+//     obscureText: isPasswordType,
+//     enableSuggestions: !isPasswordType,
+//     autocorrect: !isPasswordType,
+//     cursorColor: Colors.black,
+//     style: TextStyle(color: Colors.black.withOpacity(0.9)),
+//       validator: (value){
+//         if (isPasswordType){
+//           if (value!.isEmpty){
+//             return "Please enter your password";
+//           } else if(value.length <=7) {
+//             return "The password should be at least 8 characters";
+//           }
+//         }else {
+//           if (value!.isEmpty) {
+//             return 'Please enter your ' + text.toLowerCase();
+//           }
+//         }
+//         if (isPasswordType){
+//           if (value!.isEmpty){
+//             return "Please enter your password";
+//           } else if(value.length <=7) {
+//             return "The password should be at least 8 characters";
+//           }
+//         }
+//         return null;
+//       },
+//     decoration: InputDecoration(
+//       contentPadding: EdgeInsets.symmetric(vertical: 16.0),
+//       prefixIcon: Icon(
+//         icon,
+//         color: Colors.red,
+//       ),
+//       labelText: text,
+//       labelStyle: TextStyle(color: Colors.black54),
+//       fillColor: Colors.white.withOpacity(0.3),
+//       border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(30.0),
+//           borderSide: BorderSide(color: Colors.red,)),
+//     ),
+//     keyboardType: fieldInputType == 'password'
+//         ? TextInputType.visiblePassword
+//         : fieldInputType == 'email' ? TextInputType.emailAddress
+//         : fieldInputType == 'phone' ? TextInputType.phone
+//         : TextInputType.text
+//   );
+// }
 
 TextFormField reusableTextFormField(String text, IconData icon, String fieldInputType,
     TextEditingController controller) {
-  bool isPasswordType = fieldInputType == 'password'? true : false;
+  bool isPasswordType = fieldInputType == 'password';
+  bool isEmailType = fieldInputType == 'email';
+  bool isPhoneType = fieldInputType == 'phone';
+
   return TextFormField(
     controller: controller,
     obscureText: isPasswordType,
@@ -43,27 +98,32 @@ TextFormField reusableTextFormField(String text, IconData icon, String fieldInpu
     autocorrect: !isPasswordType,
     cursorColor: Colors.black,
     style: TextStyle(color: Colors.black.withOpacity(0.9)),
-      validator: (value){
-        if (isPasswordType){
-          if (value!.isEmpty){
-            return "Please enter your password";
-          } else if(value.length <=7) {
-            return "The password should be at least 8 characters";
-          }
-        }else {
-          if (value!.isEmpty) {
-            return 'Please enter your ' + text.toLowerCase();
-          }
+    validator: (value){
+      if (isPasswordType){
+        if (value!.isEmpty){
+          return "Please enter your password";
+        } else if(value.length <=7) {
+          return "The password should be at least 8 characters";
         }
-        if (isPasswordType){
-          if (value!.isEmpty){
-            return "Please enter your password";
-          } else if(value.length <=7) {
-            return "The password should be at least 8 characters";
-          }
+      } else if (isEmailType) {
+        if (value!.isEmpty) {
+          return 'Please enter your email';
+        } else if (!RegExp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b').hasMatch(value)) {
+          return 'Please enter a valid email address';
         }
-        return null;
-      },
+      } else if (isPhoneType) {
+        if (value!.isEmpty) {
+          return 'Please enter your phone number';
+        } else if (value.length <= 10) {
+          return 'The phone number should be at least 11 characters';
+        }
+      } else {
+        if (value!.isEmpty) {
+          return 'Please enter your ' + text.toLowerCase();
+        }
+      }
+      return null;
+    },
     decoration: InputDecoration(
       contentPadding: EdgeInsets.symmetric(vertical: 16.0),
       prefixIcon: Icon(
@@ -81,9 +141,11 @@ TextFormField reusableTextFormField(String text, IconData icon, String fieldInpu
         ? TextInputType.visiblePassword
         : fieldInputType == 'email' ? TextInputType.emailAddress
         : fieldInputType == 'phone' ? TextInputType.phone
-        : TextInputType.text
+        : TextInputType.text,
   );
 }
+
+
 
 Container loginButton(BuildContext context, String title, Function onTap) {
   return Container(
@@ -182,7 +244,7 @@ Row dividerOrLine() {
     ],
   );
 }
-
+//for textfiled
 TextField reusableTextField(String text, IconData icon, String fieldInputType,
     TextEditingController controller, Function(String)? onSubmittedCallback) {
   bool isPasswordType = fieldInputType == 'password'? true : false;
