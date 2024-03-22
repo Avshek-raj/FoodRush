@@ -275,10 +275,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       });
                 };
               }) : SizedBox(),
-              loginAs == "user" ? customLoginButton(context, "Login with mobile number", "assets/images/phone.png", Colors.green,() async{
-                Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneLoginScreen()));
-              }): SizedBox(),
-
+              // loginAs == "user" ? customLoginButton(context, "Login with mobile number", "assets/images/phone.png", Colors.green,() async{
+              //   Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneLoginScreen()));
+              // }): SizedBox(),
               //customLoginButton(context, "Login with Facebook", "assets/images/facebook.png", Colors.blue, () {
                 // FirebaseAuth.instance
                 //     .signInWithEmailAndPassword(

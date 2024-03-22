@@ -53,32 +53,40 @@ class _CartState extends State<Cart> {
         children: [
           Row(
           children: [
-          BackButton(
-          color: Colors.black,
-        ), //back jane button
+       GestureDetector(
+  onTap: () {
+    // Navigate to the previous page
+    Navigator.pop(context);
+  },
+  child: BackButton(
+    color: Colors.black,
+  ),
+),
+ //back jane button
         Spacer(),
         Text(
           "Your Order",
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Container(
-            height: 25,
-            width: 25,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              border: Border.all(color: Colors.black),
-            ),
-            child: Icon(
-              Icons.question_mark,
-              color: Colors.black,
-            ),
-            alignment: Alignment.center,
-          ),
-        ),
+      
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 10),
+        //   child: Container(
+        //     height: 25,
+        //     width: 25,
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       color: Colors.white,
+        //       border: Border.all(color: Colors.black),
+        //     ),
+        //     child: Icon(
+        //       Icons.question_mark,
+        //       color: Colors.black,
+        //     ),
+        //     alignment: Alignment.center,
+        //   ),
+        // ),
         ],
       ),
       SizedBox(

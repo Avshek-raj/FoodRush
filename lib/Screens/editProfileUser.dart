@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,6 +31,7 @@ class _EditProfileState extends State<EditProfileUser> {
     }
   });
 }
+//
 
 
   @override
@@ -148,6 +151,13 @@ Padding(
     onChanged: (value) {},
   ),
 ),
+SizedBox(
+  height: 30,
+),
+CustomElevatedButton(onPressed: (){
+
+}
+, child: Text("Save")),
 
               ],
             ),

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 
 List<BreakfastClass> data = [
   BreakfastClass(
-      image: "assets/images/cheeseBreakfast.png",
+      image: "assets/images/sunnysideup.png",
       price: "Rs. 400",
-      name: "Cheese Breakfast"),
+      name: "Sunny Side Up"),
   BreakfastClass(
-      image: "assets/images/TurkeyBreakfast.png",
+      image: "assets/images/criossant.png",
       price: "Rs. 500",
-      name: "Turkey Breakfast"),
+      name: "Croissant"),
   BreakfastClass(
-      image: "assets/images/LambBurger.png",
+      image: "assets/images/garlicbread.png",
       price: "Rs. 320",
-      name: "Lamb Burger"),
+      name: "Garlic Bread"),
 ];
 
 class Breakfast extends StatefulWidget {

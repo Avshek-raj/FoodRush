@@ -83,7 +83,7 @@ class _RestaurantSignInScreenState extends State<RestaurantSignInScreen> {
                             height: 20,
                           ),
                           TextFormField(
-                            obscureText: passToggle? true: false,
+                            obscureText: !passToggle,
                             controller: _passwordTextController,
                             validator: (value) {
                               if (value!.isEmpty){
@@ -117,6 +117,16 @@ class _RestaurantSignInScreenState extends State<RestaurantSignInScreen> {
                                   borderSide: BorderSide(color: Colors.red,)),
                             ),
                             keyboardType: passToggle ?TextInputType.text: TextInputType.visiblePassword,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          //
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text("Forgot Password?"),
+                            ],
                           ),
                           const SizedBox(
                             height: 20,

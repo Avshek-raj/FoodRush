@@ -21,8 +21,6 @@ Future<void> fetchNearestFoods(currentLocation, restaurantLocation, foodList) as
         lat,
         long,
       );
-
-
       nearestFoods.add(foodList(
         productId: foodList[i].productId,
         productName: foodList[i].productName,
@@ -36,7 +34,5 @@ Future<void> fetchNearestFoods(currentLocation, restaurantLocation, foodList) as
     }
 
     nearestFoods.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
-
-
   }
 }
