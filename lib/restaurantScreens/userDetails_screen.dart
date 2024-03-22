@@ -101,6 +101,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
 
   }
   Set<Marker> _markers = {};
+  String statusValue = "";
   LatLng? _markerPosition;
   @override
   Widget build(BuildContext context) {
@@ -304,17 +305,47 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                                           color: Colors.black),
                                     ),
                                     Container(
+                                      height:30,
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(
-                                        color: Colors.red,
+                                        color: getStatusColor(orderProvider.userOrderList[index].status),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      child: Text('Pending',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
+                                      child:
+                                      //Text("pending")
+                                      DropdownButtonHideUnderline(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: getStatusColor(orderProvider.userOrderList[index].status), // Set the background color here
+                                            borderRadius: BorderRadius.circular(4), // Optional: Add border radius
+                                          ),
+                                          child: DropdownButton<String>(
+                                            value: orderProvider.userOrderList[index].status,
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                orderProvider.userOrderList[index].status = newValue!;
+                                              });
+                                              orderProvider.updateOrderStatus(orderProvider.userOrderList[index].orderId!, orderProvider.userOrderList[index].status!);
+                                            },
+                                            items: <String>[
+                                              'pending',
+                                              'preparing',
+                                              'delivering',
+                                              'delivered'
+                                            ].map<DropdownMenuItem<String>>((String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(
+                                                  value,
+                                                  style: TextStyle(fontSize: 14),
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
                                       ),
+
                                     ),
                                   ],
                                 ),
@@ -541,7 +572,13 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                               foregroundColor: myColor, backgroundColor: Colors.white,
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
+                              for (int index = 0; index < orderProvider.userOrderList.length; index++){
+                                setState(() {
+                                  orderProvider.userOrderList[index].status = "delivering";
+                                });
+                                orderProvider.updateOrderStatus(orderProvider.userOrderList[index].orderId!, "delivering");
+
+                              }
                             },
                             child: Text(
                               "Delivery in progress",
@@ -560,6 +597,13 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                               foregroundColor: Colors.white, backgroundColor: myColor,
                             ),
                             onPressed: () {
+                              for (int index = 0; index < orderProvider.userOrderList.length; index++){
+                                setState(() {
+                                  orderProvider.userOrderList[index].status = "delivered";
+                                });
+                                orderProvider.updateOrderStatus(orderProvider.userOrderList[index].orderId!, "delivering");
+
+                              }
                               },
                             child: Text(
                               "Delivered",

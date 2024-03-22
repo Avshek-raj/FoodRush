@@ -146,7 +146,6 @@ class ProductProvider with ChangeNotifier {
   }catch(e) {
   print(e);
   } finally {
-
       nearestFoods = newList;
       isLoading = false;
       notifyListeners();

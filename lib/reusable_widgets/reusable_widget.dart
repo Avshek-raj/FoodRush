@@ -490,4 +490,14 @@ Future<bool> checkDocumentExists(String collectionName, String documentId) async
 }
 
 
-
+Color getStatusColor(status){
+  if (status == "pending"){
+    return Colors.red;
+  }else if (status == "preparing"){
+    return Colors.orange;
+  }else if (status == "delivering"){
+    return Colors.yellow;
+  }else{
+    return Colors.green;
+  }
+}

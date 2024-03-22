@@ -42,6 +42,7 @@ class OrderProvider with ChangeNotifier {
         "UserAddress": userAddress,
         "DeliveryLatLng": deliveryLatLng,
         "Payment": payment,
+        "Status": "pending"
       }).then((_) {
         print("Orders pushed successfully");
         if (onSuccess != null) onSuccess(); // Call success callback
@@ -111,7 +112,8 @@ class OrderProvider with ChangeNotifier {
           userName: element.get("UserName"),
           userId: element.get("UserId"),
           deliveryLatLng: element.get("DeliveryLatLng"),
-            payment: element.get("Payment")
+            payment: element.get("Payment"),
+            status: element.get("Status")
         );
         newList.insert(0,orderModel);
       });
@@ -213,6 +215,25 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateOrderStatus( String orderId, String status) async {
+    try {
+      DocumentReference orderRef = FirebaseFirestore.instance
+          .collection("Order")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("OrderList")
+          .doc(orderId);
+
+      await orderRef.set({
+        'Status': status,
+      }, SetOptions(merge: true));
+
+      print('Status updated successfully.');
+    } catch (e) {
+      print('Error updating Status: $e');
+    }
+  }
+
+
   List<OrderModel> userOrderList = [];
   fetchUserOrderData(userId, callback) async{
     isLoading = true;
@@ -221,7 +242,7 @@ class OrderProvider with ChangeNotifier {
       QuerySnapshot value = await FirebaseFirestore.instance.collection("Order")
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection("OrderList")
-          .where("userId", isEqualTo: userId)
+          .where("UserId", isEqualTo: userId)
           .get();
       value.docs.forEach((element) {
         orderModel = OrderModel(
@@ -235,9 +256,10 @@ class OrderProvider with ChangeNotifier {
             userName: element.get("UserName"),
             userId: element.get("UserId"),
             deliveryLatLng: element.get("DeliveryLatLng"),
-            payment: element.get("Payment")
+            payment: element.get("Payment"),
+            status: element.get("Status")
         );
-        userOrderList.insert(0,orderModel);
+        newList.insert(0,orderModel);
       });
 
     }catch (e) {
@@ -259,5 +281,6 @@ class OrderListModel {
   String? userImage;
   String? order;
   String? userId;
-  OrderListModel({this.user, this.userImage, this.order, this.userId});
+  String? status;
+  OrderListModel({this.status, this.user, this.userImage, this.order, this.userId});
 }
