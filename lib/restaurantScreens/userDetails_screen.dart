@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodrush/restaurantScreens/order_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
@@ -124,8 +125,10 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                         children: [
                           BackButton(
                             onPressed: () {
-                              // Navigate back to the previous page
-                              Navigator.pop(context);
+                              orderProvider.fetchOrderData(() {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              });
                             },
                             color: Colors.black,
                           ),
@@ -601,8 +604,81 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                                 setState(() {
                                   orderProvider.userOrderList[index].status = "delivered";
                                 });
-                                orderProvider.updateOrderStatus(orderProvider.userOrderList[index].orderId!, "delivering");
-
+                                orderProvider.updateOrderStatus(orderProvider.userOrderList[index].orderId!, "delivered");
+                                AlertDialog(
+                                  title: Text(
+                                    "Confirm Logout",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold, fontSize: 18),
+                                  ),
+                                  content: Text(
+                                    "Are you sure you want to log out?",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500, fontSize: 16),
+                                  ),
+                                  actions: <Widget>[
+                                    // Button to logout
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.red,
+                                      ),
+                                      onPressed: () async {
+                                        AlertDialog(
+                                          title: Text(
+                                            "Confirm delivery",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold, fontSize: 18),
+                                          ),
+                                          content: Text(
+                                            "Do you really want to mark this order as delivered??",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500, fontSize: 16),
+                                          ),
+                                          actions: <Widget>[
+                                            // Button to logout
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.white,
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              onPressed: () async {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(builder: (context) => OrderRequests()));
+                                              },
+                                              child: Text("Yes"),
+                                            ),
+                                            // Button to cancel logout
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.white,
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                              child: Text("No"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                      child: Text("Yes"),
+                                    ),
+                                    // Button to cancel logout
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                      child: Text("No"),
+                                    ),
+                                  ],
+                                );
                               }
                               },
                             child: Text(

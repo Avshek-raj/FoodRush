@@ -81,6 +81,7 @@ class OrderProvider with ChangeNotifier {
       }).then((_) {
         print("Orders pushed in history successfully");
         if (onSuccess != null) onSuccess(); // Call success callback
+        if (onSuccess != null) onSuccess(); // Call success callback
       }).catchError((error) {
         print("Order push in history failed");
         if (onError != null) onError(error); // Call error callback
@@ -101,21 +102,24 @@ class OrderProvider with ChangeNotifier {
       .collection("OrderList")
           .get();
       value.docs.forEach((element) {
-        orderModel = OrderModel(
-          userAddress: element.get("UserAddress"),
-          orderId: element.get("OrderId"),
-          orderImage: element.get("OrderImage"),
-          orderName: element.get("OrderName"),
-          userImage: element.get("UserImage"),
-          orderPrice: element.get("OrderPrice"),
-          orderQuantity: element.get("OrderQuantity"),
-          userName: element.get("UserName"),
-          userId: element.get("UserId"),
-          deliveryLatLng: element.get("DeliveryLatLng"),
-            payment: element.get("Payment"),
-            status: element.get("Status")
-        );
-        newList.insert(0,orderModel);
+        if (element.get("Status") != "delivered"){
+          orderModel = OrderModel(
+              userAddress: element.get("UserAddress"),
+              orderId: element.get("OrderId"),
+              orderImage: element.get("OrderImage"),
+              orderName: element.get("OrderName"),
+              userImage: element.get("UserImage"),
+              orderPrice: element.get("OrderPrice"),
+              orderQuantity: element.get("OrderQuantity"),
+              userName: element.get("UserName"),
+              userId: element.get("UserId"),
+              deliveryLatLng: element.get("DeliveryLatLng"),
+              payment: element.get("Payment"),
+              status: element.get("Status")
+          );
+          newList.insert(0,orderModel);
+        }
+
       });
 
     }catch (e) {
@@ -245,21 +249,24 @@ class OrderProvider with ChangeNotifier {
           .where("UserId", isEqualTo: userId)
           .get();
       value.docs.forEach((element) {
-        orderModel = OrderModel(
-            userAddress: element.get("UserAddress"),
-            orderId: element.get("OrderId"),
-            orderImage: element.get("OrderImage"),
-            orderName: element.get("OrderName"),
-            userImage: element.get("UserImage"),
-            orderPrice: element.get("OrderPrice"),
-            orderQuantity: element.get("OrderQuantity"),
-            userName: element.get("UserName"),
-            userId: element.get("UserId"),
-            deliveryLatLng: element.get("DeliveryLatLng"),
-            payment: element.get("Payment"),
-            status: element.get("Status")
-        );
-        newList.insert(0,orderModel);
+        if (element.get("Status") != "delivered"){
+          orderModel = OrderModel(
+              userAddress: element.get("UserAddress"),
+              orderId: element.get("OrderId"),
+              orderImage: element.get("OrderImage"),
+              orderName: element.get("OrderName"),
+              userImage: element.get("UserImage"),
+              orderPrice: element.get("OrderPrice"),
+              orderQuantity: element.get("OrderQuantity"),
+              userName: element.get("UserName"),
+              userId: element.get("UserId"),
+              deliveryLatLng: element.get("DeliveryLatLng"),
+              payment: element.get("Payment"),
+              status: element.get("Status")
+          );
+          newList.insert(0,orderModel);
+        }
+
       });
 
     }catch (e) {

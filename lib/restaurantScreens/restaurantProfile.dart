@@ -43,72 +43,19 @@ class _ProfileRestaurantState extends State<ProfileRestaurant> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(14),
                       child: Image.network(
-                        restaurantProvider.restaurantModel.restaurantImageLink! as String,
+                        restaurantProvider.restaurantModel.restaurantImageLink?? "",
                         fit: BoxFit.cover,
                       ),
                     ),
                     // alignment: Alignment.center,
                   ),
-                  Row(
-                    children: [
-                      //container for dp
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.grey.shade200,
-                                width: 1,
-                              )),
-                          child: CircleAvatar(
-                            // Icon(Icons.person_outlined,color: Colors.red,size: 30,),
-                            // backgroundColor: Colors.grey.shade200,
-                            radius: 35,
-                            backgroundColor: Colors.transparent,
-                            child: ClipOval(
-                              child: Image.asset(
-                                "assets/images/newalahana.png",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      //for text
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+
                 ],
               ),
               SizedBox(
                 height: 10,
               ),
-              // Text(
-              //                   "Hello Samjhana,",
-              //                   style: TextStyle(
-              //                       fontWeight: FontWeight.w500,
-              //                       color: Colors.black,
-              //                       fontSize: 16),
-              //                 ),
-              //                 Text(
-              //                   "Welcome to Food Rush",
-              //                   style: TextStyle(
-              //                       fontWeight: FontWeight.w500,
-              //                       color: Colors.black,
-              //                       fontSize: 16),
-              //                 ),
-              //                 Divider(),
+              Divider(),
               Padding(
                 padding: const EdgeInsets.all(13),
                 child: Row(
