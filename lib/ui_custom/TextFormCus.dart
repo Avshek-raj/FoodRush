@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Ctextform extends StatelessWidget {
   bool obscureText;
@@ -26,8 +25,6 @@ class Ctextform extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
-      // Remove FilteringTextInputFormatter.digitsOnly from inputFormatters
-      inputFormatters: [],
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       onChanged: onChanged,

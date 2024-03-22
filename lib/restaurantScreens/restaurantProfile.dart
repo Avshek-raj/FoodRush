@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/restaurantScreens/editFood.dart';
-import 'package:foodrush/restaurantScreens/profile2.dart';
+import 'package:foodrush/restaurantScreens/EditProfileRestaurant.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
 import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:foodrush/utils/color_utils.dart';

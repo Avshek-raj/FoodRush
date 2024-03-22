@@ -32,7 +32,7 @@ import 'package:foodrush/restaurantScreens/formLoginRestaurant.dart';
 import 'package:foodrush/restaurantScreens/foodAdd.dart';
 import 'package:foodrush/restaurantScreens/restaurantProfile.dart';
 import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
-import 'package:foodrush/restaurantScreens/profile2.dart';
+import 'package:foodrush/restaurantScreens/EditProfileRestaurant.dart';
 import 'package:foodrush/restaurantScreens/restaurantHome.dart';
 import 'package:foodrush/restaurantScreens/settings.dart';
 import 'package:foodrush/restaurantScreens/signupRestaurant.dart';

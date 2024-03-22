@@ -118,6 +118,16 @@ class _RestaurantSignInScreenState extends State<RestaurantSignInScreen> {
                             ),
                             keyboardType: passToggle ?TextInputType.text: TextInputType.visiblePassword,
                           ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          //
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text("Forgot Password?"),
+                            ],
+                          ),
                           const SizedBox(
                             height: 20,
                           ),
