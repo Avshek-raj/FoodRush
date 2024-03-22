@@ -11,5 +11,6 @@ class OrderModel{
       String? userAddress;
       String? deliveryLatLng;
       String? payment;
-  OrderModel({this.payment ,this.deliveryLatLng, this.orderImage,this.userAddress, this.orderId,this.userImage,this.orderPrice,this.orderName,this.orderQuantity, this.userName, this.userId, this.restaurantId});
+      String? status;
+  OrderModel({this.status,this.payment ,this.deliveryLatLng, this.orderImage,this.userAddress, this.orderId,this.userImage,this.orderPrice,this.orderName,this.orderQuantity, this.userName, this.userId, this.restaurantId});
 }

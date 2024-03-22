@@ -5,6 +5,7 @@ import 'package:foodrush/restaurantScreens/userDetails_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/order_provider.dart';
+import '../reusable_widgets/reusable_widget.dart';
 
 class OrderRequests extends StatefulWidget {
   OrderRequests({Key? key}) : super(key: key);
@@ -134,7 +135,7 @@ class _OrderRequestsState extends State<OrderRequests> {
                                       ),
                                       Text(
                                           'Order: ${orderProvider.cartList[index].orderQuantity} ${orderProvider.cartList[index].orderName}'),
-                                      Text('Address: ${data[index].address}'),
+                                      Text('Address: ${orderProvider.cartList[index].userAddress}'),
                                     ],
                                   ),
                                   Spacer(),
@@ -154,20 +155,47 @@ class _OrderRequestsState extends State<OrderRequests> {
                                             color: Colors.black),
                                       ),
                                       Container(
+                                        height:30,
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
-                                          color: data[index].statusColor,
+                                          color: getStatusColor(orderProvider.cartList[index].status),
                                           borderRadius: BorderRadius.circular(20),
                                         ),
-                                        child: Text(
-                                          data[index].statusColor == Colors.green
-                                              ? 'Delivered'
-                                              : 'Pending',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                        child:
+                                        //Text("pending")
+                                        DropdownButtonHideUnderline(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: getStatusColor(orderProvider.cartList[index].status), // Set the background color here
+                                              borderRadius: BorderRadius.circular(4), // Optional: Add border radius
+                                            ),
+                                            child: DropdownButton<String>(
+                                              value: orderProvider.cartList[index].status,
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  orderProvider.cartList[index].status = newValue!;
+                                                });
+                                                orderProvider.updateOrderStatus(orderProvider.cartList[index].orderId!, orderProvider.cartList[index].status!);
+                                              },
+                                              items: <String>[
+                                                'pending',
+                                                'preparing',
+                                                'delivering',
+                                                'delivered'
+                                              ].map<DropdownMenuItem<String>>((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(
+                                                    value,
+                                                    style: TextStyle(fontSize: 14),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ),
                                         ),
+
                                       ),
                                     ],
                                   ),

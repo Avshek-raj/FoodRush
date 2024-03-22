@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/message_provider.dart';
@@ -322,13 +323,11 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 4),
                                     decoration: BoxDecoration(
-                                      color: data[index].statusColor,
+                                      color: getStatusColor(orderProvider.cartList[index].status),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
-                                      data[index].statusColor == Colors.green
-                                          ? 'Delivered'
-                                          : 'Pending',
+                                      orderProvider.cartList[index].status??"",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white),
