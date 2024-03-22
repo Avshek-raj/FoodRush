@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/login/restaurantSignIn_screen.dart';
 import 'package:foodrush/login/signin_screen.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
 import 'package:provider/provider.dart';
 
@@ -22,15 +23,20 @@ class _LoginAsState extends State<LoginAs> {
   late PageController _pageController;
   int _currentPageIndex = 0;
   late UserProvider userProvider;
+  late RestaurantProvider restaurantProvider;
 
   @override
   void initState() {
-    if (FirebaseAuth.  instance.currentUser != null){
+    if (FirebaseAuth.instance.currentUser != null){
       userProvider = Provider.of(context, listen: false);
+      restaurantProvider = Provider.of(context, listen: false);
       userProvider.fetchUserData("",(){
         setState(() {
           isLoading = false;
         });
+        if(userProvider.userModel.email == null){
+          restaurantProvider.fetchRestaurantDetails("", (){});
+        }
       });
     } else {
       isLoading = false;
@@ -49,28 +55,32 @@ class _LoginAsState extends State<LoginAs> {
   Widget build(BuildContext context) {
     userProvider = Provider.of(context);
     if (FirebaseAuth.instance.currentUser != null){
-      if (userProvider.userModel.role?.toLowerCase() == "restaurant"){
+      if (userProvider.userModel.role?.toLowerCase() == "user"){
         return Scaffold(
           body: isLoading
               ? Center(
             child: CircularProgressIndicator(),
-          ): NavbarRestaurant(),
+          ): MainScreen(),
         );
-      } else if (userProvider.userModel.role?.toLowerCase() == "user"){
+      }
+
+      //required if another role is added
+      // else if (restaurantProvider.restaurantModel.role?.toLowerCase() == "Restaurant"){
+      //   return Scaffold(
+      //     body: isLoading
+      //         ? Center(
+      //       child: CircularProgressIndicator(),
+      //     )
+      //         : MainScreen(),
+      //   );
+      // }
+      else {
         return Scaffold(
           body: isLoading
               ? Center(
             child: CircularProgressIndicator(),
           )
-              : MainScreen(),
-        );
-      }else {
-        return Scaffold(
-          body: isLoading
-              ? Center(
-            child: CircularProgressIndicator(),
-          )
-              : MainScreen(),
+              : NavbarRestaurant(),
         );
       }
     } else {

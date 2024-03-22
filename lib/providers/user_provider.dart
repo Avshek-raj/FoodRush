@@ -92,7 +92,8 @@ class UserProvider with ChangeNotifier {
               password: data["Password"],
               deliveryInfo: data["DeliveryInfo"],
               token:data["Token"],
-              userImage: data["PhotoUrl"]
+              userImage: data["PhotoUrl"],
+              role: data["Role"]
           );
         }
       });

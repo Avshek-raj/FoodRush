@@ -136,14 +136,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        if (username == 'admin' && password == 'admin'){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
-                        }
                         FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _emailTextController.text,
                             password: _passwordTextController.text).then ((value) {
                           if (value.user?.emailVerified == true) {
                             print(value.toString());
+
                             Navigator.push(context, MaterialPageRoute(builder: (context) => loginAs == "user" ?MainScreen()  : NavbarRestaurant() ));
                           } else {
                             setState(() {
