@@ -139,6 +139,8 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                     Padding(
                       padding: const EdgeInsets.all(18),
                       child: Container(
+                        height: 70,
+                        width: 70,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -147,12 +149,19 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                           ),
                         ),
                         child: ClipOval(
-                          child: Image.network(
+                          child: restaurantProvider.restaurantModel.restaurantImageLink != null || restaurantProvider.restaurantModel.restaurantImageLink != ""?
+                          Image.network(
                             restaurantProvider.restaurantModel.restaurantImageLink.toString(),
                             fit: BoxFit.cover,
                             width: 70, // Adjust the width as needed
                             height: 70, // Adjust the height as needed
-                          ),
+                          ) :
+                          Image.asset(
+                            "assets/images/person.png",
+                            fit: BoxFit.cover,
+                            width: 70, // Adjust the width as needed
+                            height: 70, // Adjust the height as needed
+                          ) ,
                         ),
                       ),
                     ),

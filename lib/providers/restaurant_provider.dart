@@ -69,7 +69,7 @@ class RestaurantProvider with ChangeNotifier {
   }
 
   List<RestaurantModel> restaurantInfoList = [];
-  RestaurantModel restaurantModel = RestaurantModel();
+  late RestaurantModel restaurantModel ;
   fetchRestaurantDetails(userId,callback) async {
     try{
       String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -84,18 +84,22 @@ class RestaurantProvider with ChangeNotifier {
           .get();
       value.docs.forEach((element) {
         Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-
-        restaurantModel = RestaurantModel(
-          restaurantName: data["RestaurantName"],
-          email: data["Email"],
-          address: data["Address"],
-          phone: data['phone'],
-          password: data["Password"],
-          about: data["About"],
-          restaurantImageLink:data["RestaurantImage"],
-          restaurantLatLng: data["RestaurantLatLng"],
-          role: data["Role"],
-        );
+        bool deliveryInfo = data.containsKey("Name");
+         if (data.containsKey("Token")){
+          token = data["Token"];
+        } else {
+          restaurantModel = RestaurantModel(
+            restaurantName: data["RestaurantName"],
+            email: data["Email"],
+            address: data["Address"],
+            phone: data['phone'],
+            password: data["Password"],
+            about: data["About"],
+            restaurantImageLink:data["RestaurantImage"],
+            restaurantLatLng: data["RestaurantLatLng"],
+            role: data["Role"],
+          );
+        }
       });
       restaurantInfoList = newList;
     }catch (e){
