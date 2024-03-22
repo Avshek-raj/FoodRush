@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -148,6 +149,13 @@ Padding(
     onChanged: (value) {},
   ),
 ),
+SizedBox(
+  height: 30,
+),
+CustomElevatedButton(onPressed: (){
+
+}
+, child: Text("Save")),
 
               ],
             ),

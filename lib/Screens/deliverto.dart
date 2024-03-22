@@ -109,23 +109,23 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
                   Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: Icon(
-                        Icons.question_mark,
-                        color: Colors.black,
-                      ),
-                      alignment: Alignment.center,
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //   child: Container(
+                  //     height: 25,
+                  //     width: 25,
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: Colors.white,
+                  //       border: Border.all(color: Colors.black),
+                  //     ),
+                  //     child: Icon(
+                  //       Icons.question_mark,
+                  //       color: Colors.black,
+                  //     ),
+                  //     alignment: Alignment.center,
+                  //   ),
+                  // ),
                 ],
               ),
               SizedBox(

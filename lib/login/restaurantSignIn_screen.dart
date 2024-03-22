@@ -83,7 +83,7 @@ class _RestaurantSignInScreenState extends State<RestaurantSignInScreen> {
                             height: 20,
                           ),
                           TextFormField(
-                            obscureText: passToggle? true: false,
+                            obscureText: !passToggle,
                             controller: _passwordTextController,
                             validator: (value) {
                               if (value!.isEmpty){

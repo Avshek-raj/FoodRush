@@ -114,8 +114,8 @@ TextFormField reusableTextFormField(String text, IconData icon, String fieldInpu
       } else if (isPhoneType) {
         if (value!.isEmpty) {
           return 'Please enter your phone number';
-        } else if (value.length <= 10) {
-          return 'The phone number should be at least 11 characters';
+        } else if (value.length < 10) {
+          return 'The phone number should be of 10 characters';
         }
       } else {
         if (value!.isEmpty) {
@@ -282,8 +282,6 @@ TextField reusableTextField(String text, IconData icon, String fieldInputType,
       },
   );
 }
-
-
 GestureDetector menuItem(BuildContext context, String itemName, String icon, int page) {
   return GestureDetector(
     onTap: () {
@@ -380,7 +378,7 @@ class CartBadge extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MainScreen(page: 4,)),
+          MaterialPageRoute(builder: (context) => MainScreen(page:3 ,)),
         );
       },
       alignment: Alignment.center,
