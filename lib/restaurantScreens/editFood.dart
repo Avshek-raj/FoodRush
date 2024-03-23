@@ -151,7 +151,7 @@ class _EditFoodState extends State<EditFood> {
                                 return AlertDialog(
                                   title: Center(
                                       child:
-                                          Text("Produt edited successfully")),
+                                          Text("Product edited successfully")),
                                   content: Column(
                                     mainAxisSize: MainAxisSize
                                         .min, // To minimize the dialog size

@@ -56,6 +56,7 @@ class _LoginAsState extends State<LoginAs> {
     userProvider = Provider.of(context);
     if (FirebaseAuth.instance.currentUser != null){
       if (userProvider.userModel.role?.toLowerCase() == "user"){
+        loginAs = "user";
         return Scaffold(
           body: isLoading
               ? Center(
@@ -75,6 +76,7 @@ class _LoginAsState extends State<LoginAs> {
       //   );
       // }
       else {
+        loginAs = "restaurant";
         return Scaffold(
           body: isLoading
               ? Center(
@@ -142,7 +144,7 @@ class _LoginAsState extends State<LoginAs> {
                                       loginAs = "user";
                                       Navigator.push(context, MaterialPageRoute(
                                           builder: (context) =>
-                                              SignInScreen()));
+                                              SignInScreen(loginAs: "user",)));
                                     },
                                     child: SizedBox(
                                       height: 50,
@@ -210,7 +212,7 @@ class _LoginAsState extends State<LoginAs> {
                                       loginAs = "restaurant";
                                       Navigator.push(context, MaterialPageRoute(
                                           builder: (context) =>
-                                              SignInScreen()));
+                                              SignInScreen(loginAs: "restaurant")));
                                     },
                                     child: SizedBox(
                                       height: 50,

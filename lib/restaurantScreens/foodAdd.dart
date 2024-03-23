@@ -183,20 +183,24 @@ class _AddFoodState extends State<AddFood> {
                         height: 20,
                       ),
                       loginButton(context, "Save", () {
+                        Map<String, dynamic>? data = selectedCategory;
+
+                        String name = data?['name']; // Accessing the name field
+                        print(name);
                         restaurantProductProvider.addProduct(
                           context: context,
                           productName: productName.text,
                           productPrice: productPrice.text,
                           productDesc: productDesc.text,
                           productImage: productImage,
-                          category: selectedCategory.toString(),
+                          category: name,
                           onSuccess: () {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Center(
-                                      child: Text("Produt added successfully")),
+                                      child: Text("Product added successfully")),
                                   content: Column(
                                     mainAxisSize: MainAxisSize
                                         .min, // To minimize the dialog size

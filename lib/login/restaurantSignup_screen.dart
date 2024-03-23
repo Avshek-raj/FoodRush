@@ -95,7 +95,7 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen>  wi
 
   Set<Marker> _markers = {};
   LatLng? _markerPosition;
-
+String? restaurantAddress;
   @override
   Widget build(BuildContext context) {
     restaurantProvider = Provider.of(context);
@@ -236,9 +236,7 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen>  wi
                               ),
                             ]) : <Marker>{},
                             onTap: (LatLng latLng) async {
-                              //  setState(() async{
-                              //   address.text = await getAddressFromLatLng(latLng);
-                              // });
+                                restaurantAddress = await getAddressFromLatLng(latLng);
                               showGeneralDialog(
                                 context: context,
                                 barrierDismissible: true,
@@ -337,8 +335,8 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen>  wi
                           restaurantName: restaurantName.text,
                           email: email.text,
                           phone: phone.text,
-                          address: "",
-                          restaurantLatLng: _center,
+                          address: restaurantAddress,
+                          restaurantLatLng: _markerPosition??_center,
                           password: password.text,
                           about: about.text,
                           restaurantImage: file,

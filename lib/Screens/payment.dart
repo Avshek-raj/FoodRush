@@ -251,7 +251,7 @@ class _PaymentState extends State<Payment> {
                               "${sameRestaurantFoods} has been order", sameRestaurantFoods, userProvider.userModel);
                         });
                       }
-                      if (count == widget.cartList.length - 1){
+                      //if (count == widget.cartList.length - 1){
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -265,7 +265,6 @@ class _PaymentState extends State<Payment> {
                                     fit: BoxFit.fill,// Provide the correct asset path here
                                     width: 80, // Adjust the width as needed
                                     height: 80, // Adjust the height as needed
-                                  ),
                                   SizedBox(height: 8),
                                   Text(
                                     "Your food has been ordered and will be delivered shortly by the restaurant.",
@@ -290,7 +289,7 @@ class _PaymentState extends State<Payment> {
                             );
                           },
                         );
-                      }
+                    //  }
                       count++;
                     });
 

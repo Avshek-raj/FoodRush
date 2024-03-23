@@ -105,7 +105,7 @@ class RestaurantProvider with ChangeNotifier {
     }catch (e){
       print(e);
     }
-    callback(restaurantModel);
+    callback();
     notifyListeners();
   }
 

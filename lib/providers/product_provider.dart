@@ -103,6 +103,41 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
+
+  List<ProductModel> menuProductList = [];
+  Future<void> fetchMenuProducts(String? menuName) async {
+    try {
+      isLoading = true;
+      List<ProductModel> newList = [];
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("FoodProducts")
+          .where('category',
+          isEqualTo: menuName)
+          .get();
+
+      querySnapshot.docs.forEach((document) {
+        ProductModel productModel = ProductModel(
+          productId: document.get("productId"),
+          productName: document.get("productName"),
+          productImage: document.get("productImage"),
+          productPrice: document.get("productPrice"),
+          productDesc: document.get("productDescription"),
+          restaurantId: document.get("restaurantId"),
+          restaurantName: document.get("restaurantName"),
+        );
+        newList.add(productModel);
+      });
+
+      menuProductList = newList;
+      isLoading = false;
+      notifyListeners(); // Notify listeners after data is fetched
+    } catch (e) {
+      isLoading = false;
+      print("Error fetching restaurant products: $e");
+      // Handle error, show error message, etc.
+    }
+  }
+
   get getFoodProductsDataList {
     return foodProductList;
   }

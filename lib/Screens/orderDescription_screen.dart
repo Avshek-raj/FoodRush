@@ -140,8 +140,23 @@ class _OrderDescriptionState extends State<OrderDescription> {
                             ),
                           ),
                         ],
+                      ),SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          Text(
+                            "Restaurant name:",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),SizedBox(width: 20,),
+                          Text(
+                            widget.restaurantName,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 20,),
+
                       Text(
                         "Description",
                         style: TextStyle(

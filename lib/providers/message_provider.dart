@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
+import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
@@ -27,17 +28,18 @@ class MessageProvider with ChangeNotifier{
 
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('New message: ${message.notification?.title}');
-      String user = message.data['custom_data']['username'];
-      String orders = message.data['custom_data']['orders'];
-      String userImage = message.data['custom_data']['userImage'];
-      String userId = message.data['custom_data']['user_id'];
-      orderProvider.addOrderList(userId: userId, user: user, userImage: userImage, order: orders);
+      // print('New message: ${message.notification?.title}');
+      // String user = message.data['custom_data']['username'];
+      // String orders = message.data['custom_data']['orders'];
+      // String userImage = message.data['custom_data']['userImage'];
+      // String userId = message.data['custom_data']['user_id'];
+      // orderProvider.addOrderList(userId: userId, user: user, userImage: userImage, order: orders);
       // Display notification or handle the message as needed
+      orderProvider.fetchOrderData((){});
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('App opened from background: ${message.notification?.title}');
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> NavbarRestaurant(page: 2,)));
       // Handle the message when the app is opened from the background
     });
   }

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:foodrush/login/phoneLogin_screen.dart';
 import 'package:foodrush/login/restaurantSignup_screen.dart';
 import 'package:foodrush/login/signup_screen.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 import '../Screens/home_screen.dart';
 import '../Screens/Navigation.dart';
@@ -17,7 +19,8 @@ import '../utils/color_utils.dart';
 import 'loginAs.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  String? loginAs;
+   SignInScreen({super.key, this.loginAs});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -29,8 +32,12 @@ class _SignInScreenState extends State<SignInScreen> {
   bool passToggle = false;
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
+  late UserProvider userProvider;
+  late RestaurantProvider restaurantProvider;
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of(context);
+    restaurantProvider = Provider.of(context);
     return Scaffold(body:
     // FirebaseAuth.instance.currentUser != null
     //     // && FirebaseAuth.instance.currentUser?.emailVerified == true
@@ -141,8 +148,48 @@ class _SignInScreenState extends State<SignInScreen> {
                             password: _passwordTextController.text).then ((value) {
                           if (value.user?.emailVerified == true) {
                             print(value.toString());
+                            if (widget.loginAs == "user"){
+                              userProvider.fetchUserData("", (){
+                                if (userProvider.userModel.email !=null){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen() ));
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Invalid Credentials"),
+                                        content: Text("The credentials provided are invalid. Please try again."),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(); // Close the dialog
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
 
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => loginAs == "user" ?MainScreen()  : NavbarRestaurant() ));
+                                }
+                              });
+                            } else {
+                              restaurantProvider.fetchRestaurantDetails("", (){
+                                if (restaurantProvider.restaurantModel.email !=null){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => NavbarRestaurant() ));
+                                } else {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text("Invalid username or password"),
+                                    actions: [
+                                      TextButton(onPressed: (){
+                                        Navigator.of(context).pop();
+                                      }, child: Text('OK'))
+                                    ],
+                                  );
+                                }
+                              });
+                            }
                           } else {
                             setState(() {
                               isLoading = false;
@@ -194,7 +241,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 )
               ),
 
-              loginAs == "user" ? signUpOption() : SizedBox(),
+              widget.loginAs == "user" ? signUpOption() : SizedBox(),
               const SizedBox(
                 height:20
               ),
@@ -202,15 +249,15 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(
                   height:20
               ),
-              loginAs == "restaurant" ? Text("Don't have an account?") : SizedBox(),
-              loginAs == "restaurant" ? const SizedBox(
+              widget.loginAs == "restaurant" ? Text("Don't have an account?") : SizedBox(),
+              widget.loginAs == "restaurant" ? const SizedBox(
                   height: 20
               ) : SizedBox(),
-              loginAs == "restaurant" ? loginButton(context, "Register your Restaurant", () {
+              widget.loginAs == "restaurant" ? loginButton(context, "Register your Restaurant", () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterRestaurantScreen()));
 
               }) : SizedBox(),
-              loginAs == "user" ? customLoginButton(context, "Login with Google", "assets/images/google.png", Colors.green,() async {
+              widget.loginAs == "user" ? customLoginButton(context, "Login with Google", "assets/images/google.png", Colors.green,() async {
                 try{
                 GoogleSignIn _googleSignIn = GoogleSignIn();
                 await _googleSignIn.signOut();
@@ -228,35 +275,91 @@ class _SignInScreenState extends State<SignInScreen> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                 }else {
                   UserProvider userProvider = UserProvider();
-                  userProvider.addUserDetails(
-                      context: context,
-                      username:user.displayName,
-                      email: user.email,
-                      phone: user.phoneNumber,
-                      address: "",
-                      password: _passwordTextController.text,
-                      role: "User",
-                      userImage: user.photoURL,
-                      onSuccess: (){
-                        setState(() {
-                          isLoading = false;
-                        });
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
-                      },
-                      onError: (e){
-                        showDialog(context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Error"),
-                                content: Text(e.toString()),
-                                actions: [
-                                  TextButton(onPressed: (){
-                                    Navigator.of(context).pop();
-                                  }, child: Text('OK'))
-                                ],
-                              );
+                  restaurantProvider.fetchRestaurantDetails(user!.uid, (){
+                    try{
+                      if (restaurantProvider.restaurantModel.email == null){
+                        userProvider.addUserDetails(
+                            context: context,
+                            username:user.displayName,
+                            email: user.email,
+                            phone: user.phoneNumber,
+                            address: "",
+                            password: _passwordTextController.text,
+                            role: "User",
+                            userImage: user.photoURL,
+                            onSuccess: (){
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                            },
+                            onError: (e){
+                              showDialog(context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text(e.toString()),
+                                      actions: [
+                                        TextButton(onPressed: (){
+                                          Navigator.of(context).pop();
+                                        }, child: Text('OK'))
+                                      ],
+                                    );
+                                  });
                             });
-                      });
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Invalid Credentials"),
+                              content: Text("The credentials provided are invalid. Please try again."),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Close the dialog
+                                  },
+                                  child: Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+
+                      }
+                    }catch (e) {
+                      userProvider.addUserDetails(
+                          context: context,
+                          username:user.displayName,
+                          email: user.email,
+                          phone: user.phoneNumber,
+                          address: "",
+                          password: _passwordTextController.text,
+                          role: "User",
+                          userImage: user.photoURL,
+                          onSuccess: (){
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                          },
+                          onError: (e){
+                            showDialog(context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(onPressed: (){
+                                        Navigator.of(context).pop();
+                                      }, child: Text('OK'))
+                                    ],
+                                  );
+                                });
+                          });
+                    }
+
+                  });
                 }
               }catch(error) {
                   showDialog(context: context,
