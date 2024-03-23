@@ -136,6 +136,11 @@ TextFormField reusableTextFormField(String text, IconData icon, String fieldInpu
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(color: Colors.red,)),
+           focusedBorder: OutlineInputBorder(
+            // Set focused border color to red
+            borderRadius: BorderRadius.circular(40),
+            borderSide: BorderSide(color: Colors.red),
+          ),
     ),
     keyboardType: fieldInputType == 'password'
         ? TextInputType.visiblePassword
@@ -256,6 +261,12 @@ TextField reusableTextField(String text, IconData icon, String fieldInputType,
       cursorColor: Colors.black,
       style: TextStyle(color: Colors.grey.shade500, fontSize: 15),
       decoration: InputDecoration(
+        
+          focusedBorder: OutlineInputBorder(
+            // Set focused border color to red
+            borderRadius: BorderRadius.circular(40),
+            borderSide: BorderSide(color: Colors.red),
+          ),
         contentPadding: EdgeInsets.symmetric(vertical: 14.0),
         prefixIcon: Icon(
           icon,

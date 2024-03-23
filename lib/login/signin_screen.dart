@@ -92,6 +92,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             borderSide: BorderSide(color: Colors.black,)),
+                             focusedBorder: OutlineInputBorder(
+            // Set focused border color to red
+            borderRadius: BorderRadius.circular(40),
+            borderSide: BorderSide(color: Colors.red),
+          ),
                       ),
                     ),
                     const SizedBox(
@@ -130,6 +135,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             borderSide: BorderSide(color: Colors.red,)),
+                             focusedBorder: OutlineInputBorder(
+            // Set focused border color to red
+            borderRadius: BorderRadius.circular(40),
+            borderSide: BorderSide(color: Colors.red),
+          ),
                       ),
                       keyboardType: passToggle ?TextInputType.text: TextInputType.visiblePassword,
                     ),

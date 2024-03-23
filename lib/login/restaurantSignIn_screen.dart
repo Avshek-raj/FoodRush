@@ -94,6 +94,7 @@ class _RestaurantSignInScreenState extends State<RestaurantSignInScreen> {
                             },
                             style: TextStyle(color: Colors.black.withOpacity(0.9)),
                             decoration: InputDecoration(
+                              
                               contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
                               prefixIcon: Icon(
                                 Icons.lock_outline,
@@ -115,6 +116,11 @@ class _RestaurantSignInScreenState extends State<RestaurantSignInScreen> {
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30.0),
                                   borderSide: BorderSide(color: Colors.red,)),
+                                    focusedBorder: OutlineInputBorder(
+            // Set focused border color to red
+            borderRadius: BorderRadius.circular(40),
+            borderSide: BorderSide(color: Colors.red),
+          ),
                             ),
                             keyboardType: passToggle ?TextInputType.text: TextInputType.visiblePassword,
                           ),

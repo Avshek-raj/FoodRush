@@ -70,7 +70,7 @@ class _EditProfileState extends State<EditProfileUser> {
                     backgroundImage: _image != null ? FileImage(_image!) : AssetImage("assets/images/p22.png") as ImageProvider,
                   ),
                 ),
-                                Text("Tap on the Circle Avatar to change your profile image",style: TextStyle(fontWeight: FontWeight.w500),),
+                                Text("Change profile image",style: TextStyle(fontWeight: FontWeight.w500),),
 
                 // Fields to edit
                 SizedBox(height: 50),

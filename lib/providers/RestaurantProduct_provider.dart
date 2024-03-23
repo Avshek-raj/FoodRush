@@ -55,18 +55,67 @@ class RestaurantProductProvider with ChangeNotifier{
       ));
     }
   }
+  //update product
+ void editProduct({
+  required BuildContext context,
+  required String productId,
+  String? productName,
+  File? productImage,
+  String? productPrice,
+  String? productDesc,
+  String? category,
+  VoidCallback? onSuccess,
+  Function(dynamic)? onError,
+}) async {
+  try {
+    restaurantProvider = Provider.of(context, listen: false);
+
+    // If a new image is provided, upload it to Firebase Storage
+    String imageUrl = '';
+    if (productImage != null) {
+      imageUrl = await uploadImageToFirebase(productImage) as String;
+    }
+
+    // Update the document with the edited product data
+    await FirebaseFirestore.instance
+        .collection("FoodProducts")
+        .doc(productId)
+        .update({
+      "productName": productName,
+      "category": category,
+      "productImage": imageUrl.isNotEmpty ? imageUrl : null,
+      "productDescription": productDesc,
+      "productPrice": productPrice,
+    }).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Product edited successfully'),
+      ));
+      if (onSuccess != null) onSuccess(); // Call success callback
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to edit product: $error'),
+      ));
+      if (onError != null) onError(error); // Call error callback
+    });
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Failed to edit product: $e'),
+    ));
+  }
+}
+
 
   //for delete
 
-  Future<void> deleteProductFromFirestore(String productName,
+  Future<void> deleteProductFromFirestore(String productId,
       {required VoidCallback onSuccess, required Function(dynamic) onError}) async {
     try {
       // Get a reference to the Firestore collection
       CollectionReference products =
-          FirebaseFirestore.instance.collection('products');
+          FirebaseFirestore.instance.collection('FoodProducts');
 
       // Delete the document from Firestore based on the product name
-      await products.doc(productName).delete();
+      await products.doc(productId).delete();
 
       // If successful, call the success callback
       onSuccess();
