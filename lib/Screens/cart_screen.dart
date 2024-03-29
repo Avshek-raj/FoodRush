@@ -24,6 +24,7 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  bool isLoading = true;
   late CartProvider cartProvider;
   late int grandTotal = 0;
   late List<int> itemCount = [];
@@ -33,12 +34,14 @@ class _CartState extends State<Cart> {
     CartProvider cartProvider = Provider.of(context, listen: false);
     cartProvider.fetchCartData((){
       if (cartProvider.cartList != null && cartProvider.cartList.isNotEmpty) {
+        isLoading = false;
         grandTotal = cartProvider.calculateTotalPrice().toInt();
         for (var item in cartProvider.cartList) {
           itemCount.add(item.cartQuantity ?? 1);
           total = cartProvider.cartList.map((item) => int.parse(item.cartPrice ?? '0')).toList();
         }
       }
+      isLoading = false;
     });
     super.initState();
   }
@@ -46,7 +49,11 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     cartProvider = Provider.of(context);
     return Scaffold(
-      body: SafeArea(
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            ):
+          SafeArea(
         child: Column(
           children: [SingleChildScrollView(
         child: Column(

@@ -6,6 +6,7 @@ import 'package:foodrush/Screens/editProfileUser.dart';
 import 'package:foodrush/Screens/home_screen.dart';
 import 'package:foodrush/Screens/payment.dart';
 import 'package:foodrush/Screens/profile_screen.dart';
+import 'package:foodrush/Screens/reviewPage.dart';
 import 'package:foodrush/Screens/service/changePwService.dart';
 import 'package:foodrush/login/changePwUI.dart';
 import 'package:foodrush/login/signin_screen.dart';
@@ -54,45 +55,40 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ProductProvider>(
-          create: (context) => ProductProvider(),
-        ),
-        ChangeNotifierProvider<CartProvider>(
-          create: (context) => CartProvider(),
-        ),
-        ChangeNotifierProvider<UserProvider>(
-          create: (context) => UserProvider(),
-        ),
-        ChangeNotifierProvider<SearchProvider>(
-          create: (context) => SearchProvider(),
-        ),
-        ChangeNotifierProvider<RestaurantProvider>(
-          create: (context) => RestaurantProvider(),
-        ),
-        ChangeNotifierProvider<RestaurantProductProvider>(
-          create: (context) => RestaurantProductProvider(),
-        ),
-        ChangeNotifierProvider<MessageProvider>(
-          create: (context) => MessageProvider(),
-        ),
-        ChangeNotifierProvider<OrderProvider>(
-          create: (context) => OrderProvider(),
-        ),
-
-      ],
-      child: MaterialApp(
-        title: 'Foodrush',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-
-        ),
-        
-        home: LoginAs(),
-      )
-
-    );
+        providers: [
+          ChangeNotifierProvider<ProductProvider>(
+            create: (context) => ProductProvider(),
+          ),
+          ChangeNotifierProvider<CartProvider>(
+            create: (context) => CartProvider(),
+          ),
+          ChangeNotifierProvider<UserProvider>(
+            create: (context) => UserProvider(),
+          ),
+          ChangeNotifierProvider<SearchProvider>(
+            create: (context) => SearchProvider(),
+          ),
+          ChangeNotifierProvider<RestaurantProvider>(
+            create: (context) => RestaurantProvider(),
+          ),
+          ChangeNotifierProvider<RestaurantProductProvider>(
+            create: (context) => RestaurantProductProvider(),
+          ),
+          ChangeNotifierProvider<MessageProvider>(
+            create: (context) => MessageProvider(),
+          ),
+          ChangeNotifierProvider<OrderProvider>(
+            create: (context) => OrderProvider(),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Foodrush',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.red,
+          ),
+          home: LoginAs(),
+        ));
   }
 }
 //samjhana12 password

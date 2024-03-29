@@ -20,6 +20,7 @@ class DeliverTo extends StatefulWidget {
 }
 
 class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMixin  {
+  bool isLoading = true;
   late AnimationController animationController;
   late Animation<Offset> _offsetAnimation;
   late GoogleMapController mapController;
@@ -76,6 +77,7 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
 
     _currentLocation = await location.getLocation();
     setState(() {
+      isLoading = false;
       _center = LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
     });
   }
@@ -94,7 +96,11 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
     }
 
     return Scaffold(
-      body: SafeArea(
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          :SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -403,7 +409,7 @@ class DeliverToState extends State<DeliverTo>  with SingleTickerProviderStateMix
                             address: address.text,
                             landmark: landmark.text,
                             phone: phone.text,
-                            latLng: _markerPosition.toString()?? _center.toString(),
+                            latLng: _markerPosition.toString() == null || _markerPosition.toString() == "null" ||_markerPosition.toString() == ""? _center.toString(): _markerPosition.toString(),
                             onSuccess: () {
                             userProvider.fetchDeliveryInfo(onSuccess: (){
                               Navigator.of(context, rootNavigator: true).pop();

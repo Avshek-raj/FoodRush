@@ -22,6 +22,7 @@ class UserDetail extends StatefulWidget {
 }
 
 class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateMixin{
+  bool isLoading = true;
   late AnimationController animationController;
   late Animation<Offset> _offsetAnimation;
   late GoogleMapController mapController;
@@ -31,7 +32,19 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
   late UserProvider userProvider;
   @override
   void initState()  {
-    void _getLocation() async {
+    
+    super.initState();
+    // RestaurantProvider restaurantProvider = Provider.of(context, listen:false);
+    // ProductProvider productProvider = Provider.of(context, listen: false);
+    // OrderProvider orderProvider = Provider.of(context, listen:false);
+    //  restaurantProvider.fetchRestaurantDetails("",(){});
+    //  productProvider.fetchRestaurantProducts();
+    //  orderProvider.fetchOrderData((){});
+    // MessageProvider messageProvider = Provider.of(context, listen:false);
+    // messageProvider.setupFirebaseMessaging(context);
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      isLoading = true;
+      void _getLocation() async {
       Location location = Location();
 
       bool _serviceEnabled;
@@ -56,19 +69,9 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
       _currentLocation = await location.getLocation();
       setState(() {
         _center = LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
+        isLoading = false;
       });
     }
-    super.initState();
-    // RestaurantProvider restaurantProvider = Provider.of(context, listen:false);
-    // ProductProvider productProvider = Provider.of(context, listen: false);
-    // OrderProvider orderProvider = Provider.of(context, listen:false);
-    //  restaurantProvider.fetchRestaurantDetails("",(){});
-    //  productProvider.fetchRestaurantProducts();
-    //  orderProvider.fetchOrderData((){});
-    // MessageProvider messageProvider = Provider.of(context, listen:false);
-    // messageProvider.setupFirebaseMessaging(context);
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      isLoading = true;
       _getLocation();
       animationController = AnimationController(
         vsync: this,
@@ -108,9 +111,16 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     orderProvider = Provider.of(context);
     userProvider = Provider.of(context);
-    _markerPosition = getLatLngFromString(orderProvider.cartList[widget.item??0].deliveryLatLng);
+    _markerPosition = getLatLngFromString(orderProvider.cartList[0].deliveryLatLng);
+    if (_markerPosition != null) {
+      isLoading = false;
+    }
     return Scaffold(
-      body: SafeArea(
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -126,7 +136,6 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                           BackButton(
                             onPressed: () {
                               orderProvider.fetchOrderData(() {
-                                Navigator.pop(context);
                                 Navigator.pop(context);
                               });
                             },
@@ -624,44 +633,49 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                                         backgroundColor: Colors.red,
                                       ),
                                       onPressed: () async {
-                                        AlertDialog(
-                                          title: Text(
-                                            "Confirm delivery",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: 18),
-                                          ),
-                                          content: Text(
-                                            "Do you really want to mark this order as delivered??",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500, fontSize: 16),
-                                          ),
-                                          actions: <Widget>[
-                                            // Button to logout
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                foregroundColor: Colors.white,
-                                                backgroundColor: Colors.red,
-                                              ),
-                                              onPressed: () async {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(builder: (context) => OrderRequests()));
-                                              },
-                                              child: Text("Yes"),
-                                            ),
-                                            // Button to cancel logout
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                foregroundColor: Colors.white,
-                                                backgroundColor: Colors.red,
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Close the dialog
-                                              },
-                                              child: Text("No"),
-                                            ),
-                                          ],
-                                        );
+                                        showDialog(
+  context: context,
+  builder: (BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        "Confirm delivery",
+        style: TextStyle(
+          fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+      content: Text(
+        "Do you really want to mark this order as delivered??",
+        style: TextStyle(
+          fontWeight: FontWeight.w500, fontSize: 16),
+      ),
+      actions: <Widget>[
+        // Button to logout
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.red,
+          ),
+          onPressed: () async {
+            Navigator.push(context,
+              MaterialPageRoute(builder: (context) => OrderRequests()));
+          },
+          child: Text("Yes"),
+        ),
+        // Button to cancel logout
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.red,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text("No"),
+        ),
+      ],
+    );
+  },
+);
+
                                       },
                                       child: Text("Yes"),
                                     ),

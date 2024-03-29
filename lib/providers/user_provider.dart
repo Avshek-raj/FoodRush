@@ -102,7 +102,7 @@ class UserProvider with ChangeNotifier {
       print(e);
     } finally {
       isLoading = false;
-      callback();
+      callback();;
       notifyListeners();
     }
   }
@@ -128,6 +128,7 @@ class UserProvider with ChangeNotifier {
           address: data["Address"] ?? "",
           landmark: data["Landmark"] ?? "",
           phone: data["Phone"] ?? "",
+          latLng: data["DeliveryLatLng"]?? ""
         );
         newList.add(deliveryInfoModel);
         if (onSuccess != null) onSuccess();

@@ -250,7 +250,7 @@ class _EditFoodState extends State<EditFood> {
                                     TextButton(
                                       child: Text("Close"),
                                       onPressed: () {
-                                        Navigator.pop(context); // Close dialog
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> NavbarRestaurant(page: 0,))); // Close dialog
                                       },
                                     ),
                                   ],
