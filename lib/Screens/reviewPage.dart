@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:foodrush/providers/review_provider.dart';
 import 'package:foodrush/ui_custom/customElevatedButton.dart';
+import 'package:provider/provider.dart';
+
+import '../models/cart_model.dart';
 
 class reviewPage extends StatefulWidget {
-  const reviewPage({super.key});
+  CartModel? orderModal;
+   reviewPage({super.key, this.orderModal});
 
   @override
   State<reviewPage> createState() => _reviewPageState();
 }
 
 class _reviewPageState extends State<reviewPage> {
-  double _productRating = 0.0; // Initialize product rating
+  late ReviewProvider reviewProvider;
+  double _productRating = 0.0;
+  TextEditingController review = TextEditingController();// Initialize product rating
+
+  void initState() {
+    ReviewProvider reviewProvider = Provider.of(context, listen: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    reviewProvider = Provider.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -52,7 +65,7 @@ class _reviewPageState extends State<reviewPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: Text(
-                          "Dwarika",
+                          widget.orderModal?.restaurantName??"",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -68,8 +81,8 @@ class _reviewPageState extends State<reviewPage> {
                                 border: Border.all(color: Colors.grey.shade200),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Image.asset(
-                                "assets/images/Tacos.png", // Modify the path to match the correct location of the image
+                              child: Image.network(
+                                widget.orderModal?.cartImage??"", // Modify the path to match the correct location of the image
                                 height: 40,
                                 width: 40,
                                 fit: BoxFit.contain,
@@ -79,12 +92,12 @@ class _reviewPageState extends State<reviewPage> {
                               width: 5,
                             ),
                             Text(
-                              "Tacos",
+                              widget.orderModal?.cartName??"",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Spacer(),
                             Text(
-                              "RS.500",
+                              widget.orderModal?.cartPrice??"",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red),
@@ -138,6 +151,7 @@ class _reviewPageState extends State<reviewPage> {
                         ),
                       ),
                       TextFormField(
+                        controller: review,
                         decoration: InputDecoration(
                           hintText:
                               "Write your review here...", // Hint text for the TextFormField
@@ -167,6 +181,7 @@ class _reviewPageState extends State<reviewPage> {
       backgroundColor: Colors.red,
     ),
     onPressed: () {
+
       // Show message dialog when button is pressed
       showDialog(
         context: context,

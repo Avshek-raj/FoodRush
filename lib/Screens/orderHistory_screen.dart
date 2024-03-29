@@ -165,7 +165,7 @@ GestureDetector(
     // Navigate to the other page when text is tapped
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => reviewPage()),
+      MaterialPageRoute(builder: (context) => reviewPage(orderModal: cartProvider.historyList[index])),
     );
   },
   child: Text(
