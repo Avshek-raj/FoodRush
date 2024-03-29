@@ -5,6 +5,7 @@ import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
+import '../Screens/orderDescription_screen.dart';
 import '../providers/message_provider.dart';
 import '../providers/order_provider.dart';
 import '../providers/product_provider.dart';
@@ -413,9 +414,48 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                 child: GestureDetector(
                                   onTap: (){
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => EditFood( productModel: productProvider.foodProductList[index],)),);
-                                  },
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrderDescription(
+                                                  currentProduct: productProvider
+                                                      .foodProductList[
+                                                  index],
+                                                  productId:
+                                                  productProvider
+                                                      .foodProductList[
+                                                  index]
+                                                      .productId,
+                                                  productName:
+                                                  productProvider
+                                                      .foodProductList[
+                                                  index]
+                                                      .productName,
+                                                  productImage:
+                                                  productProvider
+                                                      .foodProductList[
+                                                  index]
+                                                      .productImage,
+                                                  productPrice:
+                                                  productProvider
+                                                      .foodProductList[
+                                                  index]
+                                                      .productPrice,
+                                                  productDesc:
+                                                  productProvider
+                                                      .foodProductList[
+                                                  index]
+                                                      .productDesc,
+                                                  restaurantName: productProvider
+                                                      .foodProductList[
+                                                  index]
+                                                      .restaurantName,
+                                                  restaurantId: productProvider
+                                                      .foodProductList[
+                                                  index]
+                                                      .restaurantId, role: 'restaurant',
+                                                )));
+                                    },
                                   child: Container(
                                     height: 200,
                                     width: 200,

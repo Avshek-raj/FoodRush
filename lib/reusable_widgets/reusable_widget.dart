@@ -19,6 +19,8 @@ int? cartItemNumber;
 String? deliveryAddress;
 String? deliveryLandmark;
 
+String? role;
+
 
 bool isLoading = false;
 

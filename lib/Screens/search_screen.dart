@@ -152,7 +152,7 @@ class _SearchState extends State<Search> {
                                           .restaurantName,
                                       restaurantId: searchResults[
                                       index]
-                                          .restaurantId,
+                                          .restaurantId, role: 'user',
                                     )));
                       },
                       child: Padding(

@@ -26,6 +26,7 @@ class AddFood extends StatefulWidget {
 }
 
 class _AddFoodState extends State<AddFood> {
+  bool isLoading = false;
   Map<String, dynamic>? selectedCategory;
   final _formKey = new GlobalKey<FormState>();
   TextEditingController productName = TextEditingController();
@@ -38,7 +39,10 @@ class _AddFoodState extends State<AddFood> {
   Widget build(BuildContext context) {
     restaurantProductProvider = Provider.of(context);
     return Scaffold(
-      body: SafeArea(
+      body: isLoading
+          ? Center(
+        child: CircularProgressIndicator(),
+      ):SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -183,6 +187,9 @@ class _AddFoodState extends State<AddFood> {
                         height: 20,
                       ),
                       loginButton(context, "Save", () {
+                        setState(() {
+                          isLoading = true;
+                        });
                         Map<String, dynamic>? data = selectedCategory;
 
                         String name = data?['name']; // Accessing the name field

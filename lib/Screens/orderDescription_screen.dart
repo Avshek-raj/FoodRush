@@ -1,14 +1,22 @@
 import 'dart:core';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodrush/Screens/Navigation.dart';
+import 'package:foodrush/providers/product_provider.dart';
+import 'package:foodrush/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
+import '../models/product_model.dart';
 import '../providers/cart_provider.dart';
+import '../providers/review_provider.dart';
+import '../restaurantScreens/editFood.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import '../utils/color_utils.dart';
 import 'cart_screen.dart';
 
 class OrderDescription extends StatefulWidget {
+  ProductModel? currentProduct;
   String productName;
   String productImage;
   String productDesc;
@@ -16,6 +24,7 @@ class OrderDescription extends StatefulWidget {
   String productId;
   String restaurantName;
   String restaurantId;
+  String role;
   OrderDescription(
       {super.key,
       required this.productId,
@@ -24,14 +33,21 @@ class OrderDescription extends StatefulWidget {
       required this.productPrice,
       required this.productDesc,
       required this.restaurantName,
-      required this.restaurantId});
+      required this.restaurantId,
+        required this.role,
+        this.currentProduct,
+      });
 
   @override
   State<OrderDescription> createState() => _OrderDescriptionState();
 }
 
 class _OrderDescriptionState extends State<OrderDescription> {
+  bool isLoading = true;
   CartProvider cartProvider = CartProvider();
+  late ReviewProvider reviewProvider ;
+  late UserProvider userProvider;
+  late ProductProvider productProvider;
   int itemCount = 1;
   int index = 0; // Define the variable 'index'
   List<String> imageList = [
@@ -46,10 +62,26 @@ class _OrderDescriptionState extends State<OrderDescription> {
     //  "aset/images/chocofun4.png",
     // "aset/images/momo5.png",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+    reviewProvider.fetchReview(widget.productId,() {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of(context);
+    productProvider = Provider.of(context);
     return Scaffold(
-        body: SafeArea(
+        body: isLoading
+            ? Center(
+          child: CircularProgressIndicator(),
+        ):SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -61,9 +93,10 @@ class _OrderDescriptionState extends State<OrderDescription> {
                         color: Colors.black,
                       ),
                       Spacer(),
-                      CartBadge(
+                      widget.role != "restaurant" ? CartBadge(
                         itemCount: cartItemNumber ?? 0, // Replace this with
-                      ),
+                      )
+                      :SizedBox(),
                     ],
                   ),
                 ),
@@ -115,7 +148,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                                   color: myColor),
                             ),
                             Spacer(),
-                            Container(
+                            widget.role == "restaurant" ? SizedBox():Container(
                               height: 30,
                               width: 118,
                               decoration: BoxDecoration(
@@ -309,6 +342,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                 // ),
 
                 //customers ko review dekhaune container
+
                 Container(
                   height: MediaQuery.of(context).size.height * 0.32,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -320,50 +354,137 @@ class _OrderDescriptionState extends State<OrderDescription> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Samjhana Shrestha",
-                              style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
-                              
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "(4)", // Example rating value
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors
-                                    .orange, // You can adjust color as needed
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 08),
+                          child: Row(
+                            children: [
+                              Text(
+                                textAlign: TextAlign.left,
+                                "Reviews",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: reviewProvider.reviewList.length == 0 ?
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                                "No reviews yet",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 14)
                             ),
-                            Spacer(),
-                            Row(
-                              children: [
-                                Icon(Icons.star, color: Colors.yellow),
-                                Icon(Icons.star, color: Colors.yellow),
-                                Icon(Icons.star, color: Colors.yellow),
-                                Icon(Icons.star, color: Colors.yellow),
-                                Icon(Icons.star, color: Colors.yellow),
+                          )
+                              :ListView.builder(
+                            itemCount: reviewProvider.reviewList.length, // Assuming reviewList is a List of review data
+                            itemBuilder: (context, index) {
+                              // Access each review item based on the index
+                              final review = reviewProvider.reviewList[index];
+                              final numRating = review.rating ?? 0.0;
+                          
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        review.userName??"",
+                                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        "(${review.rating})", // Example rating value
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.orange, // You can adjust color as needed
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Row(
+                                        children: List.generate(
+                                          5,
+                                              (index) {
+                                            // Calculate the number of full stars and half stars
+                                            double fullStars = numRating.floorToDouble();
+                                            double halfStars = numRating - fullStars;
 
-                                // Add more icons as needed based on the user's rating
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                                height: 90,
-                                width: MediaQuery.of(context).size.width * 0.90,
-                                child: Text(
-                                  "Akdam nai mitho authentic taste xa. I liked the food very much and will be purchasing from you guys.I liked the food very much and will be purchasing from you guys. ",
-                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                )),
-                          ],
-                        ),
-                        Divider(),
+                                            if (index < fullStars) {
+                                              // Full star
+                                              return Icon(Icons.star, color: Colors.yellow);
+                                            } else if (index == fullStars && halfStars >= 0.5) {
+                                              // Half star
+                                              return Icon(Icons.star_half, color: Colors.yellow);
+                                            } else {
+                                              // Empty star
+                                              return Icon(Icons.star_border, color: Colors.yellow);
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.90,
+                                    child: Text(
+                                      review.review??"",
+                                      style: TextStyle(fontWeight: FontWeight.w400),
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Divider(),
+                                ],
+                              );
+                            },
+                          ),
+                        )
+
+                        // Row(
+                        //   children: [
+                        //     Text(
+                        //       "Samjhana Shrestha",
+                        //       style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
+                        //
+                        //     ),
+                        //     SizedBox(
+                        //       width: 5,
+                        //     ),
+                        //     Text(
+                        //       "(4)", // Example rating value
+                        //       style: TextStyle(
+                        //         fontWeight: FontWeight.w500,
+                        //         color: Colors
+                        //             .orange, // You can adjust color as needed
+                        //       ),
+                        //     ),
+                        //     Spacer(),
+                        //     Row(
+                        //       children: [
+                        //         Icon(Icons.star, color: Colors.yellow),
+                        //         Icon(Icons.star, color: Colors.yellow),
+                        //         Icon(Icons.star, color: Colors.yellow),
+                        //         Icon(Icons.star, color: Colors.yellow),
+                        //         Icon(Icons.star, color: Colors.yellow),
+                        //
+                        //         // Add more icons as needed based on the user's rating
+                        //       ],
+                        //     ),
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     SizedBox(
+                        //         height: 90,
+                        //         width: MediaQuery.of(context).size.width * 0.90,
+                        //         child: Text(
+                        //           "Akdam nai mitho authentic taste xa. I liked the food very much and will be purchasing from you guys.I liked the food very much and will be purchasing from you guys. ",
+                        //           style: TextStyle(fontWeight: FontWeight.w400),
+                        //         )),
+                        //   ],
+                        // ),
+                        // Divider(),
                       ],
                     ),
                     
@@ -381,13 +502,51 @@ class _OrderDescriptionState extends State<OrderDescription> {
               EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 20),
           child: Row(
             children: [
-              Text(
+              widget.role == "restaurant" ? SizedBox():Text(
                 "Total: Rs. " +
                     (int.parse(widget.productPrice) * itemCount).toString(),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               Spacer(),
+              widget.role == "restaurant" ?
               GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditFood( productModel: widget.currentProduct!,)),);
+
+                },
+                child: Container(
+                  height: 40,
+                  width: 170,
+                  decoration: BoxDecoration(
+                      color: myColor,
+                      border: Border.all(color: myColor),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Edit Product",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+                  :GestureDetector(
                 onTap: () {
                   cartProvider.addReviewCartData(
                     context: context,

@@ -196,7 +196,7 @@ class _PaymentState extends State<Payment> {
                     String? oldRestaurantName;
                     // for (var item in widget.cartList){
                       widget.cartList.asMap().forEach((index, item) async {
-                        String orderId = DateTime.now().millisecondsSinceEpoch.toString();
+                        String? orderId = item.cartId;
                         orderProvider.addOrderData(
                           orderId: orderId,
                           orderImage: item.cartImage,

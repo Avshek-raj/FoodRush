@@ -20,13 +20,19 @@ class OrderHistory extends StatefulWidget {
 }
 
 class _OrderHistoryState extends State<OrderHistory> {
+  bool isLoading =true;
   late CartProvider cartProvider;
 
   @override
   void initState() {
     super.initState();
     cartProvider = Provider.of<CartProvider>(context, listen: false);
-    cartProvider.fetchHistoryData(() {});
+    cartProvider.fetchHistoryData(() {
+      setState(() {
+        isLoading = false;
+      });
+      ;
+    });
   }
 
   @override
@@ -34,7 +40,10 @@ class _OrderHistoryState extends State<OrderHistory> {
     UserProvider userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
-      body: SafeArea(
+      body: isLoading
+          ? Center(
+        child: CircularProgressIndicator(),
+      ):SafeArea(
         child: Column(
           children: [
             Row(

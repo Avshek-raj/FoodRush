@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/providers/review_provider.dart';
 import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart_model.dart';
+import '../providers/user_provider.dart';
 
 class reviewPage extends StatefulWidget {
   CartModel? orderModal;
@@ -15,6 +17,7 @@ class reviewPage extends StatefulWidget {
 
 class _reviewPageState extends State<reviewPage> {
   late ReviewProvider reviewProvider;
+  late UserProvider userProvider;
   double _productRating = 0.0;
   TextEditingController review = TextEditingController();// Initialize product rating
 
@@ -26,6 +29,7 @@ class _reviewPageState extends State<reviewPage> {
   @override
   Widget build(BuildContext context) {
     reviewProvider = Provider.of(context);
+    userProvider = Provider.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -97,7 +101,7 @@ class _reviewPageState extends State<reviewPage> {
                             ),
                             Spacer(),
                             Text(
-                              widget.orderModal?.cartPrice??"",
+                              'Rs. ${widget.orderModal?.cartPrice??""}',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red),
@@ -181,25 +185,55 @@ class _reviewPageState extends State<reviewPage> {
       backgroundColor: Colors.red,
     ),
     onPressed: () {
-
-      // Show message dialog when button is pressed
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Success"),
-            content: Text("Thank you for your review!"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  // Close the dialog
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK",style: TextStyle(color: Colors.red),),
-              ),
-            ],
+      reviewProvider.addReview(
+          context: context,
+          productId: widget.orderModal?.cartId,
+        userName: userProvider.userModel.username,
+        userId: FirebaseAuth.instance.currentUser?.uid,
+        userImage: userProvider.userModel.userImage,
+        rating: _productRating,
+        review: review.text,
+        onSuccess: (){
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Success"),
+                content: Text("Thank you for your review!"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      // Close the dialog
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK",style: TextStyle(color: Colors.red),),
+                  ),
+                ],
+              );
+            },
           );
         },
+        onError: (e){
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Error"),
+                content: Text(e.toString()),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      // Close the dialog
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK",style: TextStyle(color: Colors.red),),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       );
     },
     child: Text("Submit"),
@@ -225,19 +259,51 @@ class StarRating extends StatefulWidget {
 }
 
 class _StarRatingState extends State<StarRating> {
+  double _currentRating = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentRating = widget.rating;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: List.generate(5, (index) {
+          double rating = index + 1;
+          IconData iconData;
+          if (_currentRating >= rating) {
+            iconData = Icons.star;
+          } else if (_currentRating >= rating - 0.5) {
+            iconData = Icons.star_half;
+          } else {
+            iconData = Icons.star_border;
+          }
           return IconButton(
             icon: Icon(
-              index < widget.rating ? Icons.star : Icons.star_border,
+              iconData,
               color: Colors.amber,
               size: 45,
             ),
-            onPressed: () => widget.onRatingChanged(index + 1),
+            onPressed: () {
+              if (_currentRating == index+0.5){
+                double newRating = _currentRating + 0.5;
+                setState(() {
+                  _currentRating = newRating;
+                });
+                widget.onRatingChanged(newRating);
+              } else {
+                double newRating = index+1 - 0.5;
+                setState(() {
+                  _currentRating = newRating;
+                });
+                widget.onRatingChanged(newRating);
+              }
+
+            },
           );
         }),
       ),

@@ -20,6 +20,7 @@ import 'package:foodrush/providers/order_provider.dart';
 import 'package:foodrush/providers/product_provider.dart';
 import 'package:foodrush/providers/RestaurantProduct_provider.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
+import 'package:foodrush/providers/review_provider.dart';
 import 'package:foodrush/providers/search_provider.dart';
 import 'package:foodrush/providers/user_provider.dart';
 import 'package:foodrush/providers/message_provider.dart';
@@ -79,6 +80,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<OrderProvider>(
             create: (context) => OrderProvider(),
+          ),
+          ChangeNotifierProvider<ReviewProvider>(
+            create: (context) => ReviewProvider(),
           ),
         ],
         child: MaterialApp(

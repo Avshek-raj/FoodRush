@@ -7,7 +7,7 @@ class ReviewModal {
   String? userName;
   String? userId;
   String? userImage;
-  int? rating;
+  double? rating;
   String? review;
   String? date;
   ReviewModal({this.productId,this.userName,this.userId,this.userImage,this.rating, this.review, this.date});
@@ -20,7 +20,7 @@ class ReviewProvider with ChangeNotifier {
     String? userName,
     String? userId,
     String? userImage,
-    int? rating,
+    double? rating,
     String? review,
     VoidCallback? onSuccess, // Callback for success
     Function(dynamic)? onError,
@@ -54,22 +54,25 @@ class ReviewProvider with ChangeNotifier {
   late ReviewModal reviewModal;
   fetchReview(productId, callback) async{
     List<ReviewModal> newList = [];
-    QuerySnapshot value = await FirebaseFirestore.instance.collection("Review")
-        .doc(productId)
-    .collection("ReviewList")
-        .get();
-    value.docs.forEach((element) {
-      reviewModal = ReviewModal(
-          productId: element.get("ProductId"),
-          userName: element.get("UserName"),
-          userId: element.get("UserId"),
-          userImage: element.get("UserImage"),
-          rating: element.get("Rating"),
-          review: element.get("Review"),
-        date: element.get("date"),
-      );
-      newList.add(reviewModal);
-    });
+    try {
+      QuerySnapshot value = await FirebaseFirestore.instance.collection("Review")
+          .doc(productId)
+      .collection("ReviewList")
+          .get();
+      value.docs.forEach((element) {
+        reviewModal = ReviewModal(
+            productId: element.get("ProductId"),
+            userName: element.get("UserName"),
+            userId: element.get("UserId"),
+            userImage: element.get("UserImage"),
+            rating: element.get("Rating"),
+            review: element.get("Review"),
+        );
+        newList.add(reviewModal);
+      });
+    } on Exception catch (e) {
+      print(e);
+    }
     reviewList = newList;
     callback();
     notifyListeners();

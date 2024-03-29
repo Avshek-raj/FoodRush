@@ -64,6 +64,7 @@ class RestaurantProductProvider with ChangeNotifier{
   String? productPrice,
   String? productDesc,
   String? category,
+   String? productImageUrl,
   VoidCallback? onSuccess,
   Function(dynamic)? onError,
 }) async {
@@ -71,9 +72,11 @@ class RestaurantProductProvider with ChangeNotifier{
     restaurantProvider = Provider.of(context, listen: false);
 
     // If a new image is provided, upload it to Firebase Storage
-    String imageUrl = '';
+    String? imageUrl = '';
     if (productImage != null) {
       imageUrl = await uploadImageToFirebase(productImage) as String;
+    } else {
+      imageUrl = productImageUrl;
     }
 
     // Update the document with the edited product data
@@ -83,7 +86,7 @@ class RestaurantProductProvider with ChangeNotifier{
         .update({
       "productName": productName,
       "category": category,
-      "productImage": imageUrl.isNotEmpty ? imageUrl : null,
+      "productImage": imageUrl ,
       "productDescription": productDesc,
       "productPrice": productPrice,
     }).then((_) {

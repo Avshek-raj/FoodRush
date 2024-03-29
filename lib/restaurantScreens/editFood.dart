@@ -155,6 +155,7 @@ class _EditFoodState extends State<EditFood> {
                           productPrice: productPrice.text,
                           productDesc: productDesc.text,
                           productImage: productImage,
+                          productImageUrl: widget.productModel.productImage,
                           onSuccess: () {
                             showDialog(
                               context: context,

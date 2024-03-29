@@ -312,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       restaurantId: productProvider
                                                           .nearestFoods[
                                                       index]
-                                                          .restaurantId,
+                                                          .restaurantId, role: 'user',
                                                     )));
                                       },
                                       child: Container(
@@ -487,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       restaurantId: productProvider
                                                           .foodProductList[
                                                       index]
-                                                          .restaurantId,
+                                                          .restaurantId, role: 'users',
                                                     )));
                                       },
                                       child: Container(
