@@ -27,13 +27,13 @@ class OrderDescription extends StatefulWidget {
   String role;
   OrderDescription(
       {super.key,
-      required this.productId,
-      required this.productName,
-      required this.productImage,
-      required this.productPrice,
-      required this.productDesc,
-      required this.restaurantName,
-      required this.restaurantId,
+        required this.productId,
+        required this.productName,
+        required this.productImage,
+        required this.productPrice,
+        required this.productDesc,
+        required this.restaurantName,
+        required this.restaurantId,
         required this.role,
         this.currentProduct,
       });
@@ -96,7 +96,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                       widget.role != "restaurant" ? CartBadge(
                         itemCount: cartItemNumber ?? 0, // Replace this with
                       )
-                      :SizedBox(),
+                          :SizedBox(),
                     ],
                   ),
                 ),
@@ -344,7 +344,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                 //customers ko review dekhaune container
 
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.32,
+                  height: MediaQuery.of(context).size.height * 0.28,
                   width: MediaQuery.of(context).size.width * 0.95,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade400),
@@ -383,7 +383,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                               // Access each review item based on the index
                               final review = reviewProvider.reviewList[index];
                               final numRating = review.rating ?? 0.0;
-                          
+
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -487,7 +487,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                         // Divider(),
                       ],
                     ),
-                    
+
                   ),
                 ),
               ],
@@ -499,7 +499,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
               border: Border.all(color: Colors.white),
               borderRadius: BorderRadius.circular(10)),
           padding:
-              EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 20),
+          EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 20),
           child: Row(
             children: [
               widget.role == "restaurant" ? SizedBox():Text(
@@ -562,8 +562,8 @@ class _OrderDescriptionState extends State<OrderDescription> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => MainScreen(
-                                    page: 3,
-                                  )));
+                                page: 3,
+                              )));
                       // Execute any additional code on success
                     },
                     onError: (error) {
@@ -609,60 +609,60 @@ class _OrderDescriptionState extends State<OrderDescription> {
 }
 
 
-  // ListView.builder(
-  //               shrinkWrap: true,
-  //               itemCount: reviews.length,
-  //               itemBuilder: (BuildContext context, int index) {
-  //                 return Container(
-  //                   height: MediaQuery.of(context).size.height * 0.32,
-  //                   width: MediaQuery.of(context).size.width * 0.95,
-  //                   decoration: BoxDecoration(
-  //                     border: Border.all(color: Colors.grey.shade400),
-  //                     borderRadius: BorderRadius.circular(12),
-  //                   ),
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.all(8.0),
-  //                     child: Column(
-  //                       children: [
-  //                         Row(
-  //                           children: [
-  //                             Text(
-  //                               reviews[index]['username'],
-  //                               style: TextStyle(fontWeight: FontWeight.w500),
-  //                             ),
-  //                             SizedBox(
-  //                               width: 5,
-  //                             ),
-  //                             Text(
-  //                               '(${reviews[index]['rating']})',
-  //                               style: TextStyle(
-  //                                 fontWeight: FontWeight.w500,
-  //                                 color: Colors.orange,
-  //                               ),
-  //                             ),
-  //                             Spacer(),
-  //                             Row(
-  //                               children: List.generate(
-  //                                 reviews[index]['rating'],
-  //                                 (index) => Icon(Icons.star, color: Colors.yellow),
-  //                               ),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                         SizedBox(height: 10),
-  //                         Expanded(
-  //                           child: SingleChildScrollView(
-  //                             child: Text(
-  //                               reviews[index]['review'],
-  //                               style: TextStyle(fontWeight: FontWeight.w400),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                         Divider(),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 );
-  //               },
-  //             ),
+// ListView.builder(
+//               shrinkWrap: true,
+//               itemCount: reviews.length,
+//               itemBuilder: (BuildContext context, int index) {
+//                 return Container(
+//                   height: MediaQuery.of(context).size.height * 0.32,
+//                   width: MediaQuery.of(context).size.width * 0.95,
+//                   decoration: BoxDecoration(
+//                     border: Border.all(color: Colors.grey.shade400),
+//                     borderRadius: BorderRadius.circular(12),
+//                   ),
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(8.0),
+//                     child: Column(
+//                       children: [
+//                         Row(
+//                           children: [
+//                             Text(
+//                               reviews[index]['username'],
+//                               style: TextStyle(fontWeight: FontWeight.w500),
+//                             ),
+//                             SizedBox(
+//                               width: 5,
+//                             ),
+//                             Text(
+//                               '(${reviews[index]['rating']})',
+//                               style: TextStyle(
+//                                 fontWeight: FontWeight.w500,
+//                                 color: Colors.orange,
+//                               ),
+//                             ),
+//                             Spacer(),
+//                             Row(
+//                               children: List.generate(
+//                                 reviews[index]['rating'],
+//                                 (index) => Icon(Icons.star, color: Colors.yellow),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         SizedBox(height: 10),
+//                         Expanded(
+//                           child: SingleChildScrollView(
+//                             child: Text(
+//                               reviews[index]['review'],
+//                               style: TextStyle(fontWeight: FontWeight.w400),
+//                             ),
+//                           ),
+//                         ),
+//                         Divider(),
+//                       ],
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
               
