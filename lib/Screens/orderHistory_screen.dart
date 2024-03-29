@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:foodrush/Screens/reviewPage.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart_model.dart';
@@ -156,8 +157,22 @@ class _OrderHistoryState extends State<OrderHistory> {
                                                 cartProvider.historyList[index].cartQuantity!).toString(),
                                         style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                                       ),
+
                                     ],
                                   ),
+GestureDetector(
+  onTap: () {
+    // Navigate to the other page when text is tapped
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => reviewPage()),
+    );
+  },
+  child: Text(
+    "Write Review",
+    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+  ),
+),
                                 ],
                               ),
                             ),

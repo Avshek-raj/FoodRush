@@ -322,8 +322,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Invalid Credentials"),
-                              content: Text("The credentials provided are invalid. Please try again."),
+                              title: Text("Error"),
+                              content: Text("You dont have access to this page"),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {

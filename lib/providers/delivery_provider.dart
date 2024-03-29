@@ -27,12 +27,13 @@ class DeliveryProvider with ChangeNotifier {
         "Address": address,
         "Landmark": landmark,
         "Phone": phone,
-        "latLng": latLng,
+        "DeliveryLatLng": latLng,
       }).then((_) {
         deliveryIngoModel.name  = name;
         deliveryIngoModel.landmark = landmark;
         deliveryIngoModel.address = address;
         deliveryIngoModel.phone = phone;
+        deliveryIngoModel.latLng = latLng;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Date uploaded successfully'),
         ));

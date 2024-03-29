@@ -264,7 +264,7 @@ class _PaymentState extends State<Payment> {
                                     'assets/images/success.png',
                                     fit: BoxFit.fill,// Provide the correct asset path here
                                     width: 80, // Adjust the width as needed
-                                    height: 80, // Adjust the height as needed
+                                    height: 80,), // Adjust the height as needed
                                   SizedBox(height: 8),
                                   Text(
                                     "Your food has been ordered and will be delivered shortly by the restaurant.",

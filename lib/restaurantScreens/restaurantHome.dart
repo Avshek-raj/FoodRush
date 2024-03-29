@@ -94,6 +94,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
 
   @override
   void initState()  {
+    isLoading = true;
     super.initState();
     // RestaurantProvider restaurantProvider = Provider.of(context, listen:false);
     // ProductProvider productProvider = Provider.of(context, listen: false);
@@ -103,17 +104,18 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
     //  orderProvider.fetchOrderData((){});
     // MessageProvider messageProvider = Provider.of(context, listen:false);
     // messageProvider.setupFirebaseMessaging(context);
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      isLoading = true;
+    WidgetsBinding.instance?.addPostFrameCallback((_) async{
+      
       // Access inherited widgets or elements here
       restaurantProvider = Provider.of(context, listen: false);
       productProvider = Provider.of(context, listen: false);
       orderProvider = Provider.of(context, listen: false);
-      restaurantProvider.fetchRestaurantDetails("", () {});
-      productProvider.fetchRestaurantProducts();
-      orderProvider.fetchOrderData(() {});
+      await restaurantProvider.fetchRestaurantDetails("", () {});
+      await productProvider.fetchRestaurantProducts();
+      await orderProvider.fetchOrderData(() {});
       messageProvider = Provider.of(context, listen: false);
       messageProvider.setupFirebaseMessaging(context, "Restaurant");
+      isLoading = false;
     });
 
   }
@@ -131,6 +133,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 10,), 
               Padding(
                 padding: const EdgeInsets.only(right: 30),
                 child: Row(
@@ -201,39 +204,40 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                 ),
               ),
               // for search box
-              Padding(
-                padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
-                child: Container(
-                  height: 45,
-                  width: MediaQuery.of(context).size.width * 0.90,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    border: Border.all(color: Colors.grey.shade500),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(
-                        Icons.search_rounded,
-                        color: Colors.red,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Search Your Food, Drink, etc",
-                        style: TextStyle(color: Colors.grey.shade500),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
+              //   child: Container(
+              //     height: 45,
+              //     width: MediaQuery.of(context).size.width * 0.90,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(40),
+              //       border: Border.all(color: Colors.grey.shade500),
+              //     ),
+              //     child: Row(
+              //       children: [
+              //         SizedBox(
+              //           width: 5,
+              //         ),
+              //         Icon(
+              //           Icons.search_rounded,
+              //           color: Colors.red,
+              //         ),
+              //         SizedBox(
+              //           width: 10,
+              //         ),
+              //         Text(
+              //           "Search Your Food, Drink, etc",
+              //           style: TextStyle(color: Colors.grey.shade500),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 15,
+              // ),
               // for order status
+              SizedBox(height: 30,), 
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -365,13 +369,13 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           Spacer(),
-                          Text(
-                            "View all",
-                            style: TextStyle(
-                                color: const Color.fromARGB(255, 55, 151, 59),
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold),
-                          )
+                          // Text(
+                          //   "View all",
+                          //   style: TextStyle(
+                          //       color: const Color.fromARGB(255, 55, 151, 59),
+                          //       fontSize: 12,
+                          //       fontWeight: FontWeight.bold),
+                          // )
                         ],
                       ),
                     ),

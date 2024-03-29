@@ -158,7 +158,7 @@ class ProductProvider with ChangeNotifier {
             restaurantLocation!.latitude!,
             restaurantLocation!.longitude!,
           );
-          if (haversine <=20){
+          if (haversine <=15){
             newList.add(ProductModel(
               productId: foodList[i].productId,
               productName: foodList[i].productName,

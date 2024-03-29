@@ -449,7 +449,7 @@ LatLng? getLatLngFromString( coordinatesString) {
   }
 }
 
-
+////Haversine algo.
 double calculateDistance(
     double startLat,
     double startLong,

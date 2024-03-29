@@ -26,6 +26,7 @@ class RegisterRestaurantScreen extends StatefulWidget {
 }
 
 class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen>  with SingleTickerProviderStateMixin{
+  bool isLoading = true;
   late AnimationController animationController;
   late Animation<Offset> _offsetAnimation;
   late GoogleMapController mapController;
@@ -88,6 +89,7 @@ class _RegisterRestaurantScreenState extends State<RegisterRestaurantScreen>  wi
 
     _currentLocation = await location.getLocation();
     setState(() {
+      isLoading = false;
       _center = LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
       address = LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
     });
@@ -100,7 +102,11 @@ String? restaurantAddress;
   Widget build(BuildContext context) {
     restaurantProvider = Provider.of(context);
     return Scaffold(
-      body: SafeArea(
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          :SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
