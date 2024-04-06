@@ -68,6 +68,54 @@ class RestaurantProvider with ChangeNotifier {
     }
   }
 
+  void editRestaurantDetails({
+    required BuildContext context,
+    String? restaurantName,
+    String? email,
+    String? phone,
+    String? address,
+    LatLng? restaurantLatLng,
+    String? password,
+    String? about,
+    String? restaurantImageUrl,
+    File? newRestaurantImage,
+    VoidCallback? onSuccess, // Callback for success
+    Function(dynamic)? onError,
+  }) async {
+    try {
+      String imageUrl = "";
+      if (newRestaurantImage != null) {
+         imageUrl = await uploadImageToFirebase(newRestaurantImage!) as String;
+      }
+      await FirebaseFirestore.instance
+          .collection("RestaurantUsers")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("RestaurantInfo")
+          .doc("Details")
+          .update({
+        "RestaurantId": FirebaseAuth.instance.currentUser?.uid,
+        "RestaurantName": restaurantName,
+        "Email": email,
+        "Phone": phone,
+        "RestaurantLatLng": restaurantLatLng.toString(),
+        "Address": address,
+        "Password": password,
+        "About": about,
+        "Role": "Restaurant",
+        "RestaurantImage" : imageUrl != ""? imageUrl : restaurantImageUrl,
+      }).then((_) {
+        print('Restaurant info uploaded Successfully');
+        if (onSuccess != null) onSuccess();
+      }).catchError((error) {
+        print('Error:Error on restaurant info upload');
+        if (onError != null) onError(error);
+      });
+    } catch (e) {
+      print('Error:Error on restaurant info upload');
+      if (onError != null) onError(e);
+    }
+  }
+
   List<RestaurantModel> restaurantInfoList = [];
   late RestaurantModel restaurantModel ;
   fetchRestaurantDetails(userId,callback) async {
