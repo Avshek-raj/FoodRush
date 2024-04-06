@@ -89,6 +89,7 @@ class MyApp extends StatelessWidget {
           title: 'Foodrush',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            primaryColor: Colors.red,
             primarySwatch: Colors.red,
           ),
           home: LoginAs(),

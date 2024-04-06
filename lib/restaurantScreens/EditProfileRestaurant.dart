@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/providers/user_provider.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart'; // Import Services
 
 class EditProfile extends StatefulWidget {
@@ -12,9 +16,24 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  File? _image;
+  Future getImage() async {
+    final imagePicker = ImagePicker();
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+//
   @override
   Widget build(BuildContext context) {
         UserProvider userProvider = Provider.of<UserProvider>(context);
+        RestaurantProvider restaurantProvider = Provider.of<RestaurantProvider>(context);
 
     return Scaffold(
       body: SafeArea(
@@ -37,19 +56,23 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
               // Container for circle avatar
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 18, 18, 18),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.red, // Optional: Set the background color of the avatar
-                    child: ClipOval(
-                      child: Image.network(
-                        userProvider.userModel.userImage ?? "", // Provide the image URL
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+              GestureDetector(
+                onTap: getImage,
+                child: _image != null
+                    ? CircleAvatar(
+                  radius: 45,
+                  backgroundImage: FileImage(_image!),
+                )
+                    : userProvider.userModel.userImage != null
+                    ? CircleAvatar(
+                  radius: 45,
+                  backgroundImage: NetworkImage(userProvider.userModel.userImage!),
+                )
+                    : CircleAvatar(
+                  radius: 45,
+                  child: Icon(Icons.person_outline),
                 ),
+              ),
               // Container(
               //   height: 90,
               //   width: 90,

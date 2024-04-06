@@ -92,7 +92,7 @@ class RestaurantProvider with ChangeNotifier {
             restaurantName: data["RestaurantName"],
             email: data["Email"],
             address: data["Address"],
-            phone: data['phone'],
+            phone: data['Phone'],
             password: data["Password"],
             about: data["About"],
             restaurantImageLink:data["RestaurantImage"],

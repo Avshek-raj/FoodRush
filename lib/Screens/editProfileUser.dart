@@ -1,11 +1,18 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:foodrush/Screens/Navigation.dart';
+import 'package:foodrush/Screens/profile_screen.dart';
+import 'package:foodrush/login/forgotPw1.dart';
 import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:foodrush/ui_custom/TextFormCus.dart';
 import 'package:foodrush/utils/color_utils.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 
 class EditProfileUser extends StatefulWidget {
   const EditProfileUser({Key? key}) : super(key: key);
@@ -17,6 +24,11 @@ class EditProfileUser extends StatefulWidget {
 class _EditProfileState extends State<EditProfileUser> {
   final _formKey = GlobalKey<FormState>();
   File? _image;
+  late UserProvider userProvider;
+  TextEditingController username = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController address = TextEditingController();
 
   // Function to pick image from gallery
   Future getImage() async {
@@ -36,6 +48,12 @@ class _EditProfileState extends State<EditProfileUser> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of(context);
+    username.text =  userProvider.userModel.username?? "";
+    email.text = userProvider.userModel.email?? "";
+    phone.text = userProvider.userModel.phone?? "";
+    address.text = userProvider.userModel.address?? "";
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -65,19 +83,32 @@ class _EditProfileState extends State<EditProfileUser> {
                 // GestureDetector to handle avatar image change
                 GestureDetector(
                   onTap: getImage,
-                  child: CircleAvatar(
+                  child: _image != null
+                      ? CircleAvatar(
                     radius: 45,
-                    backgroundImage: _image != null ? FileImage(_image!) : AssetImage("assets/images/p22.png") as ImageProvider,
+                    backgroundImage: FileImage(_image!),
+                  )
+                      : userProvider.userModel.userImage != null
+                      ? CircleAvatar(
+                    radius: 45,
+                    backgroundImage: NetworkImage(userProvider.userModel.userImage!),
+                  )
+                      : CircleAvatar(
+                    radius: 45,
+                    child: Icon(Icons.person_outline),
                   ),
                 ),
-                                Text("Change profile image",style: TextStyle(fontWeight: FontWeight.w500),),
+
+                SizedBox(height: 5,),
+                Text("Change profile image",style: TextStyle(fontWeight: FontWeight.w500),),
 
                 // Fields to edit
                 SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Ctextform(
-                    labelText: "User Name",
+                    controller: username,
+                    labelText: "Username",
                     prefixIcon: Icon(
                       Icons.person_outline,
                       color: Colors.red,
@@ -96,6 +127,7 @@ class _EditProfileState extends State<EditProfileUser> {
                 Padding(
   padding: const EdgeInsets.symmetric(horizontal: 10),
   child: Ctextform(
+    controller: email,
     labelText: "Email",
     prefixIcon: Icon(
       Icons.email_outlined,
@@ -116,6 +148,7 @@ SizedBox(height: 10),
 Padding(
   padding: const EdgeInsets.symmetric(horizontal: 10),
   child: Ctextform(
+    controller: phone,
     labelText: "Phone",
     prefixIcon: Icon(
       Icons.phone,
@@ -137,6 +170,7 @@ SizedBox(height: 10),
 Padding(
   padding: const EdgeInsets.symmetric(horizontal: 10),
   child: Ctextform(
+    controller: address,
     labelText: "Address",
     prefixIcon: Icon(
       Icons.location_on_outlined,
@@ -155,10 +189,37 @@ SizedBox(
   height: 30,
 ),
 CustomElevatedButton(onPressed: (){
-
+  userProvider.editUserDetails(context: context, username: username.text, email: email.text, phone: phone.text, address: address.text, userImage: userProvider.userModel.userImage, newUserImage: _image,
+  onSuccess: (){
+    showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Success"),
+        content: Text("User profile updated successfully"),
+        actions: [
+          TextButton(onPressed: ()async{
+            await userProvider.fetchUserData("", (){});
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MainScreen(page: 4,)));
+          }, child: Text('OK'))
+        ],
+      );
+    });
+  },
+  onError: (e){
+    AlertDialog(
+      title: Text("Error"),
+      content: Text("An error occured. Please ty again"),
+      actions: [
+        TextButton(onPressed: ()async{
+          Navigator.pop(context);
+        }, child: Text('OK'))
+      ],
+    );
+  });
 }
 , child: Text("Save")),
-
               ],
             ),
           ),

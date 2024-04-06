@@ -64,7 +64,7 @@ class _OrderRequestsState extends State<OrderRequests> {
             SizedBox(height: 10),
             Expanded(
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.90,
+                width: MediaQuery.of(context).size.width * 0.93,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.grey.shade500),
@@ -120,7 +120,7 @@ class _OrderRequestsState extends State<OrderRequests> {
                                       radius: 20,
                                       child: orderProvider.cartList[index].userImage != ""
                                           ?Image.network(orderProvider.cartList[index].userImage!)
-                                          : Icon(Icons.supervised_user_circle),
+                                          : Icon(Icons.person_outline),
                                       backgroundColor: Colors.transparent,
                                     ),
                                   ),
@@ -142,11 +142,12 @@ class _OrderRequestsState extends State<OrderRequests> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text(
-                                        '\RS:${int.parse(orderProvider.cartList[index].orderPrice!) * orderProvider.cartList[index].orderQuantity!}',
-                                        style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                        overflow: TextOverflow.ellipsis,
+                                      Container(
+                                        child: Text(
+                                          'Rs. ${int.parse(orderProvider.cartList[index].orderPrice!) * orderProvider.cartList[index].orderQuantity!}',
+                                          style:
+                                          TextStyle(fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                       Text(
                                         'Status: ',

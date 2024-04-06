@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Ctextform extends StatefulWidget {
@@ -6,6 +7,7 @@ class Ctextform extends StatefulWidget {
   String? Function(String?)? validator;
   Widget? suffixIcon;
   Widget? prefixIcon;
+  TextEditingController? controller;
   Function(String)? onChanged;
   TextInputType? keyboardType; // Make keyboardType nullable
 
@@ -18,6 +20,7 @@ class Ctextform extends StatefulWidget {
     this.labelText,
     this.obscureText = false,
     this.onChanged,
+    this.controller,
     this.keyboardType, // Make keyboardType optional
   }) : super(key: key);
 
@@ -37,6 +40,7 @@ class _CtextformState extends State<Ctextform> {
         });
       },
       child: TextFormField(
+        controller: widget.controller,
         keyboardType: widget.keyboardType,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: widget.validator,

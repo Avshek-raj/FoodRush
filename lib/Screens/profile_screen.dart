@@ -60,17 +60,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 30),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 18, 18, 18),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.red, // Optional: Set the background color of the avatar
-                    child: ClipOval(
-                      child: Image.network(
-                        userProvider.userModel.userImage ?? "", // Provide the image URL
-                        fit: BoxFit.cover,
+                  child: ClipOval(
+                    child: userProvider.userModel.userImage!= null ? Image.network(
+                      userProvider.userModel.userImage ?? "",
+                      width: 80, // Set the desired width
+                      height: 80, // Set the desired height
+                      fit: BoxFit.cover,
+                    ):  CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Colors.red, // Optional: Set the background color of the avatar
+                      child: ClipOval(
+                        child: Icon(Icons.person_outline, size: 40,)
                       ),
                     ),
                   ),
                 ),
+
 
                 SizedBox(
                   height: 10,

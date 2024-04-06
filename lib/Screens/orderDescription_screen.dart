@@ -529,7 +529,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                         width: 15,
                       ),
                       Icon(
-                        Icons.shopping_cart,
+                        Icons.mode_edit_outline,
                         color: Colors.white,
                       ),
                       SizedBox(

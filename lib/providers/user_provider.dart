@@ -3,11 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/models/location_model.dart';
-
+import 'dart:io';
 import '../Screens/home_screen.dart';
 import '../models/user_model.dart';
 import '../reusable_widgets/reusable_widget.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:foodrush/providers/restaurant_provider.dart';
+import 'package:foodrush/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 class UserProvider with ChangeNotifier {
   void addUserDetails({
     required BuildContext context,
@@ -141,5 +148,73 @@ class UserProvider with ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  void editUserDetails({
+    required BuildContext context,
+    String? username,
+    String? email,
+    String? phone,
+    String? address,
+    String? password,
+    File? newUserImage,
+    String? userImage,
+    VoidCallback? onSuccess, // Callback for success
+    Function(dynamic)? onError,
+  }) async {
+    try {
+      String imageUrl = "";
+      if (newUserImage != null) {
+        imageUrl = await uploadImageToFirebase(newUserImage!) as String;
+      }
+
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("UserInfo")
+          .doc("Details")
+          .update({
+        "Username": username,
+        "Email": email,
+        "Phone": phone,
+        "Address": address,
+        "Password": password,
+        "PhotoUrl": imageUrl != ""? imageUrl :userImage??"",
+      }).then((_) {
+          print('Data uploaded Successfully');
+        if (onSuccess != null) onSuccess();
+      }).catchError((error) {
+          print('Failed to upload data: $error');
+        if (onError != null) onError(error); // Call error callback
+      });
+    } catch (e) {
+        print('Failed to upload data: $e');
+      if (onError != null) onError(e);
+    }
+  }
+}
+
+Future<String?> uploadImageToFirebase(File imageFile) async {
+  try {
+    // Convert XFile to File
+    File file = File(imageFile.path);
+
+    // Create a reference to the location you want to upload to in Firebase Storage
+    Reference storageReference = FirebaseStorage.instance.ref().child('UserImages').child(DateTime.now().millisecondsSinceEpoch.toString());
+
+    // Upload the file to Firebase Storage
+    UploadTask uploadTask = storageReference.putFile(file);
+
+    // Await the completion of the upload task
+    await uploadTask;
+
+    // Get the download URL for the image
+    String imageUrl = await storageReference.getDownloadURL();
+
+    // Return the download URL
+    return imageUrl;
+  } catch (e) {
+    print('Error uploading image to Firebase Storage: $e');
+    return null;
   }
 }

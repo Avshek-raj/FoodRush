@@ -107,12 +107,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             radius: 35,
                             backgroundColor: Colors.red, // Optional: Set the background color of the avatar
                             child: ClipOval(
-                              child: Image.network(
+                              child: userProvider.userModel.userImage != null ?Image.network(
                                 userProvider.userModel.userImage ?? "", // Provide the image URL
                                 fit: BoxFit.cover, // Adjust the fit as per your requirement
                                 width: 70, // Set the width of the clipped image
                                 height: 70, // Set the height of the clipped image
-                              ),
+                              ) : Icon(Icons.person_outlined),
                             ),
                           ),
                         ),
