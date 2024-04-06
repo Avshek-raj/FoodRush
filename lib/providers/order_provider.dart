@@ -93,6 +93,7 @@ class OrderProvider with ChangeNotifier {
 
   List<OrderModel> cartList = [];
   late OrderModel orderModel;
+  int orderNumber = 0;
   fetchOrderData(callback) async{
     isLoading = true;
     List<OrderModel> newList = [];
@@ -126,7 +127,7 @@ class OrderProvider with ChangeNotifier {
       print(e);
     }finally{
       cartList = newList;
-      cartItemNumber = cartList.length;
+      orderNumber = cartList.length;
       isLoading = false;
       callback();
       notifyListeners();
@@ -209,7 +210,6 @@ class OrderProvider with ChangeNotifier {
         newList.add(orderListModel);
       });
       orderList = newList;
-      cartItemNumber = cartList.length;
     } catch (e) {
       print(e);
     }

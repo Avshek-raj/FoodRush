@@ -12,6 +12,7 @@ import 'package:location/location.dart';
 
 import '../Screens/MenuPage.dart';
 import '../Screens/cart_screen.dart';
+import '../restaurantScreens/navbarRestaurant.dart';
 import '../utils/color_utils.dart';
 
 import '../models/location_model.dart';
@@ -543,4 +544,55 @@ LatLng? userLatLng;
   LocationData currentLocation = await location.getLocation();
     isLoading = false;
     userLatLng = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+}
+
+
+class OrderBadge extends StatelessWidget {
+  final int itemCount;
+
+  const OrderBadge({
+    Key? key,
+    required this.itemCount,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NavbarRestaurant(page:2 ,)),
+        );
+      },
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(16),
+      icon: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.centerLeft,
+        children: [
+          itemCount >0 ?Icon(Icons.notifications_on_outlined, size: 27,) :Icon(Icons.notifications_outlined, size: 27,),
+          if (itemCount > 0)
+            Positioned(
+              top: -5,
+              right: -5,
+              child: Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red,
+                ),
+                child: Text(
+                  itemCount.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 }

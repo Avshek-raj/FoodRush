@@ -56,8 +56,6 @@ class _OrderRequestsState extends State<OrderRequests> {
                     "Order requests",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                   ),
-                  Spacer(),
-                  Icon(Icons.notifications_active_outlined, color: Colors.red),
                 ],
               ),
             ),

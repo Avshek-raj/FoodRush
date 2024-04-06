@@ -194,15 +194,16 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                       ],
                     ),
                     Spacer(),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => NavbarRestaurant(page: 2,)));
-                      },
-                      child: Icon(
-                        Icons.notifications_on_outlined,
-                        color: Colors.red,
-                      ),
-                    ),
+                    // GestureDetector(
+                    //   onTap: (){
+                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => NavbarRestaurant(page: 2,)));
+                    //   },
+                    //   child: Icon(
+                    //     Icons.notifications_on_outlined,
+                    //     color: Colors.red,
+                    //   ),
+                    // ),
+                    OrderBadge(itemCount: orderProvider.orderNumber,),
                   ],
                 ),
               ),

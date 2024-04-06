@@ -62,7 +62,7 @@ class _SearchState extends State<Search> {
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         Spacer(),
-        CartBadge(
+        OrderBadge(
           itemCount: cartProvider.cartList.length,)
         ],
       ),

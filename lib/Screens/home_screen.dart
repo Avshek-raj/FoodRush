@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Spacer(), // Add some spacing between buttons
-                        CartBadge(
+                        OrderBadge(
                           itemCount: cartProvider.cartList.length,
                         )
                       ],

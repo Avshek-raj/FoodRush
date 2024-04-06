@@ -93,7 +93,7 @@ class _OrderDescriptionState extends State<OrderDescription> {
                         color: Colors.black,
                       ),
                       Spacer(),
-                      widget.role != "restaurant" ? CartBadge(
+                      widget.role != "restaurant" ? OrderBadge(
                         itemCount: cartItemNumber ?? 0, // Replace this with
                       )
                           :SizedBox(),
