@@ -164,14 +164,18 @@ class _MenusState extends State<Menus> {
                       ),
                       child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              topRight: Radius.circular(12),
-                            ),
-                            child: Image.network(
-                              productProvider.foodProductList[index].productImage!,
-                              fit: BoxFit.fill,
+                          Container(
+                            height: 210,
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12),
+                                topRight: Radius.circular(12),
+                              ),
+                              child: Image.network(
+                                productProvider.foodProductList[index].productImage!,
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ),
                           Padding(
@@ -266,14 +270,18 @@ class _MenusState extends State<Menus> {
                       ),
                       child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              topRight: Radius.circular(12),
-                            ),
-                            child: Image.network(
-                              productProvider.menuProductList[index].productImage!,
-                              fit: BoxFit.fill,
+                          Container(
+                            height: 210,
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12),
+                                topRight: Radius.circular(12),
+                              ),
+                              child: Image.network(
+                                productProvider.menuProductList[index].productImage!,
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ),
                           Padding(

@@ -65,13 +65,17 @@ class UserProvider with ChangeNotifier {
   UserModel userModel = UserModel();
   DeliveryInfoModel deliveryInfoModel = DeliveryInfoModel();
   String token = "";
+  UserModel userInfo = UserModel();
 
   fetchUserData(String? userId, callback) async {
     try {
       isLoading = true;
       List<UserModel> newList = [];
+      bool isRestaurant = false;
       if (userId == null || userId ==""){
         userId = FirebaseAuth.instance.currentUser?.uid;
+      } else {
+        isRestaurant =true;
       }
       QuerySnapshot value = await FirebaseFirestore.instance
           .collection("Users")
@@ -91,17 +95,32 @@ class UserProvider with ChangeNotifier {
         } else if (data.containsKey("Token")){
           token = data["Token"];
         } else {
-          userModel = UserModel(
-              username: data["Username"],
-              email: data["Email"],
-              address: data["Address"],
-              phone: data['Phone'],
-              password: data["Password"],
-              deliveryInfo: data["DeliveryInfo"],
-              token:data["Token"],
-              userImage: data["PhotoUrl"],
-              role: data["Role"]
-          );
+          if (isRestaurant == true) {
+            userInfo = UserModel(
+                username: data["Username"],
+                email: data["Email"],
+                address: data["Address"],
+                phone: data['Phone'],
+                password: data["Password"],
+                deliveryInfo: data["DeliveryInfo"],
+                token:data["Token"],
+                userImage: data["PhotoUrl"],
+                role: data["Role"]
+            );
+          }else {
+            userModel = UserModel(
+                username: data["Username"],
+                email: data["Email"],
+                address: data["Address"],
+                phone: data['Phone'],
+                password: data["Password"],
+                deliveryInfo: data["DeliveryInfo"],
+                token:data["Token"],
+                userImage: data["PhotoUrl"],
+                role: data["Role"]
+            );
+          }
+
         }
       });
       userInfoList = newList;

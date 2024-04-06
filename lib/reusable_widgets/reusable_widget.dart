@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foodrush/Screens/Navigation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 import '../Screens/MenuPage.dart';
 import '../Screens/cart_screen.dart';
@@ -513,4 +514,33 @@ Color getStatusColor(status){
   }else{
     return Colors.green;
   }
+}
+
+
+LatLng? userLatLng;
+ _getLocation() async {
+  Location location = Location();
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+
+  _serviceEnabled = await location.serviceEnabled();
+  if (!_serviceEnabled) {
+    _serviceEnabled = await location.requestService();
+    if (!_serviceEnabled) {
+      return;
+    }
+  }
+
+  _permissionGranted = await location.hasPermission();
+  if (_permissionGranted == PermissionStatus.denied) {
+    _permissionGranted = await location.requestPermission();
+    if (_permissionGranted != PermissionStatus.granted) {
+      return;
+    }
+  }
+
+  LocationData currentLocation = await location.getLocation();
+    isLoading = false;
+    userLatLng = LatLng(currentLocation.latitude!, currentLocation.longitude!);
 }

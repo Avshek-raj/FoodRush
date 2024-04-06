@@ -3,9 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:foodrush/Screens/deliverto.dart';
 import 'package:foodrush/Screens/payment.dart';
 import 'package:foodrush/providers/user_provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import '../models/cart_model.dart';
+import '../reusable_widgets/reusable_widget.dart';
 import '../utils/color_utils.dart';
+
 
 class OrderSummary extends StatefulWidget {
   List<CartModel> cartList ;
@@ -337,7 +341,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white, backgroundColor: myColor,
                             ),
-                            onPressed: () {
+                            onPressed: () async{
                               String productName = "";
                               String productId = "";
                               for (var item in widget.cartList) {
@@ -360,4 +364,30 @@ class _OrderSummaryState extends State<OrderSummary> {
       //),
     );
   }
+}
+
+_getLocation() async {
+  Location location = Location();
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+
+  _serviceEnabled = await location.serviceEnabled();
+  if (!_serviceEnabled) {
+    _serviceEnabled = await location.requestService();
+    if (!_serviceEnabled) {
+      return;
+    }
+  }
+
+  _permissionGranted = await location.hasPermission();
+  if (_permissionGranted == PermissionStatus.denied) {
+    _permissionGranted = await location.requestPermission();
+    if (_permissionGranted != PermissionStatus.granted) {
+      return;
+    }
+  }
+
+  LocationData currentLocation = await location.getLocation();
+  userLatLng = LatLng(currentLocation.latitude!, currentLocation.longitude!);
 }

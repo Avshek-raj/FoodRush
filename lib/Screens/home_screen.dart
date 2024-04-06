@@ -70,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
     productProvider.fetchFoodProductData();
     MessageProvider messageProvider = Provider.of(context, listen:false);
     messageProvider.setupFirebaseMessaging(context, "");
+
     super.initState();
   }
 

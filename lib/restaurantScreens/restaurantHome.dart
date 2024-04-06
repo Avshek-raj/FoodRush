@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/restaurantScreens/navbarRestaurant.dart';
+import 'package:foodrush/restaurantScreens/userDetails_screen.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -284,72 +286,77 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                       }else
                       return Column(
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.grey.shade200,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  child: orderProvider.cartList[index].userImage != ""
-                                      ?Image.network(orderProvider.cartList[index].userImage!)
-                                  : Icon(Icons.supervised_user_circle),
-                                  backgroundColor: Colors.transparent,
-                                ),
-                              ),
-                              SizedBox(width: 5),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    orderProvider.cartList[index].userName??"",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                      'Order: ${orderProvider.cartList[index].orderQuantity} ${orderProvider.cartList[index].orderName}'),
-                                  Text('Address: ${orderProvider.cartList[index].userAddress}'),
-                                ],
-                              ),
-                              Spacer(),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    '\RS:${int.parse(orderProvider.cartList[index].orderPrice!) * orderProvider.cartList[index].orderQuantity!}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                        overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'Status: ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: getStatusColor(orderProvider.cartList[index].status),
-                                      borderRadius: BorderRadius.circular(20),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => UserOrderDetail(userId: orderProvider.cartList[index].userId, item: index,)));
+                            }
+                            ,child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.grey.shade200,
+                                      width: 1,
                                     ),
-                                    child: Text(
-                                      orderProvider.cartList[index].status??"",
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    child: orderProvider.cartList[index].userImage != ""
+                                        ?Image.network(orderProvider.cartList[index].userImage!)
+                                    : Icon(Icons.supervised_user_circle),
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      orderProvider.cartList[index].userName??"",
+                                      style:
+                                          TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                        'Order: ${orderProvider.cartList[index].orderQuantity} ${orderProvider.cartList[index].orderName}'),
+                                    Text('Address: ${orderProvider.cartList[index].userAddress}'),
+                                  ],
+                                ),
+                                Spacer(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '\RS:${int.parse(orderProvider.cartList[index].orderPrice!) * orderProvider.cartList[index].orderQuantity!}',
+                                      style:
+                                          TextStyle(fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      'Status: ',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white),
+                                          color: Colors.black),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: getStatusColor(orderProvider.cartList[index].status),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        orderProvider.cartList[index].status??"",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           Divider(),
                         ],

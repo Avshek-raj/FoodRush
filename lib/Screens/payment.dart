@@ -5,11 +5,14 @@ import 'package:foodrush/Screens/service/esewa.service.dart';
 import 'package:foodrush/providers/message_provider.dart';
 import 'package:foodrush/providers/restaurant_provider.dart';
 import 'package:foodrush/providers/user_provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:foodrush/Screens/Navigation.dart';
 import '../models/cart_model.dart';
 import '../providers/cart_provider.dart';
 import '../providers/order_provider.dart';
+import '../reusable_widgets/reusable_widget.dart';
 
 // import 'package:text_divider/text_divider.dart';
 
@@ -194,6 +197,13 @@ class _PaymentState extends State<Payment> {
                     int count = 0;
                     String sameRestaurantFoods = "";
                     String? oldRestaurantName;
+
+                    if (userProvider.deliveryInfoModel.latLng != null && userProvider.userModel.userLatLng != null && userProvider.deliveryInfoModel.latLng != "" && userProvider.userModel.userLatLng != ""){
+
+                    }else {
+                      await _getLocation();
+                      userProvider.deliveryInfoModel.latLng = userLatLng.toString();
+                    }
                     // for (var item in widget.cartList){
                       widget.cartList.asMap().forEach((index, item) async {
                         String? orderId = item.cartId;
@@ -306,4 +316,30 @@ class _PaymentState extends State<Payment> {
       ),
     );
   }
+}
+
+_getLocation() async {
+  Location location = Location();
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+
+  _serviceEnabled = await location.serviceEnabled();
+  if (!_serviceEnabled) {
+    _serviceEnabled = await location.requestService();
+    if (!_serviceEnabled) {
+      return;
+    }
+  }
+
+  _permissionGranted = await location.hasPermission();
+  if (_permissionGranted == PermissionStatus.denied) {
+    _permissionGranted = await location.requestPermission();
+    if (_permissionGranted != PermissionStatus.granted) {
+      return;
+    }
+  }
+
+  LocationData currentLocation = await location.getLocation();
+  userLatLng = LatLng(currentLocation.latitude!, currentLocation.longitude!);
 }

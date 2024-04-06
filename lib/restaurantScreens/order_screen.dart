@@ -103,7 +103,7 @@ class _OrderRequestsState extends State<OrderRequests> {
                           children: [
                             GestureDetector(
                               onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => UserDetail(userId: orderProvider.cartList[index].userId, item: index,)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => UserOrderDetail(userId: orderProvider.cartList[index].userId, item: index,)));
                               }
                               ,child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -12,16 +12,16 @@ import '../reusable_widgets/reusable_widget.dart';
 import '../utils/color_utils.dart';
 import 'navbarRestaurant.dart';
 
-class UserDetail extends StatefulWidget {
+class UserOrderDetail extends StatefulWidget {
 
   String? userId; int? item;
-   UserDetail({super.key, this.userId, this.item});
+   UserOrderDetail({super.key, this.userId, this.item});
 
   @override
-  State<UserDetail> createState() => _UserDetailState();
+  State<UserOrderDetail> createState() => _UserOrderDetailState();
 }
 
-class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateMixin{
+class _UserOrderDetailState extends State<UserOrderDetail> with SingleTickerProviderStateMixin{
   bool isLoading = true;
   late AnimationController animationController;
   late Animation<Offset> _offsetAnimation;
@@ -94,8 +94,12 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
       userProvider = Provider.of(context, listen: false);
       // restaurantProvider.fetchRestaurantDetails("", () {});
       // productProvider.fetchRestaurantProducts();
-      orderProvider.fetchUserOrderData(widget.userId,() {});
-      userProvider.fetchUserData(widget.userId, (){});
+      orderProvider.fetchUserOrderData(widget.userId,() {
+        userProvider.fetchUserData(widget.userId, (){
+          isLoading = false;
+        });
+      });
+
       // messageProvider = Provider.of(context, listen: false);
       // messageProvider.setupFirebaseMessaging(context, "Restaurant");
 
@@ -107,11 +111,13 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
   Set<Marker> _markers = {};
   String statusValue = "";
   LatLng? _markerPosition;
+  LatLng? userLatLng ;
   @override
   Widget build(BuildContext context) {
     orderProvider = Provider.of(context);
     userProvider = Provider.of(context);
     _markerPosition = getLatLngFromString(orderProvider.cartList[0].deliveryLatLng);
+    userLatLng = getLatLngFromString(userProvider.userInfo.userLatLng);
     if (_markerPosition != null) {
       isLoading = false;
     }
@@ -187,7 +193,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        userProvider.userModel.username??"",
+                        userProvider.userInfo.username??"",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 15,
@@ -195,7 +201,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                         ),
                       ),
                       Text(
-                        userProvider.userModel.email??"",
+                        userProvider.userInfo.email??"",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -203,7 +209,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                         ),
                       ),
                       Text(
-                        userProvider.userModel.address??"",
+                        userProvider.userInfo.address??"",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -211,7 +217,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                         ),
                       ),
                       Text(
-                        userProvider.userModel.phone??"",
+                        userProvider.userInfo.phone??"",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -255,7 +261,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                           padding: const EdgeInsets.symmetric(vertical: 100),
                           child: Center(
                             child: Text(
-                              "You don't have any orders currently",
+                              "No orders currently",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -427,12 +433,12 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                userProvider.deliveryInfoModel.name?? userProvider.userModel.username??"xxxxx xxxxx",
+                                userProvider.deliveryInfoModel.name?? userProvider.userInfo.username??"xxxxx xxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Text(
-                                userProvider.deliveryInfoModel.address??userProvider.userModel.address??"xxxxx, xxxxx",
+                                userProvider.deliveryInfoModel.address??userProvider.userInfo.address??"xxxxx, xxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
@@ -442,7 +448,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
                               Text(
-                                userProvider.deliveryInfoModel.phone??userProvider.userModel.phone??"xxxxxxxxxx",
+                                userProvider.deliveryInfoModel.phone??userProvider.userInfo.phone??"xxxxxxxxxx",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
@@ -474,7 +480,7 @@ class _UserDetailState extends State<UserDetail> with SingleTickerProviderStateM
                     mapController = controller;
                   },
                   initialCameraPosition: CameraPosition(
-                    target: _markerPosition??_center,
+                    target: _markerPosition??userLatLng?? LatLng(0, 0),
                     zoom: 15.0,
                   ),
                   markers: _markerPosition != null ? Set<Marker>.from([
