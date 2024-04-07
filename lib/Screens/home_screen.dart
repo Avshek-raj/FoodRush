@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Spacer(), // Add some spacing between buttons
-                        OrderBadge(
+                        CartBadge(
                           itemCount: cartProvider.cartList.length,
                         )
                       ],
@@ -445,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount:
-                                  productProvider.foodProductList.length,
+                                  productProvider.topLiked.length,
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         0, 10, 10, 10), //2 ta box ko distance
@@ -458,35 +458,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     OrderDescription(
                                                       productId:
                                                       productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .productId,
                                                       productName:
                                                       productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .productName,
                                                       productImage:
                                                       productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .productImage,
                                                       productPrice:
                                                       productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .productPrice,
                                                       productDesc:
                                                       productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .productDesc,
                                                       restaurantName: productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .restaurantName,
                                                       restaurantId: productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .restaurantId, role: 'users',
                                                     )));
@@ -510,7 +510,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 width: MediaQuery.of(context).size.width,
                                                 height: 100,// Set your desired height
                                                 child: Image.network(
-                                                  productProvider.foodProductList[index].productImage!,
+                                                  productProvider.topLiked[index].productImage!,
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -522,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 children: [
                                                   Text(
                                                       productProvider
-                                                          .foodProductList[
+                                                          .topLiked[
                                                       index]
                                                           .productName!,
                                                       style: TextStyle(
@@ -541,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Text(
                                                     "Rs. " +
                                                         productProvider
-                                                            .foodProductList[
+                                                            .topLiked[
                                                         index]
                                                             .productPrice!,
                                                     style: TextStyle(

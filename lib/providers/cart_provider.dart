@@ -6,6 +6,7 @@ import 'package:foodrush/reusable_widgets/reusable_widget.dart';
 
 import '../Screens/home_screen.dart';
 import '../models/cart_model.dart';
+
 class CartProvider with ChangeNotifier {
   void addReviewCartData({
     required BuildContext context, // Add required BuildContext parameter
@@ -116,7 +117,7 @@ class CartProvider with ChangeNotifier {
 
         newList.add(historyModel);
       });
-
+      newList.sort((a, b) => (int.parse(a.cartId??"") ?? 0).compareTo(int.parse(b.cartId??"") ?? 0));
       historyList = newList;
       cartItemNumber = historyList.length;
     } catch (e) {

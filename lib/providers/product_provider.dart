@@ -27,10 +27,17 @@ class ProductProvider with ChangeNotifier {
     value.docs.forEach((element) {
       try{
         String? restaurantLatLng;
+        double? rating;
         try {
            restaurantLatLng = element.get("RestaurantLatLng");
         } catch (e){
           restaurantLatLng = null;
+        }
+        try {
+          rating = element.get("Rating");
+          print("success");
+        } catch (e){
+          rating = null;
         }
         // Check if "restaurantLatLng" field exists
         if (restaurantLatLng != null) {
@@ -43,6 +50,7 @@ class ProductProvider with ChangeNotifier {
             restaurantId: element.get("restaurantId"),
             restaurantName: element.get("restaurantName"),
             restaurantLatLng: restaurantLatLng, // Assign the value if it exists
+            rating: rating!=null? element.get("Rating"): 0.0,
           );
           newList.add(productModel);
         } else {
@@ -54,6 +62,7 @@ class ProductProvider with ChangeNotifier {
             productDesc: element.get("productDescription"),
             restaurantId: element.get("restaurantId"),
             restaurantName: element.get("restaurantName"), // Assign the value if it exists
+              rating: rating!=null? element.get("Rating"): 0.0,
           );
           newList.add(productModel);
         }
@@ -143,9 +152,12 @@ class ProductProvider with ChangeNotifier {
   }
 
   List<ProductModel> nearestFoods = [];
+  List<ProductModel> topLiked = [];
+
   fetchNearestFoods(foodList) async {
     isLoading = true;
     List<ProductModel> newList = [];
+    List<ProductModel> topLikedList = [];
     try{
     LocationData currentLocation = await location.getLocation();
     if (currentLocation != null) {
@@ -170,18 +182,33 @@ class ProductProvider with ChangeNotifier {
               restaurantLatLng: foodList[i].restaurantLatLng,
               distance: haversine,
             ));
+            topLikedList.add(ProductModel(
+              productId: foodList[i].productId,
+              productName: foodList[i].productName,
+              productImage: foodList[i].productImage,
+              productPrice: foodList[i].productPrice,
+              productDesc: foodList[i].productDesc,
+              restaurantId: foodList[i].restaurantId,
+              restaurantName: foodList[i].restaurantName,
+              restaurantLatLng: foodList[i].restaurantLatLng,
+              distance: haversine,
+              rating: foodList[i].rating,
+            ));
           }
         }
 
       }
       if (newList.length >1){
         newList.sort((a, b) => (a.distance ?? 0).compareTo(b.distance ?? 0));
+
       }
     }
   }catch(e) {
   print(e);
   } finally {
       nearestFoods = newList;
+      topLikedList.sort((a, b) => (b.rating??0).compareTo(a.rating ?? 0));
+      topLiked = topLikedList;
       isLoading = false;
       notifyListeners();
     }

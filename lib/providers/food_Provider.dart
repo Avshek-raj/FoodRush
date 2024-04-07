@@ -41,6 +41,7 @@ class foodProvider with ChangeNotifier {
     }
   }
 
+
   List<CartModel> cartList = [];
   late CartModel cartModel;
   fetchCartData(callback) async{

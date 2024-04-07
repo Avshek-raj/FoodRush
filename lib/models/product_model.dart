@@ -8,6 +8,7 @@ class ProductModel {
   String restaurantName;
   double? distance;
   String? restaurantLatLng;
+  double? rating;
   ProductModel(
       {
       required this.productId,
@@ -19,5 +20,6 @@ class ProductModel {
       required this.restaurantName,
       this.distance,
       this.restaurantLatLng,
+        this.rating,
       });
 }

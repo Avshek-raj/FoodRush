@@ -55,6 +55,32 @@ class RestaurantProductProvider with ChangeNotifier{
       ));
     }
   }
+
+  void addProductRating({
+    required BuildContext context,
+    String? productId,
+    double? rating,
+    VoidCallback? onSuccess,
+    Function(dynamic)? onError,
+  }) async {
+    try{
+      restaurantProvider = Provider.of(context, listen:false);
+      await FirebaseFirestore.instance
+          .collection("FoodProducts")
+          .doc(productId)
+          .update({
+        "Rating": rating
+      }).then((_) {
+          print('Product added successfully');
+        if (onSuccess != null) onSuccess(); // Call success callback
+      }).catchError((error) {
+          print('Failed to add product: $error');
+        if (onError != null) onError(error); // Call error callback
+      });
+    } catch(e) {
+        print('Failed to add product: $e');
+    }
+  }
   //update product
  void editProduct({
   required BuildContext context,

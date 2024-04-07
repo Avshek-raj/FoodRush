@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodrush/providers/review_provider.dart';
-import 'package:foodrush/ui_custom/customElevatedButton.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart_model.dart';
+import '../providers/RestaurantProduct_provider.dart';
 import '../providers/user_provider.dart';
 
 class reviewPage extends StatefulWidget {
@@ -18,6 +18,7 @@ class reviewPage extends StatefulWidget {
 class _reviewPageState extends State<reviewPage> {
   late ReviewProvider reviewProvider;
   late UserProvider userProvider;
+  late RestaurantProductProvider restaurantProductProvider;
   double _productRating = 0.0;
   TextEditingController review = TextEditingController();// Initialize product rating
 
@@ -30,6 +31,7 @@ class _reviewPageState extends State<reviewPage> {
   Widget build(BuildContext context) {
     reviewProvider = Provider.of(context);
     userProvider = Provider.of(context);
+    restaurantProductProvider = Provider.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -177,67 +179,75 @@ class _reviewPageState extends State<reviewPage> {
                         height: 50,
                       ),
                 SizedBox(
-  height: 50,
-  width: 250,
-  child: ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      foregroundColor: Colors.white,
-      backgroundColor: Colors.red,
-    ),
-    onPressed: () {
-      reviewProvider.addReview(
-          context: context,
-          productId: widget.orderModal?.cartId,
-        userName: userProvider.userModel.username,
-        userId: FirebaseAuth.instance.currentUser?.uid,
-        userImage: userProvider.userModel.userImage,
-        rating: _productRating,
-        review: review.text,
-        onSuccess: (){
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Success"),
-                content: Text("Thank you for your review!"),
-                actions: [
-                  TextButton(
+                  height: 50,
+                  width: 250,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                    ),
                     onPressed: () {
-                      // Close the dialog
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+                      reviewProvider.addReview(
+                        context: context,
+                        productId: widget.orderModal?.cartId,
+                        userName: userProvider.userModel.username,
+                        userId: FirebaseAuth.instance.currentUser?.uid,
+                        userImage: userProvider.userModel.userImage,
+                        rating: _productRating,
+                        review: review.text,
+                        onSuccess: ()async{
+                          double averageRating = _productRating;
+                          for (var reviewItem in reviewProvider.reviewList) {
+                            averageRating += reviewItem.rating ?? 0.0;
+                          }
+                          await reviewProvider.fetchReview(widget.orderModal?.cartId,() {
+                          });
+                          averageRating= averageRating/reviewProvider.reviewList.length;
+                          restaurantProductProvider.addProductRating(context: context, productId: widget.orderModal?.cartId, rating: averageRating);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Success"),
+                                content: Text("Thank you for your review!"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      // Close the dialog
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("OK",style: TextStyle(color: Colors.red),),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        onError: (e){
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error"),
+                                content: Text(e.toString()),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      // Close the dialog
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("OK",style: TextStyle(color: Colors.red),),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      );
                     },
-                    child: Text("OK",style: TextStyle(color: Colors.red),),
+                    child: Text("Submit"),
                   ),
-                ],
-              );
-            },
-          );
-        },
-        onError: (e){
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Error"),
-                content: Text(e.toString()),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      // Close the dialog
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("OK",style: TextStyle(color: Colors.red),),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      );
-    },
-    child: Text("Submit"),
-  ),
 ),
 
             ],
